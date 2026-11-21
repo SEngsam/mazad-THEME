@@ -163,7 +163,7 @@ function sectionNav() {
 }
 
 const cardSection = (id, title, body, aside = '') => `
-  <section id="${id}" aria-labelledby="${id}-title" class="card flex scroll-mt-40 flex-col gap-4 p-5 sm:p-6">
+  <section id="${id}" aria-labelledby="${id}-title" class="card flex scroll-mt-48 lg:scroll-mt-40 flex-col gap-4 p-5 sm:p-6">
     <div class="section-head"><h2 id="${id}-title" class="m-0 text-lg font-bold">${title}</h2>${aside}</div>
     ${body}
   </section>`;
@@ -232,7 +232,7 @@ function viewingSection() {
   const { place, times } = d.viewing;
   const s = d.seller;
   return `
-    <section id="viewing" aria-label="المعاينة والبائع" class="grid scroll-mt-40 grid-cols-1 gap-5 sm:grid-cols-2">
+    <section id="viewing" aria-label="المعاينة والبائع" class="grid scroll-mt-48 lg:scroll-mt-40 grid-cols-1 gap-5 sm:grid-cols-2">
       <div class="card flex flex-col gap-3 p-5 sm:p-6">
         <h2 class="m-0 text-lg font-bold">المعاينة والاستلام</h2>
         <p class="m-0 flex items-start gap-2 text-sm text-ink-body">${pin}<span>${esc(place)}</span></p>
@@ -353,7 +353,7 @@ function render() {
     ${titleBlock()}
     <div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8 xl:grid-cols-[minmax(0,1fr)_400px]">
       <div class="min-w-0 lg:col-start-1 lg:row-start-1">${gallery()}</div>
-      <aside id="bid-panel" aria-label="المزايدة" class="scroll-mt-40 lg:sticky lg:top-[136px] lg:col-start-2 lg:row-span-2 lg:row-start-1">${bidPanel()}</aside>
+      <aside id="bid-panel" aria-label="المزايدة" class="scroll-mt-48 lg:scroll-mt-40 lg:sticky lg:top-[136px] lg:col-start-2 lg:row-span-2 lg:row-start-1">${bidPanel()}</aside>
       <div class="flex min-w-0 flex-col gap-5 lg:col-start-1 lg:row-start-2">
         ${sectionNav()}
         ${specsSection()}

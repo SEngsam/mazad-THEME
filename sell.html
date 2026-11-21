@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بِع معنا · مزاد</title>
+  <meta name="description" content="أضف سيارتك أو مقتنياتك للمزاد في خمس خطوات، وسنراجع الطلب وننشره خلال 48 ساعة.">
+  <meta name="theme-color" content="#062E22">
+  <link rel="preload" href="public/fonts/readex-pro-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="dist/styles.css">
+  <script type="module" src="src/js/sell.js"></script>
+</head>
+<body>
+  <a href="#main" class="sr-only z-50 rounded-full bg-white px-4 py-2 font-semibold focus:not-sr-only focus:fixed focus:start-4 focus:top-4">تخطَّ إلى المحتوى</a>
+
+  <div class="flex min-h-screen flex-col">
+    <div id="site-top" class="contents"></div>
+
+    <main id="main" class="container-page flex flex-col gap-5 pb-16 pt-4">
+      <nav aria-label="مسار التصفح" class="text-[13px] text-ink-muted">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
+          <li><a href="index.html" class="text-ink-body hover:text-primary">الرئيسية</a></li>
+          <li aria-hidden="true">‹</li>
+          <li aria-current="page" class="text-ink">بِع معنا</li>
+        </ol>
+      </nav>
+      <header class="flex flex-col gap-2">
+        <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[28px]">بِع معنا</h1>
+        <p class="m-0 text-[15px] leading-relaxed text-ink-body">أضف منتجك في خمس خطوات. نراجع الطلب وننشره في المزاد خلال 48 ساعة، والإضافة مجانية.</p>
+      </header>
+
+      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8">
+        <section id="wizard" aria-label="نموذج إضافة منتج" class="card flex min-w-0 scroll-mt-48 lg:scroll-mt-40 flex-col"></section>
+
+        <aside class="flex flex-col gap-5 lg:sticky lg:top-[136px]">
+          <section aria-labelledby="preview-title" class="flex flex-col gap-3">
+            <h2 id="preview-title" class="m-0 text-base font-bold">هكذا سيظهر منتجك</h2>
+            <div id="preview" inert></div>
+          </section>
+          <section id="how" aria-labelledby="how-title" class="card scroll-mt-48 lg:scroll-mt-40 flex flex-col gap-4 p-5">
+            <h2 id="how-title" class="m-0 text-base font-bold">كيف يعمل البيع في مزاد؟</h2>
+            <ol id="how-list" class="m-0 flex list-none flex-col gap-4 p-0"></ol>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <div id="site-footer" class="contents"></div>
+  </div>
+</body>
+</html>

@@ -47,7 +47,7 @@ const topHTML = (user) => `
             ${userIcon}
             <span class="hidden whitespace-nowrap sm:inline">${user ? 'حسابي' : 'تسجيل الدخول'}</span>
           </a>
-          <a href="index.html#sell" class="btn-outline px-3 py-2 text-[13px] sm:px-[18px] sm:py-2.5 sm:text-sm">بِع معنا</a>
+          <a href="sell.html" class="btn-outline px-3 py-2 text-[13px] sm:px-[18px] sm:py-2.5 sm:text-sm">بِع معنا</a>
         </nav>
       </div>
 
@@ -75,7 +75,7 @@ const footerHTML = `
         </nav>
         <nav aria-labelledby="f-sellers" class="flex flex-col gap-2.5">
           <h2 id="f-sellers" class="m-0 text-sm font-semibold">البائعون</h2>
-          <a href="index.html#sell" class="text-ink-body">ابدأ البيع</a>
+          <a href="sell.html" class="text-ink-body">ابدأ البيع</a>
           <a href="#" class="text-ink-body">لوحة البائع</a>
           <a href="#" class="text-ink-body">أعلن معنا</a>
         </nav>
