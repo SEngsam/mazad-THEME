@@ -228,6 +228,7 @@ const footerHTML = `
           <h2 class="m-0 text-sm font-semibold">تواصل</h2>
           <a href="tel:920012345" class="tabular text-ink-body">920012345</a>
           <a href="help.html" class="text-ink-body">مركز المساعدة</a>
+          <a href="about.html" class="text-ink-body">من نحن</a>
         </div>
       </div>
       <div class="container-page flex flex-wrap items-center justify-between gap-3 border-t border-[#E5E7EB] pb-7 pt-4 text-xs text-ink-muted">
