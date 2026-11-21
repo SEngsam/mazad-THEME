@@ -102,6 +102,7 @@ const activeCount = () => [state.cat, state.cities.length, state.min || state.ma
 
 const xIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 const sliders = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>';
+const mapIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4Z"/><path d="M9 4v14M15 6v14"/></svg>';
 
 /* ---------- page head ---------- */
 
@@ -240,6 +241,7 @@ function renderToolbar(total) {
       <div class="flex items-center gap-3">
         <button type="button" id="open-filters" class="btn-outline gap-2 px-4 py-2 text-[13px] lg:hidden" aria-haspopup="dialog">${sliders}الفلاتر${n ? ` <span class="rounded-full bg-primary px-[7px] py-0.5 text-[11px] font-semibold text-white tabular">${n}</span>` : ''}</button>
         <p class="m-0 text-sm text-ink-body"><b class="font-semibold text-ink tabular">${formatNumber(total)}</b> مزاد</p>
+        <a href="map.html${state.cat ? `?cat=${state.cat}` : ''}" class="flex items-center gap-1.5 whitespace-nowrap text-[13px] font-semibold">${mapIcon}الخريطة</a>
       </div>
       <div class="scroll-row -m-0.5 max-w-full gap-2 p-0.5" role="group" aria-label="ترتيب النتائج">
         ${SORTS.map((label, i) => `<button type="button" data-sort="${i}" aria-pressed="${i === state.sort}" class="shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${i === state.sort ? 'border-primary bg-primary text-white' : 'border-[#E5E7EB] bg-white text-ink hover:border-ink/40'}">${label}</button>`).join('')}

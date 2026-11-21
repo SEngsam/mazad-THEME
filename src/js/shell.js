@@ -214,6 +214,7 @@ const footerHTML = `
         <nav aria-labelledby="f-bidders" class="flex flex-col gap-2.5">
           <h2 id="f-bidders" class="m-0 text-sm font-semibold">المزايدون</h2>
           <a href="auctions.html" class="text-ink-body">المزادات القادمة</a>
+          <a href="map.html" class="text-ink-body">المزادات على الخريطة</a>
           <a href="help.html#how-to-bid" class="text-ink-body">كيف أزايد</a>
           <a href="help.html#fees" class="text-ink-body">الرسوم</a>
           <a href="help.html#protection" class="text-ink-body">حماية المشتري</a>
@@ -232,7 +233,7 @@ const footerHTML = `
         </div>
       </div>
       <div class="container-page flex flex-wrap items-center justify-between gap-3 border-t border-[#E5E7EB] pb-7 pt-4 text-xs text-ink-muted">
-        <span>© 2026 مزادي · جميع الحقوق محفوظة</span>
+        <span class="flex flex-wrap items-center gap-x-4 gap-y-1"><span>© 2026 مزادي · جميع الحقوق محفوظة</span><a href="terms.html#terms" class="text-ink-muted hover:text-ink">الشروط والأحكام</a><a href="terms.html#privacy" class="text-ink-muted hover:text-ink">سياسة الخصوصية</a></span>
         <ul class="m-0 flex list-none flex-wrap items-center gap-2 p-0" aria-label="وسائل الدفع">
           <li class="pay-badge">مدى<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Mada_Logo.svg" alt="مدى"></li>
           <li class="pay-badge">Apple Pay<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Apple_Pay_logo.svg" alt="Apple Pay"></li>

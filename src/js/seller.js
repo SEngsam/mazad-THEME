@@ -60,7 +60,10 @@ function header() {
             <span>${esc(seller.city)}</span><span>عضو منذ <span class="tabular">${seller.since}</span></span>
           </p>
         </div>
-        <button type="button" id="follow" aria-pressed="${state.following}" class="${state.following ? 'btn-primary' : 'btn-outline'} w-full px-6 py-2.5 text-sm sm:w-auto">${state.following ? `${check}تتابع البائع` : 'متابعة البائع'}</button>
+        <div class="flex w-full gap-2 sm:w-auto">
+          <button type="button" id="follow" aria-pressed="${state.following}" class="${state.following ? 'btn-primary' : 'btn-outline'} flex-1 px-6 py-2.5 text-sm sm:flex-none">${state.following ? `${check}تتابع البائع` : 'متابعة البائع'}</button>
+          <a href="messages.html?s=${sid}" class="btn-outline flex-1 px-6 py-2.5 text-sm sm:flex-none">راسل البائع</a>
+        </div>
       </div>
       <dl class="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-[14px] border border-line bg-line-soft sm:grid-cols-4">
         ${[['الصفقات المكتملة', formatNumber(seller.deals)], ['التقييم', `${seller.rating} من 5`], ['مطابقة الوصف', `${seller.match}%`], ['سرعة الرد', seller.reply]]

@@ -205,7 +205,8 @@ function body() {
             <li>بيانات البطاقة تُعالَج لدى بوابة الدفع ولا نحفظها.</li>
             <li>يمكنك إيقاف رسائل العروض من الإعدادات متى شئت.</li>
           </ul></div>
-      </div>`),
+      </div>
+      <a href="terms.html" class="btn-outline self-start px-6 py-2.5 text-sm">اقرأ الشروط كاملة</a>`),
     sectionWrap('contact', 'تواصل معنا', `
       <div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         ${contactForm}

@@ -24,7 +24,18 @@ const state = {
   photo: 0,
   watch: loadWatch(),
   history: buildHistory(lot.bid, d.bids),
+  reported: Boolean(readStore('mz-reports', {})[lot.id]),
 };
+
+/* ---------- browser storage for questions and reports ---------- */
+
+function readStore(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) ?? 'null') ?? fallback; } catch { return fallback; }
+}
+function writeStore(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage blocked: keep it for this page */ }
+}
+function myQuestions() { return readStore('mz-questions', {})[lot.id] ?? []; }
 
 /* ---------- data helpers ---------- */
 
@@ -94,6 +105,11 @@ const pin = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[18px] w-[18px
 const calendar = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[18px] w-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
 const shield = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3 5 6v5.5c0 4.4 3 7.9 7 9.5 4-1.6 7-5.1 7-9.5V6l-7-3Z"/><path d="m9 12 2 2 4-4" stroke-linecap="round"/></svg>';
 
+const shareIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1"/></svg>';
+const flagIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4.5M5 4.5h11l-2 4 2 4H5"/></svg>';
+const chatIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A1.5 1.5 0 0 1 4 15.5Z"/></svg>';
+const closeIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
 /* ---------- static parts ---------- */
 
 function breadcrumb() {
@@ -125,6 +141,10 @@ function titleBlock() {
         <span class="tabular">لوت ${esc(d.lotNo)}</span><span aria-hidden="true">·</span>
         <span>${formatNumber(d.watchers)} يتابعون</span>
       </p>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" data-share class="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-ink/40">${shareIcon}مشاركة</button>
+        <button type="button" data-report ${state.reported ? 'disabled' : ''} class="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-ink/40 disabled:cursor-default disabled:text-ink-muted disabled:hover:border-[#E5E7EB]">${flagIcon}${state.reported ? 'تم الإبلاغ' : 'إبلاغ'}</button>
+      </div>
     </header>`;
 }
 
@@ -150,7 +170,7 @@ function gallery() {
 }
 
 function sectionNav() {
-  const items = [['specs', 'المواصفات'], d.inspection && ['inspection', 'تقرير الفحص'], ['description', 'الوصف'], ['history', 'سجل المزايدات'], ['viewing', 'المعاينة والبائع']].filter(Boolean);
+  const items = [['specs', 'المواصفات'], d.inspection && ['inspection', 'تقرير الفحص'], ['description', 'الوصف'], ['history', 'سجل المزايدات'], ['questions', 'أسئلة وأجوبة'], ['viewing', 'المعاينة والبائع']].filter(Boolean);
   return `
     <nav aria-label="أقسام الصفحة" class="scroll-row -m-0.5 gap-2 p-0.5">
       ${items.map(([id, label]) => `<a href="#${id}" class="shrink-0 whitespace-nowrap rounded-full border border-[#E5E7EB] bg-white px-4 py-2 text-[13px] font-medium text-ink hover:border-ink/40 hover:text-ink">${label}</a>`).join('')}
@@ -223,6 +243,41 @@ function historySection() {
     `<span id="history-count" class="text-[13px] text-ink-muted">${formatNumber(state.bids)} مزايدة</span>`);
 }
 
+/* ---------- questions ---------- */
+
+function questionItems() {
+  const own = myQuestions().map((x) => ({ q: x.q, a: null, ago: 'الآن' }));
+  const all = [...own, ...(data.lotQuestions[lot.id] ?? [])];
+  if (!all.length) return '<li class="py-2 text-sm text-ink-muted">لا توجد أسئلة بعد. كن أول من يسأل البائع.</li>';
+  return all.map((x) => `
+    <li class="flex flex-col gap-2 border-b border-line-soft py-4 first:pt-0 last:border-0 last:pb-0">
+      <p class="m-0 flex items-start gap-2.5 text-sm font-semibold text-ink"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mist text-xs font-bold text-ink-body">س</span><span class="min-w-0 flex-1 pt-0.5">${esc(x.q)}</span><span class="shrink-0 pt-0.5 text-xs font-normal text-ink-muted">${esc(x.ago)}</span></p>
+      ${x.a ? `<p class="m-0 flex items-start gap-2.5 text-sm leading-relaxed text-ink-body"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary">ج</span><span class="min-w-0 flex-1 pt-0.5">${esc(x.a)}</span></p>`
+        : '<p class="m-0 ms-[34px] self-start rounded-md bg-mist px-2 py-0.5 text-[11px] font-semibold text-ink-body">بانتظار رد البائع</p>'}
+    </li>`).join('');
+}
+
+function questionCount() {
+  const n = myQuestions().length + (data.lotQuestions[lot.id]?.length ?? 0);
+  return `${formatNumber(n)} ${n === 1 ? 'سؤال' : 'أسئلة'}`;
+}
+
+const Q_HINT = 'تظهر الإجابة هنا للجميع. لا تكتب رقم جوالك أو أي بيانات شخصية.';
+
+function questionsSection() {
+  return cardSection('questions', 'أسئلة وأجوبة', `
+    <ul id="q-list" class="m-0 list-none p-0">${questionItems()}</ul>
+    <form id="q-form" novalidate class="flex flex-col gap-2 border-t border-line-soft pt-4">
+      <label for="q-text" class="text-sm font-semibold">اسأل البائع</label>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <input id="q-text" maxlength="200" autocomplete="off" placeholder="مثال: هل يمكن المعاينة يوم الجمعة؟" aria-describedby="q-help"
+          class="min-w-0 flex-1 rounded-full border-0 bg-mist px-5 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0">
+        <button type="submit" class="btn-primary px-6 py-3 text-sm">إرسال السؤال</button>
+      </div>
+      <p id="q-help" class="m-0 text-xs text-ink-muted">${Q_HINT}</p>
+    </form>`, `<span id="q-count" class="text-[13px] text-ink-muted">${questionCount()}</span>`);
+}
+
 function viewingSection() {
   const { place, times } = d.viewing;
   const sid = data.sellerIdOf(lot);
@@ -248,7 +303,10 @@ function viewingSection() {
           <span class="tabular">${formatNumber(s.deals)} صفقة</span><span aria-hidden="true">·</span>
           <span>التقييم <span class="tabular">${s.rating}</span> من 5</span>
         </p>
-        <a href="seller.html?s=${sid}" class="btn-outline self-start px-5 py-2 text-[13px]">صفحة البائع</a>
+        <div class="flex flex-wrap gap-2">
+          <a href="messages.html?s=${sid}&amp;lot=${lot.id}" class="btn-primary px-5 py-2 text-[13px]">${chatIcon}راسل البائع</a>
+          <a href="seller.html?s=${sid}" class="btn-outline px-5 py-2 text-[13px]">صفحة البائع</a>
+        </div>
       </div>
     </section>`;
 }
@@ -357,10 +415,12 @@ function render() {
         ${inspectionSection()}
         ${descriptionSection()}
         ${historySection()}
+        ${questionsSection()}
         ${viewingSection()}
       </div>
     </div>
-    ${mobileBar()}`;
+    ${mobileBar()}
+    <dialog id="lot-dialog" aria-labelledby="dialog-title" class="m-auto w-[min(440px,calc(100vw-32px))] rounded-card border border-line bg-white p-0 text-ink shadow-card backdrop:bg-forest/50"></dialog>`;
   renderSimilar();
   renderBidUI();
   renderWatch();
@@ -509,6 +569,80 @@ function tick() {
   if (left <= 0 && !tick.ended) { tick.ended = true; renderBidUI(); }
 }
 
+/* ---------- share and report dialogs ---------- */
+
+const REPORT_REASONS = ['الوصف لا يطابق الصور', 'منتج مقلّد أو محظور', 'مزايدات مشبوهة', 'طلب البائع الدفع خارج مزادي', 'سبب آخر'];
+function pageUrl() { return location.href.split('#')[0]; }
+
+function dialogHead(title) {
+  return `
+    <div class="flex items-center justify-between gap-3 border-b border-line-soft px-5 py-4">
+      <h2 id="dialog-title" class="m-0 text-lg font-bold">${title}</h2>
+      <button type="button" data-dialog-close class="grid h-9 w-9 place-items-center rounded-full text-ink hover:bg-sand" aria-label="إغلاق">${closeIcon}</button>
+    </div>`;
+}
+
+function shareDialog() {
+  const url = encodeURIComponent(pageUrl());
+  const text = encodeURIComponent(`${lot.name} في مزادي`);
+  const target = (href, label) => `<a href="${href}" target="_blank" rel="noopener" class="flex flex-1 items-center justify-center rounded-full border border-[#E5E7EB] bg-white px-4 py-2.5 text-[13px] font-semibold text-ink hover:border-ink/40 hover:text-ink">${label}</a>`;
+  return `
+    ${dialogHead('مشاركة المزاد')}
+    <div class="flex flex-col gap-4 p-5">
+      <div class="flex items-center gap-3">
+        <span class="block w-16 shrink-0">${Media({ src: lot.img, className: 'aspect-[4/3] rounded-lg' })}</span>
+        <span class="flex min-w-0 flex-col"><b class="truncate text-sm font-semibold">${esc(lot.name)}</b><span class="text-xs text-ink-muted">المزايدة <span class="tabular">${formatPrice(state.current)}</span></span></span>
+      </div>
+      <div class="flex items-center gap-2 rounded-full bg-mist p-1">
+        <label for="share-url" class="sr-only">رابط المزاد</label>
+        <input id="share-url" readonly dir="ltr" value="${esc(pageUrl())}" class="min-w-0 flex-1 truncate border-0 bg-transparent px-4 text-[13px] text-ink-body focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
+        <button type="button" data-copy class="btn-primary shrink-0 px-5 py-2.5 text-[13px]">نسخ الرابط</button>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        ${target(`https://wa.me/?text=${text}%20${url}`, 'واتساب')}
+        ${target(`https://x.com/intent/post?text=${text}&url=${url}`, 'إكس')}
+        ${target(`mailto:?subject=${text}&body=${url}`, 'البريد')}
+      </div>
+    </div>`;
+}
+
+function reportDialog() {
+  return `
+    ${dialogHead('الإبلاغ عن المزاد')}
+    <form id="report-form" class="flex flex-col gap-4 p-5">
+      <fieldset class="m-0 flex flex-col gap-1 border-0 p-0">
+        <legend class="mb-2 p-0 text-sm text-ink-body">ما المشكلة في هذا المزاد؟</legend>
+        ${REPORT_REASONS.map((r, i) => `
+          <label class="flex cursor-pointer items-center gap-3 rounded-xl px-2 py-2.5 text-sm hover:bg-sand">
+            <input type="radio" name="reason" value="${i}" required class="h-[18px] w-[18px] accent-primary">${r}
+          </label>`).join('')}
+      </fieldset>
+      <label class="flex flex-col gap-1.5 text-sm font-semibold">تفاصيل إضافية (اختياري)
+        <textarea name="note" rows="3" maxlength="500" class="resize-none rounded-2xl border-0 bg-mist px-4 py-3 text-sm font-normal text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"></textarea>
+      </label>
+      <p class="m-0 text-xs text-ink-muted">لا يعرف البائع من أرسل البلاغ.</p>
+      <div class="flex gap-2">
+        <button type="submit" class="btn-primary flex-1 py-3 text-sm">إرسال البلاغ</button>
+        <button type="button" data-dialog-close class="btn-outline px-6 py-3 text-sm">إلغاء</button>
+      </div>
+    </form>`;
+}
+
+function reportDone(ref) {
+  return `
+    ${dialogHead('استلمنا بلاغك')}
+    <div class="flex flex-col gap-4 p-5">
+      <p class="m-0 text-[15px] leading-relaxed text-ink-body">رقم البلاغ <b dir="ltr" class="font-semibold text-ink tabular">${ref}</b>. نراجعه خلال 24 ساعة، ونوقف المزاد إذا ثبتت المخالفة.</p>
+      <button type="button" data-dialog-close class="btn-primary py-3 text-sm">تم</button>
+    </div>`;
+}
+
+function openDialog(html) {
+  const dlg = $('#lot-dialog');
+  dlg.innerHTML = html;
+  dlg.showModal();
+}
+
 /* ---------- events ---------- */
 
 document.addEventListener('click', (event) => {
@@ -542,6 +676,27 @@ document.addEventListener('click', (event) => {
     $('#bid-action button')?.focus();
     return;
   }
+  if (t.closest('[data-share]')) {
+    if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+      navigator.share({ title: lot.name, url: pageUrl() }).catch(() => {});
+      return;
+    }
+    openDialog(shareDialog());
+    return;
+  }
+  if (t.closest('[data-report]')) {
+    if (!getUser()) { location.href = loginHref(); return; }
+    openDialog(reportDialog());
+    return;
+  }
+  if (t.closest('[data-dialog-close]') || t.id === 'lot-dialog') { $('#lot-dialog').close(); return; }
+  const copy = t.closest('[data-copy]');
+  if (copy) {
+    const fallback = () => { $('#share-url').select(); document.execCommand?.('copy'); copy.textContent = 'تم النسخ'; };
+    if (navigator.clipboard) navigator.clipboard.writeText(pageUrl()).then(() => { copy.textContent = 'تم النسخ'; }, fallback);
+    else fallback();
+    return;
+  }
   if (t.closest('#watch-btn')) {
     state.watch.has(lot.id) ? state.watch.delete(lot.id) : state.watch.add(lot.id);
     renderWatch();
@@ -559,6 +714,37 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('submit', (event) => {
+  if (event.target.id === 'q-form') {
+    event.preventDefault();
+    const input = $('#q-text');
+    const q = input.value.trim();
+    if (q.length < 5) {
+      $('#q-help').innerHTML = '<span class="font-semibold text-accent-ink">اكتب سؤالك بوضوح، خمسة أحرف على الأقل.</span>';
+      input.focus();
+      return;
+    }
+    if (!getUser()) { location.href = loginHref(); return; }
+    const all = readStore('mz-questions', {});
+    writeStore('mz-questions', { ...all, [lot.id]: [{ q: q.slice(0, 200), at: Date.now() }, ...(all[lot.id] ?? [])] });
+    $('#q-list').innerHTML = questionItems();
+    $('#q-count').textContent = questionCount();
+    input.value = '';
+    $('#q-help').textContent = Q_HINT;
+    toast('أرسلنا سؤالك إلى البائع');
+    return;
+  }
+  if (event.target.id === 'report-form') {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const ref = `RP-${String(Date.now()).slice(-6)}`;
+    writeStore('mz-reports', { ...readStore('mz-reports', {}), [lot.id]: { ref, reason: Number(form.get('reason')), note: String(form.get('note') ?? '').slice(0, 500), at: Date.now() } });
+    state.reported = true;
+    $('#lot-dialog').innerHTML = reportDone(ref);
+    const btn = $('[data-report]');
+    btn.disabled = true;
+    btn.innerHTML = `${flagIcon}تم الإبلاغ`;
+    return;
+  }
   if (event.target.id !== 'bid-form') return;
   event.preventDefault();
   if (state.amount < minBid()) return;

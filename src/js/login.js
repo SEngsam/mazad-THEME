@@ -82,7 +82,7 @@ function phoneStep() {
 
     <button type="button" data-go="nafath" class="btn-outline w-full py-3.5 text-[15px]">${shield}الدخول عبر نفاذ</button>
 
-    <p class="m-0 text-xs leading-[1.8] text-ink-muted">بالمتابعة أنت توافق على <a href="help.html#terms" class="font-semibold">الشروط والأحكام</a> و<a href="help.html#privacy" class="font-semibold">سياسة الخصوصية</a>.</p>`;
+    <p class="m-0 text-xs leading-[1.8] text-ink-muted">بالمتابعة أنت توافق على <a href="terms.html#terms" class="font-semibold">الشروط والأحكام</a> و<a href="terms.html#privacy" class="font-semibold">سياسة الخصوصية</a>.</p>`;
 }
 
 function codeBoxes() {
