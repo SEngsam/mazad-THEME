@@ -7,6 +7,7 @@ renderShell();
 const $ = (sel, root = document) => root.querySelector(sel);
 const params = new URLSearchParams(location.search);
 const lot = data.lots.find((l) => String(l.id) === params.get('id')) ?? data.lots[0];
+if (params.has('id') && String(lot.id) !== params.get('id')) location.replace('404.html');
 const catName = data.categories[lot.cat];
 const d = detailsFor(lot);
 const startedAt = Date.now();

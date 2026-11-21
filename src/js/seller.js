@@ -7,6 +7,7 @@ renderShell();
 const $ = (sel) => document.querySelector(sel);
 const params = new URLSearchParams(location.search);
 const sid = data.sellers[params.get('s')] ? params.get('s') : 'alwafa';
+if (params.has('s') && sid !== params.get('s')) location.replace('404.html');
 const seller = data.sellers[sid];
 const startedAt = Date.now();
 const FOLLOW_KEY = 'mz-follow';

@@ -9,6 +9,7 @@ renderShell();
 const $ = (sel) => document.querySelector(sel);
 const params = new URLSearchParams(location.search);
 const id = data.events[params.get('e')] ? params.get('e') : 'north-yard';
+if (params.has('e') && id !== params.get('e')) location.replace('404.html');
 const ev = data.events[id];
 const startedAt = Date.now();
 const state = { watch: loadWatch() };
