@@ -33,7 +33,7 @@ export function Media({ src, className = '', alt = '', eager = false }) {
 export function FeaturedCard(item) {
   const tagTone = item.tone === 'accent' ? 'bg-accent-strong' : 'bg-primary';
   return `
-    <a href="#live" class="group relative flex min-h-[220px] overflow-hidden rounded-[20px] bg-mist text-white hover:text-white sm:min-h-[300px] ${item.large ? 'md:flex-[2_1_0%]' : 'md:flex-[1_1_0%]'}">
+    <a href="event.html?e=${item.event}" class="group relative flex min-h-[220px] overflow-hidden rounded-[20px] bg-mist text-white hover:text-white sm:min-h-[300px] ${item.large ? 'md:flex-[2_1_0%]' : 'md:flex-[1_1_0%]'}">
       ${Media({ src: item.img, eager: item.large, className: 'absolute inset-0 transition-transform duration-500 group-hover:scale-[1.02]' })}
       <span class="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 bg-gradient-to-t from-[rgba(10,12,15,.72)] to-transparent p-5 pt-16 sm:p-[22px] sm:pt-20">
         <span class="self-start rounded-full ${tagTone} px-2.5 py-1 text-xs font-semibold">${esc(item.tag)}</span>

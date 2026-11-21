@@ -14,8 +14,8 @@ export const categoryTiles = [
 ];
 
 export const featured = [
-  { tag: 'الليلة 8:00م', tone: 'accent', title: 'مزاد سيارات ساحة الشمال · 42 سيارة', meta: 'معاينة من 4 إلى 7 مساءً · الرياض', img: unsplash('1638835373951-3a67da7aaf8d', 1400), large: true },
-  { tag: 'ينتهي الخميس', tone: 'primary', title: 'ساعات فاخرة', meta: '53 قطعة موثّقة', img: unsplash('1639006570490-79c0c53f1080', 900), large: false },
+  { event: 'north-yard', tag: 'الليلة 8:00م', tone: 'accent', title: 'مزاد سيارات ساحة الشمال · 42 سيارة', meta: 'معاينة من 4 إلى 7 مساءً · الرياض', img: unsplash('1638835373951-3a67da7aaf8d', 1400), large: true },
+  { event: 'luxury-watches', tag: 'ينتهي الخميس', tone: 'primary', title: 'ساعات فاخرة', meta: '53 قطعة موثّقة', img: unsplash('1639006570490-79c0c53f1080', 900), large: false },
 ];
 
 /** endsIn: seconds remaining when the page loads. order: listing order for «المضاف حديثاً». */
@@ -141,3 +141,37 @@ export const wonLots = [
 
 /** Categories that can be shipped; the rest are picked up or transferred (cars, land, equipment, plates). */
 export const shippableCats = [2, 3, 4, 7];
+
+/** Scheduled auction events shown on the home page's featured cards. startsAt: hour of day (live yard auction) or endsInDays (online). */
+export const events = {
+  'north-yard': {
+    title: 'مزاد سيارات ساحة الشمال',
+    type: 'حضوري وإلكتروني',
+    city: 'الرياض',
+    count: 42,
+    unit: 'سيارة',
+    cat: 1,
+    startHour: 20,
+    place: 'ساحة الشمال، طريق الملك فهد، الرياض',
+    mapQuery: 'طريق الملك فهد الرياض',
+    viewing: 'اليوم من 4 إلى 7 مساءً',
+    deposit: 5000,
+    lots: [0, 12, 4, 2],
+    img: 'https://images.unsplash.com/photo-1638835373951-3a67da7aaf8d?w=1400&q=70&auto=format&fit=crop',
+  },
+  'luxury-watches': {
+    title: 'مزاد الساعات الفاخرة',
+    type: 'إلكتروني',
+    city: 'جدة',
+    count: 53,
+    unit: 'قطعة',
+    cat: 2,
+    endsInDays: 4,
+    place: 'مستودع مزاد، حي الروضة، جدة',
+    mapQuery: 'حي الروضة جدة',
+    viewing: 'بموعد مسبق من الأحد إلى الأربعاء',
+    deposit: 1000,
+    lots: [1, 8, 10],
+    img: 'https://images.unsplash.com/photo-1639006570490-79c0c53f1080?w=1400&q=70&auto=format&fit=crop',
+  },
+};

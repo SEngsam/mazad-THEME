@@ -136,6 +136,12 @@ export function saveOrder(id, order) {
   writeStore('mz-orders', { ...loadOrders(), [id]: order });
 }
 
+/** Event registrations by event id: { [id]: { remind: boolean, at } }. */
+export const loadEventRegs = () => readStore('mz-events', {});
+export function saveEventReg(id, reg) {
+  writeStore('mz-events', { ...loadEventRegs(), [id]: reg });
+}
+
 /* ---------- sign-in state ---------- */
 
 const USER_KEY = 'mz-user';
