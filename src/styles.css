@@ -56,12 +56,24 @@
 
   .card { @apply rounded-card border border-line bg-white shadow-card; }
 
-  /* Image frame: shows a labelled striped placeholder until (or unless) the photo loads. */
-  .media { @apply relative isolate overflow-hidden bg-mist; background-image: repeating-linear-gradient(135deg, #E1E7E4 0 10px, #E6EBE8 10px 20px); }
-  .media-label { @apply absolute inset-0 -z-10 grid place-items-center p-2 text-center text-xs font-medium text-ink-muted; }
-  .media-label-top { @apply place-items-start pt-3; }
+  /* Image frame: a soft brand placeholder (the Mazad mark) shows until, or unless, the photo loads.
+     A shimmer sweeps across it only while a photo is still loading; it stops once the photo loads or fails. */
+  .media { @apply relative isolate overflow-hidden bg-primary-soft; }
+  .media::before {
+    content: ''; @apply absolute inset-0 -z-10;
+    background-color: rgb(var(--primary) / .16);
+    -webkit-mask: url('../public/assets/mazad-mark.png') center / clamp(32px, 26%, 84px) auto no-repeat;
+    mask: url('../public/assets/mazad-mark.png') center / clamp(32px, 26%, 84px) auto no-repeat;
+  }
+  .media:has(img:not(.is-loaded))::after {
+    content: ''; @apply absolute inset-0 -z-10;
+    background: linear-gradient(100deg, transparent 25%, rgb(255 255 255 / .6) 50%, transparent 75%);
+    animation: media-shimmer 1.5s ease-in-out infinite;
+  }
   .media img { @apply absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300; }
   .media img.is-loaded { @apply opacity-100; }
+  @keyframes media-shimmer { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+  @media (prefers-reduced-motion: reduce) { .media:has(img:not(.is-loaded))::after { animation: none; opacity: 0; } }
 
   .brand-pill { @apply flex items-center gap-1.5 rounded-full bg-white py-0.5 pe-2 ps-1 text-xs font-semibold text-ink; }
   .brand-pill img { @apply h-4 w-4 rounded; }
