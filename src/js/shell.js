@@ -8,11 +8,132 @@ const userIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-
 
 const bellIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 2 6 2 6H4s2-1.5 2-6Z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></svg>';
 
-function bellLink() {
+/* ---------- notifications dropdown ---------- */
+
+const NOTIF_ICONS = {
+  warn: '<path d="M12 7v6M12 17h.01"/>',
+  good: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  info: '<path d="M6 10a6 6 0 0 1 12 0c0 4.5 2 6 2 6H4s2-1.5 2-6Z"/><path d="M10 19.5a2 2 0 0 0 4 0"/>',
+};
+const NOTIF_TONES = { warn: 'bg-accent-soft text-accent-ink', good: 'bg-primary-soft text-primary', info: 'bg-mist text-ink-body' };
+const notifTimeFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { hour: 'numeric', minute: '2-digit' });
+const notifDayFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { weekday: 'long', day: 'numeric', month: 'long' });
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escText = (v) => String(v).replace(/[&<>"']/g, (c) => ESC[c]);
+let notifFilter = 'all';
+
+function notifAgo(at) {
+  const m = Math.max(0, Math.round((Date.now() - at) / 60000));
+  if (m < 1) return 'الآن';
+  if (m < 60) return m === 1 ? 'قبل دقيقة' : m === 2 ? 'قبل دقيقتين' : m <= 10 ? `قبل ${m} دقائق` : `قبل ${m} دقيقة`;
+  return notifTimeFmt.format(new Date(at));
+}
+
+function notifDay(at) {
+  const day = new Date(at); day.setHours(0, 0, 0, 0);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((today - day) / 86400000);
+  return diff === 0 ? 'اليوم' : diff === 1 ? 'أمس' : notifDayFmt.format(new Date(at));
+}
+
+function notifRow(n, read) {
+  return `
+    <li>
+      <a href="${n.href}" data-notif="${escText(n.id)}" class="flex items-start gap-3 px-4 py-3 text-ink hover:bg-sand hover:text-ink ${read ? '' : 'bg-primary-soft/50'}">
+        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full ${NOTIF_TONES[n.tone]}"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${NOTIF_ICONS[n.tone]}</svg></span>
+        <span class="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span class="flex items-baseline justify-between gap-3">
+            <span class="flex items-center gap-1.5 text-sm ${read ? 'font-medium' : 'font-bold'}">${read ? '' : '<span class="h-2 w-2 shrink-0 rounded-full bg-accent-strong" role="img" aria-label="غير مقروء"></span>'}${escText(n.title)}</span>
+            <span class="shrink-0 text-[11px] text-ink-muted">${notifAgo(n.at)}</span>
+          </span>
+          <span class="truncate text-[13px] text-ink-body">${escText(n.text)}</span>
+        </span>
+      </a>
+    </li>`;
+}
+
+function unreadCount() {
   const read = loadReadNotifications();
-  const unread = buildNotifications().filter((n) => !read.has(n.id)).length;
-  return `<a href="notifications.html" class="relative flex items-center rounded-full px-2 py-2.5 text-ink hover:text-primary sm:px-2.5" aria-label="الإشعارات، ${unread} غير مقروءة">
-    ${bellIcon}<span data-notif-count ${unread ? '' : 'hidden'} class="absolute -end-0.5 top-0.5 min-w-[18px] rounded-full bg-accent-strong ring-2 ring-white px-1 text-center text-[10px] font-bold leading-[18px] text-white tabular">${unread}</span></a>`;
+  return buildNotifications().filter((n) => !read.has(n.id)).length;
+}
+
+function panelHTML() {
+  const read = loadReadNotifications();
+  const all = buildNotifications();
+  const unread = all.filter((n) => !read.has(n.id)).length;
+  const list = notifFilter === 'unread' ? all.filter((n) => !read.has(n.id)) : all;
+  const groups = new Map();
+  list.forEach((n) => { const g = notifDay(n.at); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(n); });
+  const tab = (id, label) => `<button type="button" data-notif-filter="${id}" aria-pressed="${notifFilter === id}" class="rounded-full px-3 py-1 text-xs font-semibold transition-colors ${notifFilter === id ? 'bg-primary text-white' : 'text-ink-body hover:bg-sand'}">${label}</button>`;
+  return `
+    <div class="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-3">
+      <h2 id="notif-title" tabindex="-1" class="m-0 text-base font-bold">الإشعارات</h2>
+      ${unread ? '<button type="button" data-notif-readall class="text-xs font-semibold text-primary hover:text-primary-dark">تعليم الكل كمقروء</button>' : ''}
+    </div>
+    <div class="flex gap-1 px-3 pt-2.5" role="group" aria-label="عرض">${tab('all', 'الكل')}${tab('unread', `غير المقروءة${unread ? ` <span class="tabular">${unread}</span>` : ''}`)}</div>
+    <div class="max-h-[min(60vh,460px)] overflow-y-auto overscroll-contain pb-1">
+      ${list.length ? [...groups].map(([label, items]) => `
+        <p class="m-0 px-4 pb-1 pt-3 text-xs font-semibold text-ink-muted">${escText(label)}</p>
+        <ul class="m-0 list-none p-0">${items.map((n) => notifRow(n, read.has(n.id))).join('')}</ul>`).join('')
+        : '<p class="m-0 px-4 py-10 text-center text-sm text-ink-body">لا توجد إشعارات غير مقروءة.</p>'}
+    </div>
+    <a href="account.html#settings" class="block border-t border-line-soft px-4 py-3 text-center text-sm font-semibold">إعدادات الإشعارات</a>`;
+}
+
+function bellLink() {
+  const unread = unreadCount();
+  return `
+    <div class="relative">
+      <button type="button" id="bell" aria-expanded="false" aria-controls="notif-panel" aria-haspopup="dialog" aria-label="الإشعارات، ${unread} غير مقروءة"
+        class="relative flex items-center rounded-full px-2 py-2.5 text-ink hover:text-primary aria-expanded:text-primary sm:px-2.5">
+        ${bellIcon}<span data-notif-count ${unread ? '' : 'hidden'} class="absolute -end-0.5 top-0.5 min-w-[18px] rounded-full bg-accent-strong px-1 text-center text-[10px] font-bold leading-[18px] text-white ring-2 ring-white tabular">${unread}</span>
+      </button>
+      <div id="notif-panel" role="dialog" aria-labelledby="notif-title"
+        class="absolute end-0 top-full z-40 mt-2 hidden w-[380px] flex-col overflow-hidden rounded-card border border-line bg-white text-start shadow-card max-sm:fixed max-sm:inset-x-3 max-sm:mt-0 max-sm:w-auto"></div>
+    </div>`;
+}
+
+function setPanelOpen(open) {
+  const panel = document.getElementById('notif-panel');
+  const bell = document.getElementById('bell');
+  if (!panel || !bell) return;
+  if (open) { notifFilter = 'all'; panel.innerHTML = panelHTML(); }
+  panel.classList.toggle('hidden', !open);
+  panel.classList.toggle('flex', open);
+  bell.setAttribute('aria-expanded', String(open));
+  // On phones the panel is fixed to the screen: open it just under the bell.
+  panel.style.top = open && window.matchMedia('(max-width: 639px)').matches ? `${Math.round(bell.getBoundingClientRect().bottom + 8)}px` : '';
+  if (open) document.getElementById('notif-title')?.focus();
+}
+
+function refreshPanel() {
+  const panel = document.getElementById('notif-panel');
+  if (panel && !panel.classList.contains('hidden')) panel.innerHTML = panelHTML();
+  const unread = unreadCount();
+  document.querySelectorAll('[data-notif-count]').forEach((el) => { el.textContent = unread; el.hidden = !unread; });
+  document.getElementById('bell')?.setAttribute('aria-label', `الإشعارات، ${unread} غير مقروءة`);
+}
+
+let notifWired = false;
+function wireNotifications() {
+  if (notifWired) return;
+  notifWired = true;
+  document.addEventListener('click', (event) => {
+    const t = event.target;
+    const panel = document.getElementById('notif-panel');
+    if (t.closest('#bell')) { setPanelOpen(panel.classList.contains('hidden')); return; }
+    if (!panel || panel.classList.contains('hidden')) return;
+    const filter = t.closest('[data-notif-filter]');
+    if (filter) { notifFilter = filter.dataset.notifFilter; refreshPanel(); panel.querySelector(`[data-notif-filter="${notifFilter}"]`)?.focus(); return; }
+    if (t.closest('[data-notif-readall]')) { markNotificationsRead(buildNotifications().map((n) => n.id)); document.getElementById('notif-title')?.focus(); return; }
+    const row = t.closest('[data-notif]');
+    if (row) { markNotificationsRead([row.dataset.notif]); return; }
+    if (!t.closest('#notif-panel')) setPanelOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    const panel = document.getElementById('notif-panel');
+    if (event.key === 'Escape' && panel && !panel.classList.contains('hidden')) { setPanelOpen(false); document.getElementById('bell')?.focus(); }
+  });
 }
 
 const topHTML = (user) => `
@@ -199,8 +320,7 @@ export function buildNotifications(now = Date.now()) {
 export const loadReadNotifications = () => new Set(readStore('mz-notif-read', []));
 export function markNotificationsRead(ids) {
   writeStore('mz-notif-read', [...new Set([...loadReadNotifications(), ...ids])]);
-  const unread = buildNotifications().filter((n) => !loadReadNotifications().has(n.id)).length;
-  document.querySelectorAll('[data-notif-count]').forEach((el) => { el.textContent = unread; el.hidden = !unread; });
+  refreshPanel();
 }
 
 /* ---------- sign-in state ---------- */
@@ -254,4 +374,5 @@ export function renderShell() {
   document.getElementById('site-top').innerHTML = topHTML(getUser());
   document.getElementById('site-footer').innerHTML = footerHTML;
   wireLogoFallbacks();
+  wireNotifications();
 }
