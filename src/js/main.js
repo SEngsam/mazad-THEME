@@ -1,0 +1,169 @@
+import * as data from './data.js';
+import {
+  AdBanner, CategoryTile, FeaturedCard, LotCard, Media, PickCard, SortTab, SponsoredCard, TrustItem,
+  formatCountdown,
+} from './components.js';
+
+const PAGE_SIZE = 8;
+const SPONSORED_SLOT = 3;
+
+const state = {
+  cat: 0,
+  tab: 0,
+  query: '',
+  expanded: false,
+  showAds: document.documentElement.dataset.ads !== 'off',
+  watch: new Set(data.initialWatchlist),
+  startedAt: Date.now(),
+};
+
+const $ = (sel) => document.querySelector(sel);
+const elapsed = () => Math.floor((Date.now() - state.startedAt) / 1000);
+const remainingFor = (lot) => lot.endsIn - elapsed();
+
+function visibleLots() {
+  const q = state.query.trim();
+  let pool = data.lots.filter((lot) => state.cat === 0 || lot.cat === state.cat);
+  if (q) pool = pool.filter((lot) => [lot.name, lot.sub, lot.city, data.categories[lot.cat]].some((s) => s.includes(q)));
+  if (state.tab === 0) pool = [...pool].sort((a, b) => a.endsIn - b.endsIn);
+  if (state.tab === 1) pool = [...pool].reverse();
+  if (state.tab === 2) pool = [...pool].sort((a, b) => a.bid - b.bid);
+  if (state.tab === 3) pool = pool.filter((lot) => lot.noReserve);
+  return pool;
+}
+
+function renderNav() {
+  $('#cat-nav').innerHTML = data.categories
+    .map((label, i) => {
+      const active = i === state.cat;
+      return `<button type="button" data-cat="${i}" aria-pressed="${active}" class="shrink-0 whitespace-nowrap border-b-[2.5px] px-3.5 pb-3 pt-2.5 text-sm transition-colors ${active ? 'border-primary font-semibold text-ink' : 'border-transparent text-ink-body hover:text-ink'}">${label}</button>`;
+    })
+    .join('');
+}
+
+function renderCategories() {
+  $('#category-grid').innerHTML = data.categoryTiles
+    .map((tile) => CategoryTile({ ...tile, label: data.categories[tile.cat], active: tile.cat === state.cat }))
+    .join('');
+}
+
+function renderLots() {
+  const pool = visibleLots();
+  const shown = state.expanded ? pool : pool.slice(0, PAGE_SIZE);
+  const cards = shown.map((lot) => LotCard(lot, { remaining: remainingFor(lot), watched: state.watch.has(lot.id) }));
+  if (state.showAds && cards.length > SPONSORED_SLOT) cards.splice(SPONSORED_SLOT, 0, SponsoredCard(data.sponsoredLot));
+
+  $('#live-title').textContent = state.query
+    ? `نتائج «${state.query}»`
+    : `مزادات ${state.cat === 0 ? 'مباشرة' : data.categories[state.cat]}`;
+  $('#live-count').textContent = `· ${pool.length} مزاد`;
+  $('#sort-tabs').innerHTML = data.sortTabs.map((label, i) => SortTab({ index: i, label, active: i === state.tab })).join('');
+  $('#lot-grid').innerHTML = cards.length
+    ? cards.join('')
+    : '<p class="col-span-full m-0 rounded-card border border-dashed border-line bg-white p-8 text-center text-sm text-ink-body">لا توجد مزادات مطابقة حالياً.</p>';
+
+  const more = $('#show-more');
+  more.hidden = pool.length <= PAGE_SIZE;
+  more.textContent = state.expanded ? 'عرض أقل' : 'عرض المزيد';
+  more.setAttribute('aria-expanded', String(state.expanded));
+}
+
+function renderWatchCount() {
+  const n = state.watch.size;
+  document.querySelectorAll('[data-watch-count]').forEach((el) => { el.textContent = n; });
+  $('#watch-link').setAttribute('aria-label', `المفضلة، ${n} عناصر`);
+}
+
+function renderStatic() {
+  $('#featured').innerHTML = data.featured.map(FeaturedCard).join('');
+  $('#picks').innerHTML = data.picks.map(PickCard).join('');
+  $('#trust').innerHTML = data.trust.map(TrustItem).join('');
+  $('#sell-media').innerHTML = Media({ src: data.ads.sell, label: 'صورة · بيع معنا', className: 'absolute inset-0' });
+
+  document.querySelectorAll('[data-ad-slot]').forEach((el) => { el.hidden = !state.showAds; });
+  if (state.showAds) {
+    $('#ad-leaderboard').innerHTML = AdBanner({ src: data.ads.leaderboard, label: 'إعلان · 1200×110', className: 'h-full overflow-hidden rounded-[14px]' });
+    $('#ad-mid').innerHTML = data.ads.mid
+      .map((src) => AdBanner({ src, className: 'aspect-[16/5] overflow-hidden rounded-2xl' }))
+      .join('');
+  }
+}
+
+function renderDynamic() {
+  renderNav();
+  renderCategories();
+  renderLots();
+  renderWatchCount();
+}
+
+function tick() {
+  const byId = new Map(data.lots.map((lot) => [String(lot.id), lot]));
+  document.querySelectorAll('[data-timer]').forEach((el) => {
+    const left = remainingFor(byId.get(el.dataset.timer));
+    el.lastElementChild.textContent = formatCountdown(left);
+    el.classList.toggle('text-timer', left < 3600);
+    el.classList.toggle('text-white', left >= 3600);
+  });
+}
+
+function selectCategory(cat, { scroll } = {}) {
+  state.cat = cat;
+  state.expanded = false;
+  renderDynamic();
+  if (scroll) $('#live').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.addEventListener('click', (event) => {
+  const catBtn = event.target.closest('[data-cat]');
+  if (catBtn) return selectCategory(Number(catBtn.dataset.cat), { scroll: catBtn.closest('#category-grid') !== null });
+
+  const tabBtn = event.target.closest('[data-tab]');
+  if (tabBtn) {
+    state.tab = Number(tabBtn.dataset.tab);
+    return renderLots();
+  }
+
+  const watchBtn = event.target.closest('[data-watch]');
+  if (watchBtn) {
+    const id = Number(watchBtn.dataset.watch);
+    state.watch.has(id) ? state.watch.delete(id) : state.watch.add(id);
+    renderLots();
+    renderWatchCount();
+    document.querySelector(`[data-watch="${id}"]`)?.focus();
+  }
+});
+
+$('#show-more').addEventListener('click', () => {
+  state.expanded = !state.expanded;
+  renderLots();
+});
+
+$('#search-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  state.query = new FormData(event.currentTarget).get('q').toString();
+  state.expanded = false;
+  renderLots();
+  $('#live').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+$('#search-form').addEventListener('input', (event) => {
+  if (event.target.value === '' && state.query) {
+    state.query = '';
+    renderLots();
+  }
+});
+
+document.addEventListener('load', (event) => {
+  if (event.target.matches?.('img[data-media]')) event.target.classList.add('is-loaded');
+}, true);
+document.addEventListener('error', (event) => {
+  if (event.target.matches?.('img[data-media], img[data-logo]')) event.target.remove();
+}, true);
+
+document.querySelectorAll('img[data-logo]').forEach((img) => {
+  if (img.complete && img.naturalWidth === 0) img.remove();
+});
+
+renderStatic();
+renderDynamic();
+setInterval(tick, 1000);

@@ -1,0 +1,74 @@
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 300; font-display: swap; src: url('../public/fonts/readex-pro-arabic-300-normal.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 400; font-display: swap; src: url('../public/fonts/readex-pro-arabic-400-normal.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 500; font-display: swap; src: url('../public/fonts/readex-pro-arabic-500-normal.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 600; font-display: swap; src: url('../public/fonts/readex-pro-arabic-600-normal.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 700; font-display: swap; src: url('../public/fonts/readex-pro-arabic-700-normal.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 300; font-display: swap; src: url('../public/fonts/readex-pro-latin-300-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 400; font-display: swap; src: url('../public/fonts/readex-pro-latin-400-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 500; font-display: swap; src: url('../public/fonts/readex-pro-latin-500-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 600; font-display: swap; src: url('../public/fonts/readex-pro-latin-600-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Readex Pro'; font-style: normal; font-weight: 700; font-display: swap; src: url('../public/fonts/readex-pro-latin-700-normal.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Brand palette (RGB channels). Swap these to re-theme the page. */
+  :root {
+    --forest: 6 46 34;
+    --primary: 0 108 53;
+    --primary-dark: 0 85 42;
+    --primary-soft: 232 243 236;
+    --accent: 255 90 54;
+    --accent-strong: 217 58 22;
+    --accent-soft: 255 230 223;
+    --accent-ink: 194 57 27;
+    --lime: 198 244 50;
+    --timer: 255 138 101;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-sand font-sans text-ink antialiased; }
+  a { @apply text-primary transition-colors hover:text-primary-dark; }
+  button { @apply cursor-pointer; }
+
+  :focus-visible { @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white; }
+  .on-dark :focus-visible { @apply ring-lime ring-offset-forest; }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-page px-4 sm:px-6 lg:px-7; }
+
+  .section-head { @apply flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1; }
+  .section-title { @apply m-0 text-xl font-bold sm:text-[22px]; }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-colors; }
+  .btn-primary { @apply btn bg-primary text-white hover:bg-primary-dark hover:text-white; }
+  .btn-outline { @apply btn border-[1.5px] border-ink bg-white text-ink hover:bg-sand hover:text-ink; }
+  .btn-lime { @apply btn bg-lime font-bold text-forest hover:bg-[#D6FA62] hover:text-forest; }
+  .btn-ghost-dark { @apply btn border-[1.5px] border-white/60 font-medium text-white hover:bg-white/10 hover:text-white; }
+
+  .chip { @apply inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold; }
+  .chip-ad { @apply chip pointer-events-none bg-white text-ink-muted; }
+
+  .card { @apply rounded-card border border-line bg-white shadow-card; }
+
+  /* Image frame: shows a labelled striped placeholder until (or unless) the photo loads. */
+  .media { @apply relative isolate overflow-hidden bg-mist; background-image: repeating-linear-gradient(135deg, #E1E7E4 0 10px, #E6EBE8 10px 20px); }
+  .media-label { @apply absolute inset-0 -z-10 grid place-items-center p-2 text-center text-xs font-medium text-ink-muted; }
+  .media-label-top { @apply place-items-start pt-3; }
+  .media img { @apply absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300; }
+  .media img.is-loaded { @apply opacity-100; }
+
+  .brand-pill { @apply flex items-center gap-1.5 rounded-full bg-white py-0.5 pe-2 ps-1 text-xs font-semibold text-ink; }
+  .brand-pill img { @apply h-4 w-4 rounded; }
+
+  /* Payment method badge: text label shows through if the logo fails to load. */
+  .pay-badge { @apply relative grid h-9 w-16 place-items-center overflow-hidden rounded-md border border-line bg-white text-[11px] font-semibold text-ink-body; }
+  .pay-badge img { @apply absolute inset-0 h-full w-full bg-white object-contain px-2 py-1.5; }
+
+  .scroll-row { @apply flex overflow-x-auto overscroll-x-contain; scrollbar-width: thin; }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-ads="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مزاد · مزادات السيارات والمقتنيات في المملكة</title>
+  <meta name="description" content="زايد على السيارات والساعات والجوالات والمجوهرات واللوحات المميزة في مزادات موثّقة داخل المملكة.">
+  <meta name="theme-color" content="#062E22">
+  <link rel="preload" href="public/fonts/readex-pro-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="dist/styles.css">
+  <script type="module" src="src/js/main.js"></script>
+</head>
+<body>
+  <a href="#main" class="sr-only z-50 rounded-full bg-white px-4 py-2 font-semibold focus:not-sr-only focus:fixed focus:start-4 focus:top-4">تخطَّ إلى المحتوى</a>
+
+  <div class="flex min-h-screen flex-col">
+    <!-- Live announcement bar -->
+    <div class="on-dark bg-forest text-[13px] text-white">
+      <div class="container-page flex items-center justify-between gap-3 py-[9px]">
+        <p class="m-0 min-w-0 truncate">
+          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b>مزاد سيارات ساحة الشمال الليلة 8:00م · 42 سيارة
+        </p>
+        <div class="flex shrink-0 items-center gap-2 whitespace-nowrap">
+          <span class="hidden opacity-85 sm:inline">قسّط مع</span>
+          <span class="brand-pill">
+            <img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=64" alt="" width="16" height="16">تابي
+          </span>
+          <span class="brand-pill">
+            <img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=64" alt="" width="16" height="16">تمارا
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <header class="sticky top-0 z-20 border-b border-line bg-white shadow-header">
+      <div class="container-page flex flex-wrap items-center gap-x-2 gap-y-3 sm:gap-x-3 py-3 lg:flex-nowrap lg:gap-6 lg:py-3.5">
+        <a href="#" class="shrink-0" aria-label="مزاد — الرئيسية">
+          <img src="public/assets/mazad-logo.png" alt="مزاد" width="480" height="149" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
+        </a>
+
+        <form id="search-form" role="search" class="order-last flex w-full items-center rounded-full bg-mist p-1 focus-within:ring-2 focus-within:ring-primary lg:order-none lg:w-auto lg:min-w-[260px] lg:flex-1">
+          <label for="q" class="sr-only">ابحث في المزادات</label>
+          <input id="q" name="q" type="search" autocomplete="off" placeholder="ابحث عن سيارة، ساعة، جوال، أو رقم لوت"
+            class="min-w-0 flex-1 border-0 bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus-visible:ring-0 sm:px-[18px]">
+          <button type="submit" class="btn-primary px-5 py-2.5 text-sm sm:px-[22px]">بحث</button>
+        </form>
+
+        <nav aria-label="الحساب" class="ms-auto flex shrink-0 items-center gap-0.5 text-sm sm:gap-1.5">
+          <a id="watch-link" href="#" class="flex items-center gap-1 rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:gap-1.5 sm:px-3.5">
+            <span class="sm:hidden"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.1 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.7 3.6 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z"/></svg></span>
+            <span class="hidden whitespace-nowrap sm:inline">المفضلة</span>
+            <span data-watch-count class="tabular rounded-full bg-accent-soft px-[7px] py-0.5 text-[11px] font-semibold text-accent-ink">2</span>
+          </a>
+          <a href="#" class="flex items-center rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:px-3.5" aria-label="تسجيل الدخول">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px] sm:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>
+            <span class="hidden whitespace-nowrap sm:inline">تسجيل الدخول</span>
+          </a>
+          <a href="#sell" class="btn-outline px-3 py-2 text-[13px] sm:px-[18px] sm:py-2.5 sm:text-sm">بِع معنا</a>
+        </nav>
+      </div>
+
+      <nav aria-label="الفئات" class="container-page">
+        <div id="cat-nav" class="scroll-row -mx-1 gap-0.5 px-1"></div>
+      </nav>
+    </header>
+
+    <div data-ad-slot class="container-page pt-4">
+      <div id="ad-leaderboard" class="h-20 sm:h-[110px]"></div>
+    </div>
+
+    <main id="main" class="container-page flex flex-col gap-10 pb-16 pt-5 sm:gap-11">
+      <section aria-label="مزادات مميزة" class="on-dark rounded-[22px] bg-forest p-3 sm:rounded-hero sm:p-4">
+        <div id="featured" class="flex flex-col gap-3 sm:gap-4 md:flex-row"></div>
+      </section>
+
+      <section aria-labelledby="cats-title" class="flex flex-col gap-4">
+        <div class="section-head">
+          <h2 id="cats-title" class="section-title">تصفّح الفئات</h2>
+          <a href="#" class="text-sm font-semibold">كل الفئات</a>
+        </div>
+        <div id="category-grid" class="grid grid-cols-4 gap-x-2.5 gap-y-4 sm:gap-3.5 xl:grid-cols-8"></div>
+      </section>
+
+      <section id="live" aria-labelledby="live-title" class="flex scroll-mt-40 flex-col gap-[18px]">
+        <div class="flex flex-wrap items-center justify-between gap-3.5">
+          <h2 class="section-title"><span id="live-title">مزادات مباشرة</span> <span id="live-count" class="text-[15px] font-normal text-ink-muted"></span></h2>
+          <div id="sort-tabs" class="scroll-row -m-0.5 max-w-full gap-2 p-0.5" role="group" aria-label="ترتيب المزادات"></div>
+        </div>
+        <div id="lot-grid" class="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-7 xl:grid-cols-4" aria-live="polite"></div>
+        <button id="show-more" type="button" class="btn-outline self-center px-7 py-3 text-sm">عرض المزيد</button>
+      </section>
+
+      <section data-ad-slot aria-label="إعلانات" id="ad-mid" class="grid grid-cols-1 gap-4 lg:grid-cols-2"></section>
+
+      <section aria-labelledby="picks-title" class="flex flex-col gap-4">
+        <div class="section-head">
+          <h2 id="picks-title" class="section-title">اختيارات الأسبوع</h2>
+          <span class="whitespace-nowrap text-[13px] text-ink-muted">منتقاة من فريق الخبراء</span>
+        </div>
+        <div id="picks" class="scroll-row -mx-4 snap-x snap-mandatory scroll-px-4 gap-4 px-4 pb-1.5 sm:mx-0 sm:px-0 sm:scroll-px-0"></div>
+      </section>
+
+      <section aria-label="لماذا مزاد" id="trust" class="grid grid-cols-1 gap-px overflow-hidden rounded-card border border-line bg-line-soft sm:grid-cols-2 lg:grid-cols-4"></section>
+
+      <section id="sell" aria-labelledby="sell-title" class="on-dark grid scroll-mt-40 grid-cols-1 overflow-hidden rounded-[22px] bg-forest text-white lg:grid-cols-2">
+        <div class="flex flex-col justify-center gap-4 p-6 sm:p-10">
+          <h2 id="sell-title" class="m-0 text-2xl font-bold leading-[1.4] sm:text-[30px]">بيع سيارتك أو مقتنياتك لآلاف المزايدين في المملكة</h2>
+          <p class="m-0 text-[15px] leading-[1.8] text-white/85">أضف منتجك، حدد سعر الافتتاح، وسنراجعه وننشره في المزاد خلال 48 ساعة.</p>
+          <div class="flex flex-wrap gap-2.5">
+            <a href="#" class="btn-lime px-6 py-[13px] text-[15px]">ابدأ البيع</a>
+            <a href="#" class="btn-ghost-dark px-6 py-[13px] text-[15px]">كيف يعمل؟</a>
+          </div>
+        </div>
+        <div id="sell-media" class="relative min-h-[220px] sm:min-h-[280px]"></div>
+      </section>
+    </main>
+
+    <footer class="mt-auto border-t border-line-soft bg-primary-soft">
+      <div class="container-page grid grid-cols-2 gap-7 pb-6 pt-10 text-sm sm:grid-cols-3 lg:grid-cols-4">
+        <div class="col-span-2 flex flex-col gap-2.5 sm:col-span-3 lg:col-span-1">
+          <img src="public/assets/mazad-logo.png" alt="مزاد" width="480" height="149" class="block h-11 w-auto self-start">
+          <p class="m-0 text-[13px] leading-[1.8] text-ink-muted">سجل تجاري 1010XXXXXX<br>موثّق في المركز السعودي للأعمال</p>
+          <div class="flex flex-wrap gap-2">
+            <a href="#" class="whitespace-nowrap rounded-[10px] bg-ink px-3.5 py-2 text-xs text-white hover:bg-black hover:text-white">App Store</a>
+            <a href="#" class="whitespace-nowrap rounded-[10px] bg-ink px-3.5 py-2 text-xs text-white hover:bg-black hover:text-white">Google Play</a>
+          </div>
+        </div>
+        <nav aria-labelledby="f-bidders" class="flex flex-col gap-2.5">
+          <h2 id="f-bidders" class="m-0 text-sm font-semibold">المزايدون</h2>
+          <a href="#" class="text-ink-body">كيف أزايد</a>
+          <a href="#" class="text-ink-body">الرسوم</a>
+          <a href="#" class="text-ink-body">حماية المشتري</a>
+        </nav>
+        <nav aria-labelledby="f-sellers" class="flex flex-col gap-2.5">
+          <h2 id="f-sellers" class="m-0 text-sm font-semibold">البائعون</h2>
+          <a href="#sell" class="text-ink-body">ابدأ البيع</a>
+          <a href="#" class="text-ink-body">لوحة البائع</a>
+          <a href="#" class="text-ink-body">أعلن معنا</a>
+        </nav>
+        <div class="flex flex-col gap-2.5">
+          <h2 class="m-0 text-sm font-semibold">تواصل</h2>
+          <a href="tel:920012345" class="tabular text-ink-body">920012345</a>
+          <a href="#" class="text-ink-body">مركز المساعدة</a>
+        </div>
+      </div>
+      <div class="container-page flex flex-wrap items-center justify-between gap-3 border-t border-[#E5E7EB] pb-7 pt-4 text-xs text-ink-muted">
+        <span>© 2026 مَزاد · جميع الحقوق محفوظة</span>
+        <ul class="m-0 flex list-none flex-wrap items-center gap-2 p-0" aria-label="وسائل الدفع">
+          <li class="pay-badge">مدى<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Mada_Logo.svg" alt="مدى"></li>
+          <li class="pay-badge">Apple Pay<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Apple_Pay_logo.svg" alt="Apple Pay"></li>
+          <li class="pay-badge">فيزا<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Visa_Inc._logo.svg" alt="فيزا"></li>
+          <li class="pay-badge">تابي<img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=128" alt="تابي"></li>
+          <li class="pay-badge">تمارا<img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=128" alt="تمارا"></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
