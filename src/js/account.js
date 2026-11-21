@@ -1,7 +1,8 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatCountdown, formatNumber, formatPrice } from './components.js';
 import {
-  catHref, catNavHTML, clearUser, getUser, loadBids, loadListings, loadOrders, loadWatch, loginHref, renderShell, saveWatch, setUser,
+  catHref, catNavHTML, clearUser, getUser, loadBids, loadEventRegs, loadListings, loadOrders, loadWalletTx, loadWatch, loginHref, renderShell,
+  saveWalletTx, saveWatch, setUser,
 } from './shell.js';
 
 renderShell();
@@ -15,6 +16,7 @@ const TABS = [
   ['watch', 'المفضلة'],
   ['selling', 'منتجاتي'],
   ['won', 'مشترياتي'],
+  ['wallet', 'المحفظة'],
   ['settings', 'الإعدادات'],
 ];
 
@@ -32,6 +34,7 @@ const state = {
   tab: TABS.some(([id]) => `#${id}` === location.hash) ? location.hash.slice(1) : 'bids',
   watch: loadWatch(),
   notify: { outbid: true, ending: true, news: false },
+  walletForm: null, // 'topup' | 'withdraw'
 };
 
 /* ---------- small parts ---------- */
@@ -41,6 +44,7 @@ const icons = {
   watch: '<path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.1 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.7 3.6 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z"/>',
   selling: '<path d="M3.5 12.5 11 5h8v8l-7.5 7.5a1.4 1.4 0 0 1-2 0l-6-6a1.4 1.4 0 0 1 0-2Z"/><circle cx="15" cy="9" r="1.5"/>',
   won: '<path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M16 14.5h2"/><path d="M6 6V5a1.5 1.5 0 0 1 1.5-1.5h10"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/>',
 };
 const icon = (name, size = 'h-[18px] w-[18px]') => `<svg aria-hidden="true" viewBox="0 0 24 24" class="${size} shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[name]}</svg>`;
@@ -179,6 +183,140 @@ function wonTab() {
   }).join('')}</ul>`;
 }
 
+/* ---------- wallet ---------- */
+
+/** Wallet history before the visitor's own movements (prototype examples), newest first. */
+const DEMO_TX = [
+  { ref: 'WT-30418', title: 'استرداد تأمين · مزاد اللوحات المميزة', amount: 2000, status: 'pending', date: '20 نوفمبر 2026' },
+  { ref: 'WT-30377', title: 'سحب إلى الحساب البنكي', amount: -2000, status: 'done', date: '19 نوفمبر 2026' },
+  { ref: 'WT-30352', title: 'صافي بيع · ساعة سيكو بريساج 2019', amount: 2755, status: 'done', date: '18 نوفمبر 2026' },
+  { ref: 'WT-30219', title: 'استرداد تأمين · تاغ هوير كاريرا', amount: 500, status: 'done', date: '14 نوفمبر 2026' },
+  { ref: 'WT-30160', title: 'تأمين مخصوم من قيمة الشراء · دلة نحاسية قديمة', amount: -500, status: 'done', date: '12 نوفمبر 2026' },
+  { ref: 'WT-30044', title: 'شحن الرصيد · Apple Pay', amount: 3000, status: 'done', date: '8 نوفمبر 2026' },
+];
+const IBAN = '<b dir="ltr" class="font-semibold text-ink tabular">SA•• •••• 4821</b> · مصرف الراجحي';
+const txDate = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
+const depositFor = (bid) => Math.min(5000, Math.max(500, Math.round((bid * 0.05) / 100) * 100));
+
+function walletTx() {
+  const own = loadWalletTx().map((t) => ({
+    ref: t.ref,
+    title: t.kind === 'topup' ? `شحن الرصيد · ${t.method}` : 'سحب إلى الحساب البنكي',
+    amount: t.kind === 'topup' ? t.amount : -t.amount,
+    status: t.status,
+    date: txDate.format(new Date(t.at)),
+  }));
+  return [...own, ...DEMO_TX];
+}
+
+/** Completed movements plus pending withdrawals (taken out of the balance as soon as they are requested). */
+const available = () => walletTx().reduce((sum, t) => sum + (t.status === 'done' || t.amount < 0 ? t.amount : 0), 0);
+
+function heldDeposits() {
+  const events = Object.keys(loadEventRegs()).filter((id) => data.events[id])
+    .map((id) => ({ title: data.events[id].title, note: 'تسجيل في مزاد', amount: data.events[id].deposit, href: `event.html?e=${id}` }));
+  const bids = myBids().map((b) => {
+    const lot = lotById(b.id);
+    return { title: lot.name, note: 'مزايدة مفتوحة', amount: depositFor(b.amount), href: `lot.html?id=${lot.id}` };
+  });
+  return [...events, ...bids];
+}
+
+function walletForm() {
+  const topup = state.walletForm === 'topup';
+  const max = available();
+  const quick = topup ? [500, 1000, 5000] : [...new Set([500, 1000, max])].filter((v) => v > 0 && v <= max);
+  return `
+    <form id="wallet-form" novalidate class="card flex flex-col gap-4 p-5 sm:p-6" aria-labelledby="wallet-form-title">
+      <div class="flex items-center justify-between gap-3">
+        <h3 id="wallet-form-title" class="m-0 text-base font-bold">${topup ? 'شحن الرصيد' : 'سحب إلى الحساب البنكي'}</h3>
+        <button type="button" data-wallet-close class="text-sm font-semibold text-ink-body hover:text-ink">إلغاء</button>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="wallet-amount" class="text-sm font-semibold">المبلغ</label>
+        <div class="flex items-center gap-2 rounded-full bg-mist px-5 focus-within:ring-2 focus-within:ring-primary">
+          <input id="wallet-amount" inputmode="numeric" autocomplete="off" aria-describedby="wallet-help" placeholder="0"
+            class="min-w-0 flex-1 border-0 bg-transparent py-3 text-lg font-bold tabular text-ink focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
+          <span class="text-sm text-ink-muted">ر.س</span>
+        </div>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="مبالغ مقترحة">
+          ${quick.map((v) => `<button type="button" data-quick-amount="${v}" class="rounded-full border border-line bg-white px-4 py-1.5 text-[13px] font-semibold text-ink hover:border-ink/40 tabular">${!topup && v === max ? `الرصيد كاملاً (${formatNumber(v)})` : formatNumber(v)}</button>`).join('')}
+        </div>
+        <p id="wallet-help" class="m-0 text-xs text-ink-muted">${topup ? 'من 100 إلى 50,000 ر.س في العملية الواحدة.' : `المتاح للسحب ${formatPrice(max)}، ويصل خلال يومي عمل.`}</p>
+      </div>
+      ${topup ? `
+        <fieldset class="m-0 flex flex-col border-0 p-0">
+          <legend class="mb-2 text-sm font-semibold">طريقة الدفع</legend>
+          <div class="grid grid-cols-2 gap-2">
+            ${[['mada', 'مدى'], ['applepay', 'Apple Pay']].map(([v, l], i) => `
+              <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-3 text-sm font-semibold has-[:checked]:border-primary has-[:checked]:bg-primary-soft">
+                <input type="radio" name="method" value="${v}" ${i === 0 ? 'checked' : ''} class="accent-primary">${l}
+              </label>`).join('')}
+          </div>
+        </fieldset>`
+        : `<p class="m-0 rounded-xl bg-sand px-3.5 py-2.5 text-sm text-ink-body">إلى الحساب ${IBAN}</p>`}
+      <p id="wallet-error" class="m-0 hidden text-sm font-semibold text-accent-strong" role="alert"></p>
+      <button type="submit" class="btn-primary self-start px-7 py-3 text-sm">${topup ? 'شحن' : 'تأكيد السحب'}</button>
+    </form>`;
+}
+
+function walletTab() {
+  const held = heldDeposits();
+  const heldSum = held.reduce((sum, h) => sum + h.amount, 0);
+  const pendingIn = walletTx().filter((t) => t.status === 'pending' && t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
+  const tile = (label, value, note, strong = false) => `
+    <div class="flex flex-col gap-1 rounded-card p-4 sm:p-5 ${strong ? 'on-dark bg-forest text-white' : 'border border-line bg-white'}">
+      <span class="text-[13px] ${strong ? 'opacity-80' : 'text-ink-muted'}">${label}</span>
+      <b class="text-2xl font-bold tabular">${formatNumber(value)} <span class="text-sm font-semibold">ر.س</span></b>
+      <span class="text-xs ${strong ? 'opacity-75' : 'text-ink-muted'}">${note}</span>
+    </div>`;
+  const chip = (t) => (t.status === 'pending'
+    ? `<span class="whitespace-nowrap rounded-md bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent-ink">${t.amount < 0 ? 'قيد التحويل' : 'قيد الاسترداد'}</span>`
+    : '<span class="whitespace-nowrap rounded-md bg-mist px-2 py-0.5 text-[11px] font-semibold text-ink-body">مكتمل</span>');
+  return `
+    <div class="flex flex-col gap-5">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        ${tile('الرصيد المتاح', available(), 'للمزايدة والدفع والسحب', true)}
+        ${tile('تأمينات محجوزة', heldSum, held.length === 1 ? 'مزاد واحد' : held.length === 2 ? 'مزادان' : `${formatNumber(held.length)} مزادات`)}
+        ${tile('قيد الاسترداد', pendingIn, 'يصل خلال 3 أيام عمل')}
+      </div>
+      ${state.walletForm ? walletForm() : `
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-wallet-open="topup" class="btn-primary px-6 py-2.5 text-sm">شحن الرصيد</button>
+          <button type="button" data-wallet-open="withdraw" class="btn-outline px-6 py-2.5 text-sm">سحب إلى الحساب البنكي</button>
+        </div>`}
+
+      <section aria-labelledby="held-title" class="card overflow-hidden">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-line-soft px-5 py-3.5">
+          <h3 id="held-title" class="m-0 text-base font-bold">التأمينات المحجوزة</h3>
+          <span class="text-xs text-ink-muted">تُعاد كاملة إن لم تفز، أو تُخصم من قيمة الشراء</span>
+        </div>
+        ${held.length ? `<ul class="m-0 list-none p-0">${held.map((h) => `
+          <li class="flex items-center justify-between gap-3 border-b border-line-soft px-5 py-3 last:border-0">
+            <span class="flex min-w-0 flex-col gap-0.5"><a href="${h.href}" class="truncate text-sm font-semibold text-ink hover:text-primary">${esc(h.title)}</a><span class="text-xs text-ink-muted">${h.note}</span></span>
+            <b class="shrink-0 text-sm font-bold tabular">${formatPrice(h.amount)}</b>
+          </li>`).join('')}</ul>` : '<p class="m-0 px-5 py-6 text-center text-sm text-ink-body">لا توجد تأمينات محجوزة.</p>'}
+      </section>
+
+      <section aria-labelledby="tx-title" class="card overflow-hidden">
+        <h3 id="tx-title" class="m-0 border-b border-line-soft px-5 py-3.5 text-base font-bold">الحركات</h3>
+        <ul class="m-0 list-none p-0">${walletTx().map((t) => `
+          <li class="flex items-center justify-between gap-3 border-b border-line-soft px-5 py-3 last:border-0">
+            <span class="flex min-w-0 flex-col gap-1">
+              <span class="text-sm font-semibold">${esc(t.title)}</span>
+              <span class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-muted"><span>${esc(t.date)}</span><span dir="ltr" class="tabular">${esc(t.ref)}</span>${chip(t)}</span>
+            </span>
+            <b dir="ltr" class="shrink-0 text-sm font-bold tabular ${t.amount > 0 ? 'text-primary' : 'text-ink'}">${t.amount > 0 ? '+' : '−'}${formatNumber(Math.abs(t.amount))}</b>
+          </li>`).join('')}</ul>
+      </section>
+
+      <p class="m-0 flex flex-wrap items-center justify-between gap-2 text-sm text-ink-body">
+        <span>حساب السحب: ${IBAN}</span>
+        <a href="help.html#contact" class="font-semibold">تغيير الحساب</a>
+      </p>
+    </div>`;
+}
+
 function switchRow(id, title, text) {
   return `
     <label class="flex cursor-pointer items-start justify-between gap-4 border-b border-line-soft py-4 last:border-0">
@@ -268,7 +406,7 @@ function gateView() {
 
 function render() {
   if (!getUser()) { $('#account').innerHTML = gateView(); return; }
-  const views = { bids: bidsTab, watch: watchTab, selling: sellingTab, won: wonTab, settings: settingsTab };
+  const views = { bids: bidsTab, watch: watchTab, selling: sellingTab, won: wonTab, wallet: walletTab, settings: settingsTab };
   const label = TABS.find(([id]) => id === state.tab)[1];
   $('#account').innerHTML = `
     <div class="flex flex-col gap-6">
@@ -331,6 +469,11 @@ document.addEventListener('click', (event) => {
     toast('أزلناه من المفضلة');
     return;
   }
+  const open = t.closest('[data-wallet-open]');
+  if (open) { state.walletForm = open.dataset.walletOpen; render(); $('#wallet-amount')?.focus(); return; }
+  if (t.closest('[data-wallet-close]')) { state.walletForm = null; render(); $('[data-wallet-open]')?.focus(); return; }
+  const quick = t.closest('[data-quick-amount]');
+  if (quick) { $('#wallet-amount').value = formatNumber(Number(quick.dataset.quickAmount)); $('#wallet-amount').focus(); return; }
   if (t.closest('[data-logout]')) { clearUser(); location.href = 'index.html'; }
 });
 
@@ -339,7 +482,31 @@ document.addEventListener('change', (event) => {
   if (t.dataset.notify) { state.notify[t.dataset.notify] = t.checked; toast(t.checked ? 'فعّلنا الإشعار' : 'أوقفنا الإشعار'); }
 });
 
+const ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩';
+
+function submitWallet() {
+  const raw = String($('#wallet-amount').value).replace(/[٠-٩]/g, (d) => ARABIC_DIGITS.indexOf(d)).replace(/\D/g, '');
+  const amount = Number(raw);
+  const topup = state.walletForm === 'topup';
+  const error = !amount ? 'أدخل المبلغ.'
+    : topup && (amount < 100 || amount > 50000) ? 'المبلغ من 100 إلى 50,000 ر.س.'
+      : !topup && amount > available() ? `المبلغ أكبر من الرصيد المتاح (${formatPrice(available())}).` : '';
+  if (error) {
+    $('#wallet-error').textContent = error;
+    $('#wallet-error').classList.remove('hidden');
+    $('#wallet-amount').setAttribute('aria-invalid', 'true');
+    $('#wallet-amount').focus();
+    return;
+  }
+  const method = topup ? (document.querySelector('[name="method"]:checked')?.value === 'applepay' ? 'Apple Pay' : 'مدى') : '';
+  saveWalletTx({ ref: `WT-${30500 + Math.floor(Math.random() * 400)}`, kind: state.walletForm, amount, method, status: topup ? 'done' : 'pending', at: Date.now() });
+  state.walletForm = null;
+  render();
+  toast(topup ? `أضفنا ${formatPrice(amount)} إلى رصيدك` : `طلبنا تحويل ${formatPrice(amount)}، ويصل خلال يومي عمل`);
+}
+
 document.addEventListener('submit', (event) => {
+  if (event.target.id === 'wallet-form') { event.preventDefault(); submitWallet(); return; }
   if (event.target.id !== 'name-form') return;
   event.preventDefault();
   setUser({ ...getUser(), name: $('#name').value.trim().slice(0, 40) });

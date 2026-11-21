@@ -269,6 +269,12 @@ export function saveOrder(id, order) {
   writeStore('mz-orders', { ...loadOrders(), [id]: order });
 }
 
+/** Wallet movements the visitor made (top-ups, withdrawals): [{ ref, kind: 'topup'|'withdraw', amount, method, status, at }], newest first. */
+export const loadWalletTx = () => readStore('mz-wallet', []);
+export function saveWalletTx(tx) {
+  writeStore('mz-wallet', [tx, ...loadWalletTx()]);
+}
+
 /** Event registrations by event id: { [id]: { remind: boolean, at } }. */
 export const loadEventRegs = () => readStore('mz-events', {});
 export function saveEventReg(id, reg) {
