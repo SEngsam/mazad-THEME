@@ -30,7 +30,39 @@ export const lots = [
   { id: 7, cat: 6, name: 'رافعة شوكية تويوتا 3 طن', sub: '2018، 4,200 ساعة تشغيل', city: 'الدمام', bid: 36000, endsIn: 3 * 86400, noReserve: true, img: unsplash('1740914994657-f1cdffdc418e') },
   { id: 8, cat: 2, name: 'أوميغا سبيدماستر مون ووتش', sub: '2021، كامل المرفقات', city: 'الرياض', bid: 17200, endsIn: 9000, noReserve: false, img: unsplash('1662384197911-e82189f4dc60') },
   { id: 9, cat: 5, name: 'أرض سكنية 600م² حي النرجس', sub: 'صك إلكتروني، شارعين', city: 'الرياض', bid: 820000, endsIn: 4 * 86400, noReserve: false, img: unsplash('1586724237569-f3d0c1dee8c6') },
+  { id: 10, cat: 2, name: 'كارتييه سانتوس 2020', sub: 'مقاس كبير، كامل المرفقات', city: 'جدة', bid: 14200, endsIn: 3 * 86400 + 5400, noReserve: false, img: unsplash('1670404160620-a3a86428560e', 1200) },
+  { id: 11, cat: 7, name: 'دلة نحاسية قديمة', sub: 'صناعة يدوية، حالة جيدة', city: 'الأحساء', bid: 3400, endsIn: 2 * 86400 + 3600, noReserve: true, img: unsplash('1564624171349-46ed471bf4e3', 1200) },
+  { id: 12, cat: 1, name: 'شفروليه كابريس 1990', sub: 'كلاسيك، 210 ألف كم، محرك أصلي', city: 'الرياض', bid: 48000, endsIn: 6 * 3600, noReserve: false, img: unsplash('1491422433900-4e19887b7b21', 1200) },
+  { id: 13, cat: 4, name: 'خاتم ألماس 1.2 قيراط', sub: 'ذهب أبيض عيار 18، شهادة GIA', city: 'جدة', bid: 26900, endsIn: 86400 + 1800, noReserve: false, img: unsplash('1617038220319-276d3cfab638', 1200) },
+  { id: 14, cat: 8, name: 'لوحة أ أ أ 1', sub: 'رقم أحادي، نقل فوري عبر أبشر', city: 'الرياض', bid: 155000, endsIn: 5 * 86400, noReserve: false, img: unsplash('1663900108404-a05e8bf82cda', 1200) },
 ];
+
+/** One-line intro shown on each category page. */
+export const categoryIntros = {
+  1: 'سيارات مستعملة وكلاسيكية من معارض وأفراد موثّقين، مع تقرير فحص قبل المزاد.',
+  2: 'ساعات فاخرة بشهادات أصالة، من رولكس وأوميغا وكارتييه.',
+  3: 'جوالات وأجهزة إلكترونية جديدة ومستعملة مع الضمان.',
+  4: 'ذهب وألماس بفواتير وشهادات معتمدة.',
+  5: 'أراضٍ وعقارات بصكوك إلكترونية في مدن المملكة.',
+  6: 'معدات ثقيلة وآليات بساعات تشغيل موثّقة.',
+  7: 'تحف ومقتنيات تراثية ونادرة.',
+  8: 'لوحات سيارات مميزة تُنقل فوراً عبر أبشر.',
+};
+
+/** Extra words people type for each category (singular forms, common brands), used by search. */
+export const categoryKeywords = {
+  1: 'سيارة سيارات مركبة',
+  2: 'ساعة ساعات',
+  3: 'جوال جوالات هاتف موبايل ايفون الكترونيات',
+  4: 'ذهب مجوهرات الماس خاتم',
+  5: 'ارض اراضي عقار عقارات',
+  6: 'معدات معدة رافعة',
+  7: 'تحف تحفة مقتنيات تراث',
+  8: 'لوحة لوحات رقم مميز',
+};
+
+/** Lot number shown on the lot page and searchable from the header. */
+export const lotNumber = (lot) => lotDetails[lot.id]?.lotNo ?? `MZ-${10500 + lot.id}`;
 
 export const sponsoredLot = {
   name: 'تمويل سيارتك من بنك شريك',
@@ -41,11 +73,11 @@ export const sponsoredLot = {
 export const sortTabs = ['ينتهي قريباً', 'المضاف حديثاً', 'الأقل سعراً', 'بدون حد أدنى'];
 
 export const picks = [
-  { cat: 'ساعات', name: 'كارتييه سانتوس 2020', bid: 14200, img: unsplash('1670404160620-a3a86428560e', 600) },
-  { cat: 'تحف ومقتنيات', name: 'دلة نحاسية قديمة', bid: 3400, img: unsplash('1564624171349-46ed471bf4e3', 600) },
-  { cat: 'سيارات', name: 'شفروليه كابريس 1990', bid: 48000, img: unsplash('1491422433900-4e19887b7b21', 600) },
-  { cat: 'مجوهرات', name: 'خاتم ألماس 1.2 قيراط', bid: 26900, img: unsplash('1617038220319-276d3cfab638', 600) },
-  { cat: 'لوحات مميزة', name: 'لوحة أ أ أ 1', bid: 155000, img: unsplash('1663900108404-a05e8bf82cda', 600) },
+  { id: 10, cat: 'ساعات', name: 'كارتييه سانتوس 2020', bid: 14200, img: unsplash('1670404160620-a3a86428560e', 600) },
+  { id: 11, cat: 'تحف ومقتنيات', name: 'دلة نحاسية قديمة', bid: 3400, img: unsplash('1564624171349-46ed471bf4e3', 600) },
+  { id: 12, cat: 'سيارات', name: 'شفروليه كابريس 1990', bid: 48000, img: unsplash('1491422433900-4e19887b7b21', 600) },
+  { id: 13, cat: 'مجوهرات', name: 'خاتم ألماس 1.2 قيراط', bid: 26900, img: unsplash('1617038220319-276d3cfab638', 600) },
+  { id: 14, cat: 'لوحات مميزة', name: 'لوحة أ أ أ 1', bid: 155000, img: unsplash('1663900108404-a05e8bf82cda', 600) },
 ];
 
 export const trust = [

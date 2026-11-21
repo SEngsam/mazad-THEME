@@ -30,7 +30,7 @@ const topHTML = (user) => `
           <img src="public/assets/mazad-logo.png" alt="مزاد" width="480" height="149" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
         </a>
 
-        <form id="search-form" role="search" action="index.html" class="order-last flex w-full items-center rounded-full bg-mist p-1 focus-within:ring-2 focus-within:ring-primary lg:order-none lg:w-auto lg:min-w-[260px] lg:flex-1">
+        <form id="search-form" role="search" action="search.html" class="order-last flex w-full items-center rounded-full bg-mist p-1 focus-within:ring-2 focus-within:ring-primary lg:order-none lg:w-auto lg:min-w-[260px] lg:flex-1">
           <label for="q" class="sr-only">ابحث في المزادات</label>
           <input id="q" name="q" type="search" autocomplete="off" placeholder="ابحث عن سيارة، ساعة، جوال، أو رقم لوت"
             class="min-w-0 flex-1 border-0 bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted rounded-full focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:px-[18px]">
@@ -114,6 +114,9 @@ export function clearUser() {
 export function loginHref(next = location.pathname.split('/').pop() + location.search) {
   return next && !next.startsWith('login.html') ? `login.html?next=${encodeURIComponent(next)}` : 'login.html';
 }
+
+/** Address of a category's listing page (0 = all auctions). */
+export const catHref = (i) => (Number(i) > 0 ? `search.html?cat=${i}` : 'search.html');
 
 /** Category nav buttons. `active` is the selected category index, or -1 for none. */
 export function catNavHTML(categories, active) {

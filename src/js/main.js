@@ -3,20 +3,20 @@ import {
   AdBanner, CategoryTile, FeaturedCard, LotCard, Media, PickCard, SortTab, SponsoredCard, TrustItem,
   formatCountdown,
 } from './components.js';
-import { catNavHTML, renderShell } from './shell.js';
+import { catHref, catNavHTML, renderShell } from './shell.js';
 
 renderShell();
 
 const PAGE_SIZE = 8;
 const SPONSORED_SLOT = 3;
 
-const params = new URLSearchParams(location.search);
-const initialCat = Number(params.get('cat'));
+// Old links to the home page with a category or search now open the listing page.
+if (/[?&](cat|q)=/.test(location.search)) location.replace(`search.html${location.search}`);
 
 const state = {
-  cat: Number.isInteger(initialCat) && initialCat > 0 && initialCat < data.categories.length ? initialCat : 0,
+  cat: 0,
   tab: 0,
-  query: params.get('q')?.trim() ?? '',
+  query: '',
   expanded: false,
   showAds: document.documentElement.dataset.ads !== 'off',
   watch: new Set(data.initialWatchlist),
@@ -64,7 +64,7 @@ function renderLots() {
     : '<p class="col-span-full m-0 rounded-card border border-dashed border-line bg-white p-8 text-center text-sm text-ink-body">لا توجد مزادات مطابقة حالياً.</p>';
 
   const more = $('#show-more');
-  more.hidden = pool.length <= PAGE_SIZE;
+  more.classList.toggle('hidden', pool.length <= PAGE_SIZE);
   more.textContent = state.expanded ? 'عرض أقل' : 'عرض المزيد';
   more.setAttribute('aria-expanded', String(state.expanded));
 }
@@ -107,16 +107,12 @@ function tick() {
   });
 }
 
-function selectCategory(cat, { scroll } = {}) {
-  state.cat = cat;
-  state.expanded = false;
-  renderDynamic();
-  if (scroll) $('#live').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
 document.addEventListener('click', (event) => {
   const catBtn = event.target.closest('[data-cat]');
-  if (catBtn) return selectCategory(Number(catBtn.dataset.cat), { scroll: catBtn.closest('#category-grid') !== null });
+  if (catBtn) {
+    location.href = catHref(catBtn.dataset.cat);
+    return;
+  }
 
   const tabBtn = event.target.closest('[data-tab]');
   if (tabBtn) {
@@ -139,27 +135,6 @@ $('#show-more').addEventListener('click', () => {
   renderLots();
 });
 
-$('#search-form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  state.query = new FormData(event.currentTarget).get('q').toString();
-  state.expanded = false;
-  renderLots();
-  $('#live').scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-
-$('#search-form').addEventListener('input', (event) => {
-  if (event.target.value === '' && state.query) {
-    state.query = '';
-    renderLots();
-  }
-});
-
 renderStatic();
 renderDynamic();
 setInterval(tick, 1000);
-if (state.query) {
-  $('#q').value = state.query;
-  $('#live').scrollIntoView({ block: 'start' });
-} else if (state.cat) {
-  $('#live').scrollIntoView({ block: 'start' });
-}

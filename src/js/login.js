@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { esc } from './components.js';
-import { catNavHTML, clearUser, getUser, renderShell, setUser } from './shell.js';
+import { catHref, catNavHTML, clearUser, getUser, renderShell, setUser } from './shell.js';
 
 renderShell();
 
@@ -241,7 +241,7 @@ document.addEventListener('submit', (event) => {
 document.addEventListener('click', (event) => {
   const t = event.target;
   const cat = t.closest('#cat-nav [data-cat]');
-  if (cat) { location.href = cat.dataset.cat === '0' ? 'index.html' : `index.html?cat=${cat.dataset.cat}`; return; }
+  if (cat) { location.href = catHref(cat.dataset.cat); return; }
   const go = t.closest('[data-go]');
   if (go) {
     clearTimeout(nafathTimer);

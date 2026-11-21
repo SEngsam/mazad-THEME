@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatNumber, formatPrice, icons } from './components.js';
-import { catNavHTML, getUser, loginHref, renderShell } from './shell.js';
+import { catHref, catNavHTML, getUser, loginHref, renderShell } from './shell.js';
 
 renderShell();
 
@@ -31,7 +31,7 @@ function detailsFor(l) {
   const own = data.lotDetails[l.id];
   if (own) return own;
   return {
-    lotNo: `MZ-${10480 + l.id}`,
+    lotNo: data.lotNumber(l),
     bids: 5 + l.id * 3,
     startBid: Math.max(100, Math.round((l.bid * 0.6) / 100) * 100),
     reserveMet: !l.noReserve && l.id % 2 === 0,
@@ -107,7 +107,7 @@ function breadcrumb() {
       <ol class="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
         <li><a href="index.html" class="text-ink-body hover:text-primary">الرئيسية</a></li>
         <li aria-hidden="true">‹</li>
-        <li><a href="index.html?cat=${lot.cat}" class="text-ink-body hover:text-primary">${esc(catName)}</a></li>
+        <li><a href="${catHref(lot.cat)}" class="text-ink-body hover:text-primary">${esc(catName)}</a></li>
         <li aria-hidden="true">‹</li>
         <li aria-current="page" class="min-w-0 truncate text-ink">${esc(lot.name)}</li>
       </ol>
@@ -376,7 +376,7 @@ function renderSimilar() {
   const pool = [...same, ...others].slice(0, 4);
   const elapsed = Math.floor((Date.now() - startedAt) / 1000);
   $('#similar-grid').innerHTML = pool.map((l) => LotCard(l, { remaining: l.endsIn - elapsed, watched: state.watch.has(l.id) })).join('');
-  $('#similar-all').href = `index.html?cat=${lot.cat}`;
+  $('#similar-all').href = catHref(lot.cat);
 }
 
 function parseAmount(text) {
@@ -516,7 +516,7 @@ document.addEventListener('click', (event) => {
   const t = event.target;
   const cat = t.closest('#cat-nav [data-cat]');
   if (cat) {
-    location.href = cat.dataset.cat === '0' ? 'index.html' : `index.html?cat=${cat.dataset.cat}`;
+    location.href = catHref(cat.dataset.cat);
     return;
   }
   const photo = t.closest('[data-photo]');

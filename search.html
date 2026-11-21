@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>كل المزادات · مزاد</title>
+  <meta name="description" content="تصفّح المزادات حسب الفئة والمدينة والسعر، أو ابحث عن سيارة أو ساعة أو رقم لوت.">
+  <meta name="theme-color" content="#062E22">
+  <link rel="preload" href="public/fonts/readex-pro-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="dist/styles.css">
+  <script type="module" src="src/js/search.js"></script>
+</head>
+<body>
+  <a href="#main" class="sr-only z-50 rounded-full bg-white px-4 py-2 font-semibold focus:not-sr-only focus:fixed focus:start-4 focus:top-4">تخطَّ إلى المحتوى</a>
+
+  <div class="flex min-h-screen flex-col">
+    <div id="site-top" class="contents"></div>
+
+    <main id="main" class="container-page flex flex-col gap-5 pb-16 pt-4">
+      <div id="page-head" class="flex flex-col gap-4"></div>
+
+      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8">
+        <div id="filters-backdrop" class="fixed inset-0 z-40 hidden bg-ink/40 lg:hidden" aria-hidden="true"></div>
+        <aside id="filters" aria-label="الفلاتر"
+          class="fixed inset-x-0 bottom-0 z-50 hidden max-h-[88vh] flex-col overflow-hidden rounded-t-[22px] bg-white shadow-card lg:sticky lg:top-[136px] lg:z-auto lg:flex lg:max-h-none lg:overflow-visible lg:rounded-card lg:border lg:border-line"></aside>
+
+        <section aria-labelledby="results-title" class="flex min-w-0 flex-col gap-4">
+          <h2 id="results-title" class="sr-only">النتائج</h2>
+          <div id="toolbar" class="flex flex-col gap-3"></div>
+          <div id="results" class="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 xl:grid-cols-3" aria-live="polite"></div>
+          <button id="more" type="button" class="btn-outline hidden self-center px-7 py-3 text-sm">عرض المزيد</button>
+        </section>
+      </div>
+    </main>
+
+    <div id="site-footer" class="contents"></div>
+  </div>
+</body>
+</html>

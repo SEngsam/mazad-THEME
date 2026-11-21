@@ -106,10 +106,10 @@ export function SponsoredCard(ad) {
 export function PickCard(pick) {
   return `
     <article class="flex w-[46%] shrink-0 snap-start flex-col gap-2.5 sm:w-[30%] lg:w-auto lg:min-w-0 lg:flex-1">
-      ${Media({ src: pick.img, alt: pick.name, className: 'aspect-square rounded-[14px]' })}
+      <a href="lot.html?id=${pick.id}" tabindex="-1" aria-hidden="true" class="block">${Media({ src: pick.img, className: 'aspect-square rounded-[14px]' })}</a>
       <div class="flex flex-col gap-[3px]">
         <span class="text-xs text-ink-muted">${esc(pick.cat)}</span>
-        <span class="text-[15px] font-semibold">${esc(pick.name)}</span>
+        <a href="lot.html?id=${pick.id}" class="text-[15px] font-semibold text-ink hover:text-primary">${esc(pick.name)}</a>
         <span class="text-[13px] text-ink-body">المزايدة الحالية <b class="tabular whitespace-nowrap text-ink">${formatPrice(pick.bid)}</b></span>
       </div>
     </article>`;
