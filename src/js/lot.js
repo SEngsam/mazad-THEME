@@ -46,7 +46,7 @@ function detailsFor(l) {
 }
 
 /** Minimum raise for a given current bid. */
-const increment = bidIncrement;
+function increment(bid) { return bidIncrement(bid); }
 const minBid = () => state.current + increment(state.current);
 
 function buildHistory(top, count) {
