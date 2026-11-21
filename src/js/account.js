@@ -1,7 +1,7 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatCountdown, formatNumber, formatPrice } from './components.js';
 import {
-  catHref, catNavHTML, clearUser, getUser, loadBids, loadEventRegs, loadListings, loadOrders, loadWalletTx, loadWatch, loginHref, renderShell,
+  catHref, catNavHTML, clearUser, getUser, loadBids, loadEventRegs, loadListings, loadOrderActions, loadOrders, loadWalletTx, loadWatch, loginHref, renderShell,
   saveWalletTx, saveWatch, setUser,
 } from './shell.js';
 
@@ -105,13 +105,21 @@ const PAY_METHODS = { card: 'بطاقة', applepay: 'Apple Pay', tabby: 'تاب�
 const dueFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { weekday: 'long', hour: 'numeric', minute: '2-digit' });
 
 /** Won lots with their payment status from orders paid on the checkout page. */
+const shortDate = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
+
 function myWins() {
   const orders = loadOrders();
-  return data.wonLots.map((w) => ({
-    ...w,
-    order: orders[w.id],
-    status: orders[w.id] ? 'paid' : w.dueIn ? 'unpaid' : 'delivered',
-  }));
+  const actions = loadOrderActions();
+  return data.wonLots.map((w) => {
+    const order = data.orderOf(w, orders);
+    const confirmed = actions[w.id]?.confirmed;
+    return {
+      ...w,
+      order,
+      deliveredOn: w.deliveredOn ?? (confirmed ? shortDate.format(new Date(confirmed)) : undefined),
+      status: w.deliveredOn || confirmed ? 'delivered' : order ? 'paid' : 'unpaid',
+    };
+  });
 }
 
 const counts = () => ({
@@ -178,7 +186,8 @@ function wonTab() {
       href: `lot.html?id=${lot.id}`, img: lot.img, title: lot.name, status: w.status,
       meta: `${esc(data.categories[lot.cat])} · ${esc(lot.city)} · <span class="tabular">لوت ${esc(data.lotNumber(lot))}</span>`,
       facts,
-      actions: w.status === 'unpaid' ? `<a href="checkout.html?id=${w.id}" class="btn-primary px-5 py-2 text-[13px]">ادفع الآن</a>` : '',
+      actions: w.status === 'unpaid' ? `<a href="checkout.html?id=${w.id}" class="btn-primary px-5 py-2 text-[13px]">ادفع الآن</a>`
+        : `<a href="order.html?id=${w.id}" class="${w.status === 'paid' ? 'btn-primary' : 'btn-outline'} px-5 py-2 text-[13px]">${w.status === 'paid' ? 'تتبع الطلب' : 'تفاصيل الطلب'}</a>`,
     });
   }).join('')}</ul>`;
 }

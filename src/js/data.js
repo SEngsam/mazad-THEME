@@ -132,11 +132,22 @@ export const lotDetails = {
   },
 };
 
-/** Lots the signed-in visitor has won (prototype examples). dueIn: seconds left to pay when the page loads. */
+/**
+ * Lots the signed-in visitor has won (prototype examples). dueIn: seconds left to pay when the page loads.
+ * paid: an order already paid before this visit (hoursAgo: when). deliveredOn: received and confirmed.
+ */
 export const wonLots = [
   { id: 13, price: 26900, deposit: 1300, dueIn: 2 * 86400 + 5 * 3600 },
-  { id: 11, price: 3400, deposit: 500, deliveredOn: '12 نوفمبر 2026' },
+  { id: 2, price: 61000, deposit: 3000, paid: { ref: 'OR-418230', method: 'applepay', total: 59525, delivery: 'pickup', city: 'الدمام', hoursAgo: 52 } },
+  { id: 11, price: 3400, deposit: 500, deliveredOn: '12 نوفمبر 2026', paid: { ref: 'OR-402117', method: 'card', last4: '4242', total: 3060, delivery: 'ship', city: 'الرياض', hoursAgo: 11 * 24 } },
 ];
+
+const loadedAt = Date.now();
+/** The order for a won lot: paid on the checkout page (saved in `orders`) or a prototype example. */
+export function orderOf(won, orders = {}) {
+  if (orders[won.id]) return orders[won.id];
+  return won.paid ? { ...won.paid, status: 'paid', at: loadedAt - won.paid.hoursAgo * 3600000 } : null;
+}
 
 /** Categories that can be shipped; the rest are picked up or transferred (cars, land, equipment, plates). */
 export const shippableCats = [2, 3, 4, 7];
@@ -294,4 +305,49 @@ export const inspectionReports = {
     ],
     tires: [['الأمامي الأيمن', 4.2, 2022], ['الأمامي الأيسر', 4.0, 2022], ['الخلفي الأيمن', 3.6, 2022], ['الخلفي الأيسر', 3.8, 2022]],
   },
+};
+
+/**
+ * Example conversations for the messages page. `ago` is minutes before the page loads.
+ * `read` is how many messages were already read when the visitor arrives.
+ */
+export const conversations = [
+  {
+    id: 'alwafa-0', sid: 'alwafa', lot: 0, read: 3,
+    msgs: [
+      { from: 'me', ago: 26 * 60, text: 'السلام عليكم، هل يمكن معاينة السيارة قبل انتهاء المزاد؟' },
+      { from: 'them', ago: 25 * 60 + 30, text: 'وعليكم السلام. نعم، المعاينة متاحة يومياً من 4 إلى 7 مساءً في المعرض بحي الملقا.' },
+      { from: 'me', ago: 40, text: 'هل سجل الصيانة لدى الوكيل متوفر؟' },
+      { from: 'them', ago: 12, text: 'نعم، السجل كامل، وسنضيفه إلى وصف المزاد اليوم.' },
+    ],
+  },
+  {
+    id: 'support', support: true, read: 2,
+    msgs: [
+      { from: 'them', ago: 2 * 1440, text: 'مرحباً بك في مزادي. راسلنا هنا في أي وقت بخصوص المزايدة أو الدفع أو الاستلام.' },
+      { from: 'them', ago: 1440 + 95, text: 'أعدنا تأمين مزاد اللوحات المميزة (2,000 ر.س) إلى محفظتك.' },
+    ],
+  },
+  {
+    id: 'watch-house-1', sid: 'watch-house', lot: 1, read: 3,
+    msgs: [
+      { from: 'me', ago: 3 * 1440 + 50, text: 'هل الضمان الدولي ما زال سارياً؟' },
+      { from: 'them', ago: 3 * 1440 + 20, text: 'نعم، حتى مارس 2027، وبطاقة الضمان ضمن المرفقات.' },
+      { from: 'me', ago: 3 * 1440 + 10, text: 'شكراً لك.' },
+    ],
+  },
+];
+
+/** Questions buyers asked on a lot page, with the seller's answer. */
+export const lotQuestions = {
+  0: [
+    { q: 'هل السيارة مسجلة باسم المعرض؟', a: 'نعم، وتُنقل الملكية للفائز عبر أبشر في يوم الاستلام.', ago: 'قبل يومين' },
+    { q: 'هل يوجد ضمان على المحرك؟', a: 'ضمان المعرض لمدة 3 أشهر على المحرك وناقل الحركة.', ago: 'قبل 3 أيام' },
+  ],
+  1: [
+    { q: 'هل العلبة والأوراق الأصلية موجودة؟', a: 'نعم، العلبة وبطاقة الضمان والفاتورة.', ago: 'أمس' },
+  ],
+  3: [
+    { q: 'هل الجهاز نسخة الشرق الأوسط؟', a: 'نعم، يدعم شريحتين وضمان الوكيل سنة.', ago: 'قبل 5 ساعات' },
+  ],
 };

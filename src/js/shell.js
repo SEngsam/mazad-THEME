@@ -93,6 +93,18 @@ function bellLink() {
     </div>`;
 }
 
+const chatIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17h0A1.5 1.5 0 0 1 4 15.5Z"/><path d="M8.5 9.5h7M8.5 12.5h4.5"/></svg>';
+
+function msgLink() {
+  const unread = unreadMessages();
+  const here = location.pathname.endsWith('messages.html');
+  return `
+    <a id="msg-link" href="messages.html" ${here ? 'aria-current="page"' : ''} aria-label="الرسائل، ${unread} غير مقروءة"
+      class="relative flex items-center rounded-full px-2 py-2.5 text-ink hover:text-primary aria-[current=page]:text-primary sm:px-2.5">
+      ${chatIcon}<span data-msg-count ${unread ? '' : 'hidden'} class="absolute -end-0.5 top-0.5 min-w-[18px] rounded-full bg-accent-strong px-1 text-center text-[10px] font-bold leading-[18px] text-white ring-2 ring-white tabular">${unread}</span>
+    </a>`;
+}
+
 function setPanelOpen(open) {
   const panel = document.getElementById('notif-panel');
   const bell = document.getElementById('bell');
@@ -168,6 +180,7 @@ const topHTML = (user) => `
         </form>
 
         <nav aria-label="الحساب" class="ms-auto flex shrink-0 items-center gap-0.5 text-sm sm:gap-1.5">
+          ${user ? msgLink() : ''}
           ${user ? bellLink() : ''}
           <a id="watch-link" href="account.html#watch" class="flex items-center gap-1 rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:gap-1.5 sm:px-3.5">
             <span class="sm:hidden">${heartIcon}</span>
@@ -275,10 +288,42 @@ export function saveWalletTx(tx) {
   writeStore('mz-wallet', [tx, ...loadWalletTx()]);
 }
 
+/** What the buyer did on the order page, by lot id: { confirmed: at } or { report: { ref, reason, at } }. */
+export const loadOrderActions = () => readStore('mz-order-actions', {});
+export function saveOrderAction(id, action) {
+  writeStore('mz-order-actions', { ...loadOrderActions(), [id]: action });
+}
+
 /** Event registrations by event id: { [id]: { remind: boolean, at } }. */
 export const loadEventRegs = () => readStore('mz-events', {});
 export function saveEventReg(id, reg) {
   writeStore('mz-events', { ...loadEventRegs(), [id]: reg });
+}
+
+/* ---------- messages ---------- */
+
+/** Messages the visitor sent, by conversation id: [{ text, at }]. */
+export const loadSent = () => readStore('mz-messages', {});
+export function saveSent(id, msg) {
+  const all = loadSent();
+  writeStore('mz-messages', { ...all, [id]: [...(all[id] ?? []), msg] });
+}
+/** Conversations the visitor started from a lot or seller page: [{ id, sid, lot }]. */
+export const loadStartedConvs = () => readStore('mz-convs', []);
+export function saveStartedConv(conv) {
+  writeStore('mz-convs', [conv, ...loadStartedConvs().filter((c) => c.id !== conv.id)]);
+}
+/** How many messages of each conversation the visitor has read: { [id]: count }. */
+export const loadMsgRead = () => readStore('mz-msg-read', {});
+export function unreadMessages() {
+  const read = loadMsgRead();
+  return data.conversations.reduce((sum, c) => sum + c.msgs.filter((m, i) => m.from === 'them' && i >= (read[c.id] ?? c.read)).length, 0);
+}
+export function markConvRead(id, count) {
+  writeStore('mz-msg-read', { ...loadMsgRead(), [id]: count });
+  const n = unreadMessages();
+  document.querySelectorAll('[data-msg-count]').forEach((el) => { el.textContent = n; el.hidden = !n; });
+  document.getElementById('msg-link')?.setAttribute('aria-label', `الرسائل، ${n} غير مقروءة`);
 }
 
 /* ---------- notifications (built from the visitor's activity plus prototype examples) ---------- */
@@ -305,10 +350,14 @@ export function buildNotifications(now = Date.now()) {
   const orders = loadOrders();
   data.wonLots.forEach((w) => {
     const lot = lotOf(w.id);
-    if (orders[w.id]) list.push({ id: `paid-${w.id}`, kind: 'buying', tone: 'good', title: 'تم الدفع', text: `${lot.name} · رقم الطلب ${orders[w.id].ref}`, href: 'account.html#won', at: orders[w.id].at });
+    const order = data.orderOf(w, orders);
+    if (w.deliveredOn) list.push({ id: `delivered-${w.id}`, kind: 'buying', tone: 'info', title: 'تم تسليم مشترياتك', text: lot.name, href: `order.html?id=${w.id}`, at: now - 26 * HOUR });
+    else if (order) list.push({ id: `paid-${w.id}`, kind: 'buying', tone: 'good', title: 'تم الدفع', text: `${lot.name} · رقم الطلب ${order.ref}`, href: `order.html?id=${w.id}`, at: order.at });
     else if (w.dueIn) list.push({ id: `won-${w.id}`, kind: 'buying', tone: 'warn', title: 'فزت بالمزاد، أكمل الدفع', text: `${lot.name} · ${priceText(w.price)}`, href: `checkout.html?id=${w.id}`, at: now - 3 * HOUR });
-    else list.push({ id: `delivered-${w.id}`, kind: 'buying', tone: 'info', title: 'تم تسليم مشترياتك', text: lot.name, href: 'account.html#won', at: now - 26 * HOUR });
   });
+  if (data.wonLots.some((w) => w.id === 2) && !loadOrderActions()[2]) {
+    list.push({ id: 'handover-2', kind: 'buying', tone: 'warn', title: 'أكّد استلام السيارة', text: 'هيونداي سوناتا 2022 · ليُحوَّل المبلغ إلى البائع', href: 'order.html?id=2', at: now - 4 * HOUR });
+  }
   loadListings().forEach((l) => list.push({ id: `listing-${l.ref}`, kind: 'selling', tone: 'info', title: 'استلمنا طلب البيع', text: `${l.title} · نراجعه خلال 48 ساعة`, href: 'account.html#selling', at: l.at }));
   list.push(
     { id: 'listing-live-7', kind: 'selling', tone: 'good', title: 'نُشر منتجك في المزاد', text: 'رافعة شوكية تويوتا 3 طن', href: 'lot.html?id=7', at: now - 50 * HOUR },

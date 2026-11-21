@@ -258,7 +258,7 @@ function successView() {
         ${steps.map(([t, x], i) => `<li class="flex gap-3 rounded-[14px] bg-sand p-3.5"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-white tabular">${i + 1}</span><span class="flex flex-col gap-0.5"><b class="text-sm font-semibold">${t}</b><span class="text-[13px] text-ink-body">${x}</span></span></li>`).join('')}
       </ol>
       <div class="flex flex-wrap justify-center gap-2.5">
-        <a href="account.html#won" class="btn-primary px-7 py-3 text-sm">عرض مشترياتي</a>
+        <a href="order.html?id=${lot.id}" class="btn-primary px-7 py-3 text-sm">تتبع الطلب</a>
         <a href="search.html" class="btn-outline px-7 py-3 text-sm">متابعة التصفح</a>
       </div>
     </div>`;
@@ -279,7 +279,7 @@ function render() {
   if (state.order) { root.innerHTML = successView(); document.title = 'تم الدفع · مزادي'; return; }
   if (!won || !lot || !won.dueIn) { root.innerHTML = messageView('لا يوجد طلب بانتظار الدفع', 'تجد كل المزادات التي فزت بها وحالة دفعها في «مشترياتي».', 'account.html#won', 'إلى مشترياتي'); return; }
   const paid = loadOrders()[lot.id];
-  if (paid) { root.innerHTML = messageView('دفعت قيمة هذا المزاد', `رقم الطلب ${esc(paid.ref)}. تابع التسليم من «مشترياتي».`, 'account.html#won', 'إلى مشترياتي'); return; }
+  if (paid) { root.innerHTML = messageView('دفعت قيمة هذا المزاد', `رقم الطلب ${esc(paid.ref)}.`, `order.html?id=${lot.id}`, 'تتبع الطلب'); return; }
   root.innerHTML = `
     <div class="flex flex-col gap-5">
       <header class="flex flex-col gap-2">
