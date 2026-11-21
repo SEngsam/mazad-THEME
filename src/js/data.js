@@ -129,7 +129,6 @@ export const lotDetails = {
     },
     description: 'لاندكروزر GXR موديل 2021 كامل المواصفات، صيانة دورية لدى الوكيل وسجل الصيانة متوفر. السيارة نظيفة من الداخل والخارج، بدون حوادث. تُسلَّم مع مفتاحين واستمارة سارية وتأمين حتى مارس 2027.',
     viewing: { place: 'ساحة الشمال، طريق الملك فهد، الرياض', times: 'يومياً من 4 إلى 7 مساءً حتى انتهاء المزاد' },
-    seller: { name: 'معرض الوفاء للسيارات', since: 2022, deals: 214, rating: '4.8' },
   },
 };
 
@@ -175,3 +174,47 @@ export const events = {
     img: 'https://images.unsplash.com/photo-1639006570490-79c0c53f1080?w=1400&q=70&auto=format&fit=crop',
   },
 };
+
+/** Seller profiles. Each lot belongs to the seller whose `lots` lists it; others belong to `mazad-verified`. */
+export const sellers = {
+  alwafa: {
+    name: 'معرض الوفاء للسيارات', city: 'الرياض', since: 2022, deals: 214, rating: 4.8, match: 98, reply: 'خلال ساعة',
+    lots: [0, 2, 4, 12],
+    sold: [
+      { name: 'نيسان باترول 2020', price: 118000, date: '2 نوفمبر 2026' },
+      { name: 'لكزس LX570 2019', price: 205000, date: '24 أكتوبر 2026' },
+      { name: 'تويوتا كامري 2022', price: 71500, date: '15 أكتوبر 2026' },
+    ],
+    stars: [104, 20, 5, 2, 1],
+    reviews: [
+      { stars: 5, text: 'السيارة مطابقة للوصف تماماً، والتسليم ونقل الملكية تمّا في اليوم نفسه.', who: 'مشترٍ من الرياض', item: 'نيسان باترول 2020', date: '5 نوفمبر 2026' },
+      { stars: 5, text: 'تعامل واضح وسرعة في الرد على الاستفسارات قبل المزاد.', who: 'مشترٍ من الدمام', item: 'لكزس LX570 2019', date: '27 أكتوبر 2026' },
+      { stars: 4, text: 'حالة السيارة ممتازة، وتأخر موعد الاستلام يوماً واحداً.', who: 'مشترٍ من القصيم', item: 'تويوتا كامري 2022', date: '18 أكتوبر 2026' },
+    ],
+  },
+  'watch-house': {
+    name: 'دار الساعات', city: 'جدة', since: 2021, deals: 96, rating: 4.9, match: 99, reply: 'خلال ساعتين',
+    lots: [1, 8, 10, 13, 5],
+    sold: [
+      { name: 'رولكس داي جست 2019', price: 38500, date: '30 أكتوبر 2026' },
+      { name: 'تاغ هوير كاريرا 2021', price: 9800, date: '19 أكتوبر 2026' },
+    ],
+    stars: [71, 6, 1, 0, 0],
+    reviews: [
+      { stars: 5, text: 'الساعة أصلية مع شهادتها، ووصلت مغلفة بعناية.', who: 'مشترٍ من جدة', item: 'رولكس داي جست 2019', date: '2 نوفمبر 2026' },
+      { stars: 5, text: 'الوصف دقيق والصور واضحة.', who: 'مشترٍ من الرياض', item: 'تاغ هوير كاريرا 2021', date: '22 أكتوبر 2026' },
+    ],
+  },
+  'mazad-verified': {
+    name: 'بائع موثّق', city: 'الرياض', since: 2023, deals: 37, rating: 4.6, match: 96, reply: 'خلال يوم',
+    lots: [],
+    sold: [{ name: 'جالكسي S24 ألترا', price: 3100, date: '8 نوفمبر 2026' }],
+    stars: [20, 6, 2, 1, 0],
+    reviews: [
+      { stars: 5, text: 'الجهاز كما في الوصف، والتوصيل سريع.', who: 'مشترٍ من الخبر', item: 'جالكسي S24 ألترا', date: '11 نوفمبر 2026' },
+    ],
+  },
+};
+
+/** Id of the seller of a lot. */
+export const sellerIdOf = (lot) => Object.keys(sellers).find((k) => sellers[k].lots.includes(lot.id)) ?? 'mazad-verified';

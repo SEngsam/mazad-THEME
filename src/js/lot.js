@@ -41,7 +41,6 @@ function detailsFor(l) {
     inspection: null,
     description: `${l.sub}. يُسلَّم المنتج للفائز بعد إتمام الدفع، وتُراجع حالته من فريق مزاد قبل النشر.`,
     viewing: { place: l.city, times: 'بالتنسيق مع البائع بعد الفوز' },
-    seller: { name: 'بائع موثّق', since: 2023, deals: 37, rating: '4.6' },
   };
 }
 
@@ -230,7 +229,8 @@ function historySection() {
 
 function viewingSection() {
   const { place, times } = d.viewing;
-  const s = d.seller;
+  const sid = data.sellerIdOf(lot);
+  const s = data.sellers[sid];
   return `
     <section id="viewing" aria-label="المعاينة والبائع" class="grid scroll-mt-48 lg:scroll-mt-40 grid-cols-1 gap-5 sm:grid-cols-2">
       <div class="card flex flex-col gap-3 p-5 sm:p-6">
@@ -243,15 +243,16 @@ function viewingSection() {
         <div class="flex items-center gap-3">
           <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary-soft text-base font-bold text-primary">${esc(s.name.trim()[0])}</span>
           <span class="flex min-w-0 flex-col">
-            <b class="truncate text-[15px] font-semibold">${esc(s.name)}</b>
+            <a href="seller.html?s=${sid}" class="truncate text-[15px] font-semibold text-ink hover:text-primary">${esc(s.name)}</a>
             <span class="flex items-center gap-1 text-xs font-semibold text-primary">${shield}هوية موثّقة بنفاذ</span>
           </span>
         </div>
         <p class="m-0 flex flex-wrap gap-x-2 text-[13px] text-ink-muted">
           <span>عضو منذ <span class="tabular">${s.since}</span></span><span aria-hidden="true">·</span>
           <span class="tabular">${formatNumber(s.deals)} صفقة</span><span aria-hidden="true">·</span>
-          <span>التقييم <span class="tabular">${esc(s.rating)}</span> من 5</span>
+          <span>التقييم <span class="tabular">${s.rating}</span> من 5</span>
         </p>
+        <a href="seller.html?s=${sid}" class="btn-outline self-start px-5 py-2 text-[13px]">صفحة البائع</a>
       </div>
     </section>`;
 }
