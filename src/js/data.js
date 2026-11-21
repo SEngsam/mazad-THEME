@@ -173,7 +173,47 @@ export const events = {
     lots: [1, 8, 10],
     img: 'https://images.unsplash.com/photo-1639006570490-79c0c53f1080?w=1400&q=70&auto=format&fit=crop',
   },
+  'premium-plates': {
+    title: 'مزاد اللوحات المميزة', type: 'إلكتروني', city: 'الرياض', count: 15, unit: 'لوحة', cat: 8,
+    startDay: 1, startHour: 21, place: 'إلكتروني عبر مزاد', mapQuery: 'الرياض', viewing: 'لا تتطلب معاينة',
+    deposit: 2000, lots: [6, 14], img: unsplash('1758798219572-512a03a60ce0', 1400),
+  },
+  'dammam-equipment': {
+    title: 'مزاد المعدات الثقيلة', type: 'حضوري وإلكتروني', city: 'الدمام', count: 28, unit: 'معدة', cat: 6,
+    startDay: 2, startHour: 17, place: 'ساحة المعدات، المنطقة الصناعية الثانية، الدمام', mapQuery: 'المنطقة الصناعية الثانية الدمام',
+    viewing: 'يومياً من 8 صباحاً إلى 4 عصراً', deposit: 5000, lots: [7], img: unsplash('1740914994657-f1cdffdc418e', 1400),
+  },
+  heritage: {
+    title: 'مزاد التحف والمقتنيات', type: 'إلكتروني', city: 'جدة', count: 28, unit: 'قطعة', cat: 7,
+    startDay: 3, startHour: 20, place: 'مستودع مزاد، حي الروضة، جدة', mapQuery: 'حي الروضة جدة',
+    viewing: 'بموعد مسبق', deposit: 500, lots: [11], img: unsplash('1564624171349-46ed471bf4e3', 1400),
+  },
+  'riyadh-land': {
+    title: 'مزاد أراضي شمال الرياض', type: 'حضوري', city: 'الرياض', count: 12, unit: 'أرض', cat: 5,
+    startDay: 5, startHour: 19, place: 'قاعة المزادات، طريق أنس بن مالك، الرياض', mapQuery: 'طريق أنس بن مالك الرياض',
+    viewing: 'زيارة المواقع بالتنسيق مع فريق مزاد', deposit: 10000, lots: [9], img: unsplash('1694018359679-49465b4c0d61', 1400),
+  },
 };
+
+/** Hours a yard auction stays live after it starts. */
+const LIVE_HOURS = 3;
+
+/**
+ * When an event happens relative to `now`: { start, end, live, label }.
+ * Online events with `endsInDays` are running already; scheduled ones start on `startDay` (0 = today) at `startHour`.
+ */
+export function eventTiming(ev, now = new Date(), loadedAt = now.getTime()) {
+  if (ev.endsInDays) {
+    const end = loadedAt + ev.endsInDays * 86400000;
+    return { start: loadedAt, end, live: true, label: 'ينتهي خلال', target: end };
+  }
+  const start = new Date(now);
+  start.setDate(start.getDate() + (ev.startDay ?? 0));
+  start.setHours(ev.startHour, 0, 0, 0);
+  if (!ev.startDay && now - start > LIVE_HOURS * 3600000) start.setDate(start.getDate() + 1);
+  const live = now >= start;
+  return { start: start.getTime(), end: start.getTime() + LIVE_HOURS * 3600000, live, label: live ? 'مباشر الآن' : 'يبدأ خلال', target: start.getTime() };
+}
 
 /** Seller profiles. Each lot belongs to the seller whose `lots` lists it; others belong to `mazad-verified`. */
 export const sellers = {

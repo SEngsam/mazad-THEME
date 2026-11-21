@@ -1,5 +1,5 @@
 import * as data from './data.js';
-import { LotCard, Media, esc, formatNumber, formatPrice, icons } from './components.js';
+import { LotCard, Media, esc, formatDays, formatNumber, formatPrice, icons } from './components.js';
 import { catHref, catNavHTML, getUser, loadBids, loadWatch, loginHref, renderShell, saveBid, saveWatch } from './shell.js';
 
 renderShell();
@@ -80,7 +80,7 @@ function segments(sec) {
 function shortCountdown(sec) {
   const t = Math.max(0, sec);
   const days = Math.floor(t / 86400);
-  if (days) return `${days} يوم`;
+  if (days) return formatDays(days);
   const pad = (v) => String(v).padStart(2, '0');
   const h = Math.floor(t / 3600);
   const m = Math.floor((t % 3600) / 60);

@@ -11,24 +11,11 @@ const params = new URLSearchParams(location.search);
 const id = data.events[params.get('e')] ? params.get('e') : 'north-yard';
 const ev = data.events[id];
 const startedAt = Date.now();
-const LIVE_HOURS = 3;
 const state = { watch: loadWatch() };
 
 /* ---------- timing ---------- */
 
-/** Start (yard auctions) or end (online auctions) of the event, and whether it is running now. */
-function timing() {
-  const now = new Date();
-  if (ev.endsInDays) {
-    const end = startedAt + ev.endsInDays * 86400000;
-    return { label: 'ينتهي خلال', target: end, live: true };
-  }
-  const start = new Date(now);
-  start.setHours(ev.startHour, 0, 0, 0);
-  if (now - start > LIVE_HOURS * 3600000) start.setDate(start.getDate() + 1);
-  const live = now >= start;
-  return { label: live ? 'المزاد مباشر الآن' : 'يبدأ خلال', target: start.getTime(), live };
-}
+const timing = () => data.eventTiming(ev, new Date(), startedAt);
 
 function cells(ms) {
   const t = Math.max(0, Math.floor(ms / 1000));
@@ -94,7 +81,7 @@ function render() {
       <nav aria-label="مسار التصفح" class="text-[13px] text-ink-muted">
         <ol class="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
           <li><a href="index.html" class="text-ink-body hover:text-primary">الرئيسية</a></li><li aria-hidden="true">‹</li>
-          <li><a href="${catHref(ev.cat)}" class="text-ink-body hover:text-primary">${esc(data.categories[ev.cat])}</a></li><li aria-hidden="true">‹</li>
+          <li><a href="auctions.html" class="text-ink-body hover:text-primary">المزادات القادمة</a></li><li aria-hidden="true">‹</li>
           <li aria-current="page" class="text-ink">${esc(ev.title)}</li>
         </ol>
       </nav>

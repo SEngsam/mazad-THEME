@@ -4,6 +4,13 @@ export const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => escapeMa
 export const formatNumber = (n) => n.toLocaleString('en-US');
 export const formatPrice = (n) => `${formatNumber(n)} ر.س`;
 
+/** Days in formal Arabic: يوم واحد، يومان، 3 أيام، 11 يوماً. */
+export function formatDays(days) {
+  if (days === 1) return 'يوم واحد';
+  if (days === 2) return 'يومان';
+  return days <= 10 ? `${days} أيام` : `${days} يوماً`;
+}
+
 export function formatCountdown(seconds) {
   const t = Math.max(0, seconds);
   const days = Math.floor(t / 86400);
@@ -11,7 +18,7 @@ export function formatCountdown(seconds) {
   const mins = Math.floor((t % 3600) / 60);
   const secs = t % 60;
   const pad = (v) => String(v).padStart(2, '0');
-  if (days) return `${days} يوم`;
+  if (days) return formatDays(days);
   if (hours) return `${hours}:${pad(mins)}:${pad(secs)}`;
   return `${pad(mins)}:${pad(secs)}`;
 }
