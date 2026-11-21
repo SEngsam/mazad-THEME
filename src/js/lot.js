@@ -196,7 +196,7 @@ function inspectionSection() {
       <span class="rounded-full bg-accent-soft px-3 py-1 font-semibold text-accent-ink">${items.length - okCount} ملاحظة</span>
     </div>
     <ul class="m-0 list-none p-0">${rows}</ul>
-    <a href="#" class="btn-outline self-start px-5 py-2.5 text-sm">عرض التقرير الكامل</a>`, summary);
+    <a href="inspection.html?id=${lot.id}" class="btn-outline self-start px-5 py-2.5 text-sm">عرض التقرير الكامل</a>`, summary);
 }
 
 function descriptionSection() {
