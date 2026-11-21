@@ -226,7 +226,7 @@ function summary() {
       <p class="m-0 rounded-xl bg-accent-soft px-3.5 py-2.5 text-[13px] text-accent-ink">ادفع قبل <b class="font-semibold">${esc(deadline)}</b> · متبقٍ <b id="due-left" class="font-semibold tabular">${formatCountdown(left)}</b></p>
       <label class="flex cursor-pointer items-start gap-3 text-[13px] leading-relaxed text-ink-body">
         <input id="agree" type="checkbox" ${state.agree ? 'checked' : ''} ${state.errors.agree ? 'aria-invalid="true"' : ''} aria-describedby="agree-help" class="mt-0.5 h-4 w-4 shrink-0 accent-primary">
-        <span>أوافق على <a href="#" class="font-semibold">شروط الشراء</a> وسياسة الإرجاع.</span>
+        <span>أوافق على <a href="help.html#terms" class="font-semibold">شروط الشراء</a> وسياسة الإرجاع.</span>
       </label>
       ${helpLine('agree', state.errors.agree)}
       <button type="submit" form="pay-form" ${state.processing ? 'disabled aria-busy="true"' : ''} class="btn-primary w-full gap-2 py-3.5 text-[15px] disabled:cursor-wait disabled:opacity-70">

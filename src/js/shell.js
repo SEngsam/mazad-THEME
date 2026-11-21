@@ -69,20 +69,20 @@ const footerHTML = `
         </div>
         <nav aria-labelledby="f-bidders" class="flex flex-col gap-2.5">
           <h2 id="f-bidders" class="m-0 text-sm font-semibold">المزايدون</h2>
-          <a href="#" class="text-ink-body">كيف أزايد</a>
-          <a href="#" class="text-ink-body">الرسوم</a>
-          <a href="#" class="text-ink-body">حماية المشتري</a>
+          <a href="help.html#how-to-bid" class="text-ink-body">كيف أزايد</a>
+          <a href="help.html#fees" class="text-ink-body">الرسوم</a>
+          <a href="help.html#protection" class="text-ink-body">حماية المشتري</a>
         </nav>
         <nav aria-labelledby="f-sellers" class="flex flex-col gap-2.5">
           <h2 id="f-sellers" class="m-0 text-sm font-semibold">البائعون</h2>
           <a href="sell.html" class="text-ink-body">ابدأ البيع</a>
-          <a href="#" class="text-ink-body">لوحة البائع</a>
-          <a href="#" class="text-ink-body">أعلن معنا</a>
+          <a href="account.html#selling" class="text-ink-body">لوحة البائع</a>
+          <a href="help.html#contact" class="text-ink-body">أعلن معنا</a>
         </nav>
         <div class="flex flex-col gap-2.5">
           <h2 class="m-0 text-sm font-semibold">تواصل</h2>
           <a href="tel:920012345" class="tabular text-ink-body">920012345</a>
-          <a href="#" class="text-ink-body">مركز المساعدة</a>
+          <a href="help.html" class="text-ink-body">مركز المساعدة</a>
         </div>
       </div>
       <div class="container-page flex flex-wrap items-center justify-between gap-3 border-t border-[#E5E7EB] pb-7 pt-4 text-xs text-ink-muted">

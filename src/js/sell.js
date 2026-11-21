@@ -226,7 +226,7 @@ function reviewStep() {
     </div>
     <label class="flex cursor-pointer items-start gap-3 rounded-[14px] p-1 text-sm leading-relaxed text-ink-body">
       <input id="agree" type="checkbox" ${d.agree ? 'checked' : ''} aria-describedby="agree-help" ${err ? 'aria-invalid="true"' : ''} class="mt-1 h-4 w-4 shrink-0 accent-primary">
-      <span>أؤكد أن المنتج ملكي وأن المعلومات والصور صحيحة، وأوافق على <a href="#" class="font-semibold">شروط البيع</a>.</span>
+      <span>أؤكد أن المنتج ملكي وأن المعلومات والصور صحيحة، وأوافق على <a href="help.html#terms" class="font-semibold">شروط البيع</a>.</span>
     </label>
     ${err ? help('agree', err, '') : ''}`;
 }
