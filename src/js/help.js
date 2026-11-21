@@ -35,7 +35,7 @@ const FEES = [
 ];
 
 const PROTECTION = [
-  ['أموالك عندنا حتى تستلم', 'لا نحوّل المبلغ للبائع حتى تؤكد استلام المنتج.'],
+  ['أموالك محفوظة حتى تستلم', 'لا نحوّل المبلغ للبائع حتى تؤكد استلام المنتج.'],
   ['مطابق للوصف أو تسترد', 'إذا وصلك المنتج مختلفاً عن وصفه، أبلغنا خلال 48 ساعة من الاستلام ونعيد لك المبلغ.'],
   ['بائعون موثّقون بنفاذ', 'كل بائع ومزايد متحقق من هويته قبل أول عملية.'],
   ['فحص قبل المزاد', 'تقرير فحص معتمد لكل سيارة، وشهادة أصالة للساعات والمجوهرات.'],
@@ -127,7 +127,7 @@ function head() {
     </nav>
     <div class="on-dark flex flex-col gap-5 rounded-[22px] bg-forest p-6 text-white sm:rounded-hero sm:p-10">
       <div class="flex flex-col gap-2">
-        <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[30px]">كيف نقدر نساعدك؟</h1>
+        <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[30px]">كيف يمكننا مساعدتك؟</h1>
         <p class="m-0 text-[15px] leading-[1.8] text-white/85">إجابات عن المزايدة والدفع والبيع، أو تواصل معنا مباشرة.</p>
       </div>
       <form id="help-search" role="search" class="flex max-w-2xl items-center rounded-full bg-white p-1 focus-within:ring-2 focus-within:ring-lime" onsubmit="return false">
@@ -159,7 +159,7 @@ function body() {
           <p id="c-phone-help" class="m-0 text-xs text-ink-muted"></p></div>
       </div>
       <div class="flex flex-col gap-2"><label for="c-msg" class="text-sm font-semibold">رسالتك</label>
-        <textarea id="c-msg" rows="4" maxlength="800" placeholder="اكتب رقم اللوت أو الطلب إن وُجد، وكيف نقدر نساعدك." aria-describedby="c-msg-help"
+        <textarea id="c-msg" rows="4" maxlength="800" placeholder="اكتب رقم اللوت أو الطلب إن وُجد، وموضوع استفسارك." aria-describedby="c-msg-help"
           class="w-full resize-y rounded-[18px] border-0 bg-mist px-5 py-3.5 text-[15px] leading-relaxed text-ink placeholder:text-ink-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"></textarea>
         <p id="c-msg-help" class="m-0 text-xs text-ink-muted"></p></div>
       <button type="submit" class="btn-primary self-start px-7 py-3 text-sm">أرسل</button>

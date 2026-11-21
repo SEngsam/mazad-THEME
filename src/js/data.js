@@ -14,13 +14,13 @@ export const categoryTiles = [
 ];
 
 export const featured = [
-  { tag: 'الليلة 8:00م', tone: 'accent', title: 'مزاد سيارات ساحة الشمال · 42 سيارة', meta: 'معاينة من 4 لـ 7 مساءً · الرياض', img: unsplash('1638835373951-3a67da7aaf8d', 1400), large: true },
+  { tag: 'الليلة 8:00م', tone: 'accent', title: 'مزاد سيارات ساحة الشمال · 42 سيارة', meta: 'معاينة من 4 إلى 7 مساءً · الرياض', img: unsplash('1638835373951-3a67da7aaf8d', 1400), large: true },
   { tag: 'ينتهي الخميس', tone: 'primary', title: 'ساعات فاخرة', meta: '53 قطعة موثّقة', img: unsplash('1639006570490-79c0c53f1080', 900), large: false },
 ];
 
 /** endsIn: seconds remaining when the page loads. order: listing order for «المضاف حديثاً». */
 export const lots = [
-  { id: 0, cat: 1, name: 'تويوتا لاندكروزر GXR 2021', sub: 'V6، فل كامل، صيانة وكالة، بدون حوادث', city: 'الرياض', bid: 92000, endsIn: 4 * 3600 + 272, noReserve: false, img: unsplash('1650530579355-7ad9d4766043') },
+  { id: 0, cat: 1, name: 'تويوتا لاندكروزر GXR 2021', sub: 'V6، كامل المواصفات، صيانة لدى الوكيل، دون حوادث', city: 'الرياض', bid: 92000, endsIn: 4 * 3600 + 272, noReserve: false, img: unsplash('1650530579355-7ad9d4766043') },
   { id: 1, cat: 2, name: 'رولكس صبمارينر 2022', sub: 'كامل المرفقات والضمان، حالة ممتازة', city: 'جدة', bid: 41500, endsIn: 1260, noReserve: false, img: unsplash('1547996160-81dfa63595aa') },
   { id: 2, cat: 1, name: 'هيونداي سوناتا 2022', sub: '41 ألف كم، لون أبيض، سعودي', city: 'الدمام', bid: 58500, endsIn: 2 * 86400, noReserve: true, img: unsplash('1523394397008-7c076b65a890') },
   { id: 3, cat: 3, name: 'آيفون 16 برو ماكس 1TB', sub: 'جديد مختوم، ضمان سنة', city: 'الرياض', bid: 4250, endsIn: 3400, noReserve: true, img: unsplash('1523206489230-c012c64b2b48') },
@@ -29,7 +29,7 @@ export const lots = [
   { id: 6, cat: 8, name: 'لوحة مميزة ر س ع 7', sub: 'رقم ثلاثي، نقل فوري عبر أبشر', city: 'الرياض', bid: 26000, endsIn: 5 * 3600, noReserve: false, img: unsplash('1654688554491-69d21d38fb91') },
   { id: 7, cat: 6, name: 'رافعة شوكية تويوتا 3 طن', sub: '2018، 4,200 ساعة تشغيل', city: 'الدمام', bid: 36000, endsIn: 3 * 86400, noReserve: true, img: unsplash('1740914994657-f1cdffdc418e') },
   { id: 8, cat: 2, name: 'أوميغا سبيدماستر مون ووتش', sub: '2021، كامل المرفقات', city: 'الرياض', bid: 17200, endsIn: 9000, noReserve: false, img: unsplash('1662384197911-e82189f4dc60') },
-  { id: 9, cat: 5, name: 'أرض سكنية 600م² حي النرجس', sub: 'صك إلكتروني، شارعين', city: 'الرياض', bid: 820000, endsIn: 4 * 86400, noReserve: false, img: unsplash('1586724237569-f3d0c1dee8c6') },
+  { id: 9, cat: 5, name: 'أرض سكنية 600م² حي النرجس', sub: 'صك إلكتروني، على شارعين', city: 'الرياض', bid: 820000, endsIn: 4 * 86400, noReserve: false, img: unsplash('1586724237569-f3d0c1dee8c6') },
   { id: 10, cat: 2, name: 'كارتييه سانتوس 2020', sub: 'مقاس كبير، كامل المرفقات', city: 'جدة', bid: 14200, endsIn: 3 * 86400 + 5400, noReserve: false, img: unsplash('1670404160620-a3a86428560e', 1200) },
   { id: 11, cat: 7, name: 'دلة نحاسية قديمة', sub: 'صناعة يدوية، حالة جيدة', city: 'الأحساء', bid: 3400, endsIn: 2 * 86400 + 3600, noReserve: true, img: unsplash('1564624171349-46ed471bf4e3', 1200) },
   { id: 12, cat: 1, name: 'شفروليه كابريس 1990', sub: 'كلاسيك، 210 ألف كم، محرك أصلي', city: 'الرياض', bid: 48000, endsIn: 6 * 3600, noReserve: false, img: unsplash('1491422433900-4e19887b7b21', 1200) },
@@ -83,8 +83,8 @@ export const picks = [
 export const trust = [
   { title: 'هوية موثّقة بنفاذ', text: 'كل مزايد وبائع متحقق منه قبل أول مزايدة.' },
   { title: 'فحص قبل المزاد', text: 'تقرير فحص معتمد لكل سيارة وشهادة أصالة للساعات والمجوهرات.' },
-  { title: 'أموالك محمية', text: 'المبلغ بيضل عندنا لحين استلامك المنتج.' },
-  { title: 'ادفع بالطريقة اللي تناسبك', text: 'مدى، Apple Pay، أو قسّط مع تابي وتمارا.' },
+  { title: 'أموالك محمية', text: 'يبقى المبلغ لدينا حتى تستلم المنتج.' },
+  { title: 'ادفع بالطريقة التي تناسبك', text: 'مدى، Apple Pay، أو قسّط مع تابي وتمارا.' },
 ];
 
 export const ads = {
@@ -121,14 +121,14 @@ export const lotDetails = {
       items: [
         { part: 'المحرك', ok: true, note: 'سليم، بدون تسريبات' },
         { part: 'ناقل الحركة', ok: true, note: 'تبديل سلس' },
-        { part: 'الهيكل والشاصي', ok: true, note: 'بدون حوادث أو صبغ' },
+        { part: 'الهيكل', ok: true, note: 'خالٍ من الحوادث وإعادة الطلاء' },
         { part: 'المكيف', ok: true, note: 'يعمل بكفاءة' },
         { part: 'الإطارات', ok: false, note: 'تحتاج تغيير خلال 5,000 كم' },
-        { part: 'الصدام الأمامي', ok: false, note: 'خدوش سطحية' },
+        { part: 'المصد الأمامي', ok: false, note: 'خدوش سطحية' },
       ],
     },
-    description: 'لاندكروزر GXR موديل 2021 فل كامل، صيانة دورية في الوكالة وسجل الصيانة متوفر. السيارة نظيفة من الداخل والخارج، بدون حوادث. تُسلَّم مع مفتاحين واستمارة سارية وتأمين حتى مارس 2027.',
-    viewing: { place: 'ساحة الشمال، طريق الملك فهد، الرياض', times: 'يومياً من 4 لـ 7 مساءً حتى انتهاء المزاد' },
+    description: 'لاندكروزر GXR موديل 2021 كامل المواصفات، صيانة دورية لدى الوكيل وسجل الصيانة متوفر. السيارة نظيفة من الداخل والخارج، بدون حوادث. تُسلَّم مع مفتاحين واستمارة سارية وتأمين حتى مارس 2027.',
+    viewing: { place: 'ساحة الشمال، طريق الملك فهد، الرياض', times: 'يومياً من 4 إلى 7 مساءً حتى انتهاء المزاد' },
     seller: { name: 'معرض الوفاء للسيارات', since: 2022, deals: 214, rating: '4.8' },
   },
 };

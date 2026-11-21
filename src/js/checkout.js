@@ -232,7 +232,7 @@ function summary() {
       <button type="submit" form="pay-form" ${state.processing ? 'disabled aria-busy="true"' : ''} class="btn-primary w-full gap-2 py-3.5 text-[15px] disabled:cursor-wait disabled:opacity-70">
         ${state.processing ? '<span class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white motion-reduce:animate-none" aria-hidden="true"></span>' : lock}${payLabel}
       </button>
-      <p class="m-0 flex items-start gap-2 text-xs leading-relaxed text-ink-muted"><span class="text-primary">${shield}</span>أموالك محمية: يبقى المبلغ عندنا حتى تستلم المنتج وتتأكد أنه مطابق للوصف.</p>
+      <p class="m-0 flex items-start gap-2 text-xs leading-relaxed text-ink-muted"><span class="text-primary">${shield}</span>أموالك محمية: يبقى المبلغ لدينا حتى تستلم المنتج وتتأكد من مطابقته للوصف.</p>
     </div>`;
 }
 
@@ -284,7 +284,7 @@ function render() {
     <div class="flex flex-col gap-5">
       <header class="flex flex-col gap-2">
         <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[28px]">إتمام الشراء</h1>
-        <p class="m-0 text-[15px] leading-relaxed text-ink-body">مبروك الفوز! اختر طريقة الاستلام والدفع لإتمام شراء ${esc(lot.name)}.</p>
+        <p class="m-0 text-[15px] leading-relaxed text-ink-body">تهانينا بالفوز. اختر طريقة الاستلام والدفع لإتمام شراء ${esc(lot.name)}.</p>
       </header>
       <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
         <form id="pay-form" novalidate class="flex min-w-0 flex-col gap-5">${deliverySection()}${paymentSection()}</form>
