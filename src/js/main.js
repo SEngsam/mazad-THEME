@@ -3,7 +3,7 @@ import {
   AdBanner, CategoryTile, FeaturedCard, LotCard, Media, PickCard, SortTab, SponsoredCard, TrustItem,
   formatCountdown,
 } from './components.js';
-import { catHref, catNavHTML, renderShell } from './shell.js';
+import { catHref, catNavHTML, loadWatch, renderShell, saveWatch } from './shell.js';
 
 renderShell();
 
@@ -19,7 +19,7 @@ const state = {
   query: '',
   expanded: false,
   showAds: document.documentElement.dataset.ads !== 'off',
-  watch: new Set(data.initialWatchlist),
+  watch: loadWatch(),
   startedAt: Date.now(),
 };
 
@@ -124,6 +124,7 @@ document.addEventListener('click', (event) => {
   if (watchBtn) {
     const id = Number(watchBtn.dataset.watch);
     state.watch.has(id) ? state.watch.delete(id) : state.watch.add(id);
+    saveWatch(state.watch);
     renderLots();
     renderWatchCount();
     document.querySelector(`[data-watch="${id}"]`)?.focus();

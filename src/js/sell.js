@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatNumber, formatPrice } from './components.js';
-import { catHref, catNavHTML, getUser, loginHref, renderShell } from './shell.js';
+import { catHref, catNavHTML, getUser, loginHref, renderShell, saveListing } from './shell.js';
 
 renderShell();
 
@@ -368,6 +368,7 @@ document.addEventListener('submit', (event) => {
   }
   const d = state.draft;
   state.submitted = { ref: `SL-${String(Date.now()).slice(-6)}`, title: d.title, cat: d.cat, days: d.days };
+  saveListing({ ...state.submitted, opening: d.opening, city: d.city, status: 'review', at: Date.now() });
   clearDraft();
   render();
   $('#wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });

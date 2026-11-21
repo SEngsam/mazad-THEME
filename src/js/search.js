@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { LotCard, SponsoredCard, esc, formatCountdown, formatNumber, formatPrice } from './components.js';
-import { catHref, catNavHTML, renderShell } from './shell.js';
+import { catHref, catNavHTML, loadWatch, renderShell, saveWatch } from './shell.js';
 
 renderShell();
 
@@ -36,7 +36,7 @@ function readState() {
     sort: Math.min(int(p.get('sort')), SORTS.length - 1),
     expanded: false,
     filtersOpen: false,
-    watch: new Set(data.initialWatchlist),
+    watch: loadWatch(),
   };
 }
 
@@ -278,7 +278,6 @@ function renderResults() {
   more.classList.toggle('hidden', list.length <= PAGE_SIZE);
   more.textContent = state.expanded ? 'عرض أقل' : `عرض المزيد (${formatNumber(list.length - PAGE_SIZE)})`;
   more.setAttribute('aria-expanded', String(state.expanded));
-  document.querySelectorAll('[data-watch-count]').forEach((el) => { el.textContent = state.watch.size; });
 }
 
 function update({ head = false } = {}) {
@@ -348,6 +347,7 @@ document.addEventListener('click', (event) => {
   if (watch) {
     const id = Number(watch.dataset.watch);
     state.watch.has(id) ? state.watch.delete(id) : state.watch.add(id);
+    saveWatch(state.watch);
     renderResults();
     document.querySelector(`#results [data-watch="${id}"]`)?.focus();
   }

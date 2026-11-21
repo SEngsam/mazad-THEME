@@ -38,12 +38,12 @@ const topHTML = (user) => `
         </form>
 
         <nav aria-label="الحساب" class="ms-auto flex shrink-0 items-center gap-0.5 text-sm sm:gap-1.5">
-          <a id="watch-link" href="#" class="flex items-center gap-1 rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:gap-1.5 sm:px-3.5">
+          <a id="watch-link" href="account.html#watch" class="flex items-center gap-1 rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:gap-1.5 sm:px-3.5">
             <span class="sm:hidden">${heartIcon}</span>
             <span class="hidden whitespace-nowrap sm:inline">المفضلة</span>
-            <span data-watch-count class="tabular rounded-full bg-accent-soft px-[7px] py-0.5 text-[11px] font-semibold text-accent-ink">2</span>
+            <span data-watch-count class="tabular rounded-full bg-accent-soft px-[7px] py-0.5 text-[11px] font-semibold text-accent-ink">${loadWatch().size}</span>
           </a>
-          <a href="${user ? 'login.html' : loginHref()}" class="flex items-center rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:px-3.5" aria-label="${user ? 'حسابي' : 'تسجيل الدخول'}">
+          <a href="${user ? 'account.html' : loginHref()}" class="flex items-center rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:px-3.5" aria-label="${user ? 'حسابي' : 'تسجيل الدخول'}">
             ${userIcon}
             <span class="hidden whitespace-nowrap sm:inline">${user ? 'حسابي' : 'تسجيل الدخول'}</span>
           </a>
@@ -97,7 +97,40 @@ const footerHTML = `
       </div>
     </footer>`;
 
-/* ---------- sign-in state (prototype: kept in this browser only) ---------- */
+import { initialWatchlist } from './data.js';
+
+/* ---------- browser storage (prototype: everything is kept in this browser only) ---------- */
+
+function readStore(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) ?? 'null');
+    return value ?? fallback;
+  } catch { return fallback; }
+}
+function writeStore(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage blocked: keep it for this page only */ }
+}
+
+/** Watched lot ids, shared by every page. */
+export const loadWatch = () => new Set(readStore('mz-watch', initialWatchlist));
+export function saveWatch(set) {
+  writeStore('mz-watch', [...set]);
+  document.querySelectorAll('[data-watch-count]').forEach((el) => { el.textContent = set.size; });
+}
+
+/** Bids the visitor placed: [{ id, amount, status: 'leading' | 'outbid', top, at }]. Newest first, one per lot. */
+export const loadBids = () => readStore('mz-bids', []);
+export function saveBid(bid) {
+  writeStore('mz-bids', [bid, ...loadBids().filter((b) => b.id !== bid.id)]);
+}
+
+/** Listings the visitor submitted from the sell page. */
+export const loadListings = () => readStore('mz-listings', []);
+export function saveListing(listing) {
+  writeStore('mz-listings', [listing, ...loadListings()]);
+}
+
+/* ---------- sign-in state ---------- */
 
 const USER_KEY = 'mz-user';
 

@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatNumber, formatPrice, icons } from './components.js';
-import { catHref, catNavHTML, getUser, loginHref, renderShell } from './shell.js';
+import { catHref, catNavHTML, getUser, loadBids, loadWatch, loginHref, renderShell, saveBid, saveWatch } from './shell.js';
 
 renderShell();
 
@@ -21,7 +21,7 @@ const state = {
   status: null, // null | 'leading' | 'outbid'
   extraTime: 0,
   photo: 0,
-  watch: new Set(data.initialWatchlist),
+  watch: loadWatch(),
   history: buildHistory(lot.bid, d.bids),
 };
 
@@ -438,7 +438,7 @@ function renderWatch() {
   const btn = $('#watch-btn');
   btn.setAttribute('aria-pressed', String(on));
   btn.innerHTML = `<span class="${on ? 'text-accent' : ''}">${icons.heart(on)}</span>${on ? 'في المفضلة' : 'أضف إلى المفضلة'}`;
-  document.querySelectorAll('[data-watch-count]').forEach((el) => { el.textContent = state.watch.size; });
+  saveWatch(state.watch);
 }
 
 function setAmount(value) {
@@ -462,6 +462,7 @@ function placeBid() {
   state.bids += 1;
   state.history.unshift({ who: 'أنت', amount, age: 'الآن' });
   state.status = 'leading';
+  saveBid({ id: lot.id, amount, status: 'leading', top: amount, at: Date.now() });
   state.confirming = false;
   if (remaining() < SNIPING_WINDOW) state.extraTime += SNIPING_WINDOW;
   state.amount = minBid();
@@ -481,6 +482,7 @@ function placeBid() {
       state.history.unshift({ who: `مزايد #${7315 + lot.id}`, amount: rival, age: 'الآن' });
       state.history.forEach((row, i) => { if (i > 0 && row.age === 'الآن') row.age = 'قبل دقيقة'; });
       state.status = 'outbid';
+      saveBid({ ...loadBids().find((b) => b.id === lot.id), status: 'outbid', top: rival });
       if (state.amount < minBid()) state.amount = minBid();
       $('#bid-amount').value = formatNumber(state.amount);
       renderPrices();
@@ -552,6 +554,7 @@ document.addEventListener('click', (event) => {
   if (watch) {
     const id = Number(watch.dataset.watch);
     state.watch.has(id) ? state.watch.delete(id) : state.watch.add(id);
+    saveWatch(state.watch);
     renderSimilar();
     renderWatch();
     document.querySelector(`#similar-grid [data-watch="${id}"]`)?.focus();
