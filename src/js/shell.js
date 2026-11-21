@@ -230,6 +230,7 @@ const footerHTML = `
     </footer>`;
 
 import * as data from './data.js';
+import { initSelects } from './select.js';
 
 /* ---------- browser storage (prototype: everything is kept in this browser only) ---------- */
 
@@ -375,4 +376,5 @@ export function renderShell() {
   document.getElementById('site-footer').innerHTML = footerHTML;
   wireLogoFallbacks();
   wireNotifications();
+  initSelects();
 }
