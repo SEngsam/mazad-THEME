@@ -132,3 +132,12 @@ export const lotDetails = {
     seller: { name: 'معرض الوفاء للسيارات', since: 2022, deals: 214, rating: '4.8' },
   },
 };
+
+/** Lots the signed-in visitor has won (prototype examples). dueIn: seconds left to pay when the page loads. */
+export const wonLots = [
+  { id: 13, price: 26900, deposit: 1300, dueIn: 2 * 86400 + 5 * 3600 },
+  { id: 11, price: 3400, deposit: 500, deliveredOn: '12 نوفمبر 2026' },
+];
+
+/** Categories that can be shipped; the rest are picked up or transferred (cars, land, equipment, plates). */
+export const shippableCats = [2, 3, 4, 7];

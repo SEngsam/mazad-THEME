@@ -1,7 +1,7 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatCountdown, formatNumber, formatPrice } from './components.js';
 import {
-  catHref, catNavHTML, clearUser, getUser, loadBids, loadListings, loadWatch, loginHref, renderShell, saveWatch, setUser,
+  catHref, catNavHTML, clearUser, getUser, loadBids, loadListings, loadOrders, loadWatch, loginHref, renderShell, saveWatch, setUser,
 } from './shell.js';
 
 renderShell();
@@ -10,7 +10,6 @@ const $ = (sel) => document.querySelector(sel);
 const startedAt = Date.now();
 const elapsed = () => Math.floor((Date.now() - startedAt) / 1000);
 const lotById = (id) => data.lots.find((l) => l.id === id);
-const BUYER_FEE = 0.025;
 const TABS = [
   ['bids', 'مزايداتي'],
   ['watch', 'المفضلة'],
@@ -32,10 +31,6 @@ const DEMO_LISTINGS = [
 const state = {
   tab: TABS.some(([id]) => `#${id}` === location.hash) ? location.hash.slice(1) : 'bids',
   watch: loadWatch(),
-  won: [
-    { id: 13, price: 26900, deposit: 1300, status: 'unpaid', due: 'الأحد 9:00م', paying: false, method: 'مدى' },
-    { id: 11, price: 3400, deposit: 500, status: 'delivered', date: '12 نوفمبر 2026' },
-  ],
   notify: { outbid: true, ending: true, news: false },
 };
 
@@ -102,11 +97,24 @@ function myBids() {
 function myListings() {
   return [...loadListings(), ...DEMO_LISTINGS];
 }
+const PAY_METHODS = { card: 'بطاقة', applepay: 'Apple Pay', tabby: 'تابي', tamara: 'تمارا' };
+const dueFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { weekday: 'long', hour: 'numeric', minute: '2-digit' });
+
+/** Won lots with their payment status from orders paid on the checkout page. */
+function myWins() {
+  const orders = loadOrders();
+  return data.wonLots.map((w) => ({
+    ...w,
+    order: orders[w.id],
+    status: orders[w.id] ? 'paid' : w.dueIn ? 'unpaid' : 'delivered',
+  }));
+}
+
 const counts = () => ({
   bids: myBids().length,
   watch: state.watch.size,
   selling: myListings().length,
-  won: state.won.length,
+  won: data.wonLots.length,
 });
 
 /* ---------- tabs ---------- */
@@ -155,42 +163,18 @@ function sellingTab() {
   }).join('')}</ul></div>`;
 }
 
-function payPanel(w) {
-  const fee = Math.round(w.price * BUYER_FEE);
-  const due = w.price + fee - w.deposit;
-  const methods = ['مدى', 'Apple Pay', 'تقسيط مع تابي', 'تقسيط مع تمارا'];
-  return `
-    <div class="flex flex-col gap-4 rounded-[18px] bg-sand p-4">
-      <dl class="m-0 flex flex-col gap-2 text-[13px] text-ink-body">
-        <div class="flex justify-between gap-3"><dt>سعر الفوز</dt><dd class="m-0 font-semibold text-ink tabular">${formatPrice(w.price)}</dd></div>
-        <div class="flex justify-between gap-3"><dt>عمولة المشتري (2.5%)</dt><dd class="m-0 font-semibold text-ink tabular">${formatPrice(fee)}</dd></div>
-        <div class="flex justify-between gap-3"><dt>تأمين المزايدة المدفوع</dt><dd class="m-0 font-semibold text-primary tabular">− ${formatPrice(w.deposit)}</dd></div>
-        <div class="flex justify-between gap-3 border-t border-line pt-2 text-sm"><dt class="font-semibold text-ink">المتبقي للدفع</dt><dd class="m-0 text-base font-bold text-ink tabular">${formatPrice(due)}</dd></div>
-      </dl>
-      <fieldset class="m-0 min-w-0 border-0 p-0">
-        <legend class="mb-2 p-0 text-sm font-semibold">طريقة الدفع</legend>
-        <div class="flex flex-wrap gap-2">${methods.map((m) => `<label class="cursor-pointer"><input type="radio" name="pay-${w.id}" value="${m}" ${m === w.method ? 'checked' : ''} data-method="${w.id}" class="peer sr-only">
-          <span class="block rounded-full border px-4 py-2 text-[13px] font-medium transition-colors peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 border-[#E5E7EB] bg-white text-ink hover:border-ink/40">${m}</span></label>`).join('')}</div>
-      </fieldset>
-      ${w.method.startsWith('تقسيط') ? `<p class="m-0 text-xs text-ink-muted">ستكمل التقسيط في صفحة ${w.method.endsWith('تابي') ? 'تابي' : 'تمارا'} ثم تعود هنا.</p>` : ''}
-      <div class="flex flex-wrap gap-2">
-        <button type="button" data-pay="${w.id}" class="btn-primary px-6 py-2.5 text-sm">ادفع ${formatPrice(due)}</button>
-        <button type="button" data-pay-cancel="${w.id}" class="btn-outline px-5 py-2.5 text-sm">لاحقاً</button>
-      </div>
-    </div>`;
-}
-
 function wonTab() {
-  return `<ul class="m-0 flex list-none flex-col gap-3 p-0">${state.won.map((w) => {
+  return `<ul class="m-0 flex list-none flex-col gap-3 p-0">${myWins().map((w) => {
     const lot = lotById(w.id);
     const facts = fact('سعر الفوز', formatPrice(w.price))
-      + (w.status === 'unpaid' ? fact('ادفع قبل', esc(w.due), 'text-accent-strong') : w.status === 'paid' ? fact('التسليم', 'خلال 3 أيام عمل') : fact('استلمته في', esc(w.date)));
+      + (w.status === 'unpaid' ? fact('ادفع قبل', esc(dueFmt.format(new Date(startedAt + w.dueIn * 1000))), 'text-accent-strong')
+        : w.status === 'paid' ? fact('دفعت', `${formatPrice(w.order.total)} · ${PAY_METHODS[w.order.method] ?? ''}`) + fact('الاستلام', w.order.delivery === 'ship' ? `توصيل إلى ${esc(w.order.city)}` : 'من البائع')
+          : fact('استلمته في', esc(w.deliveredOn)));
     return row({
       href: `lot.html?id=${lot.id}`, img: lot.img, title: lot.name, status: w.status,
       meta: `${esc(data.categories[lot.cat])} · ${esc(lot.city)} · <span class="tabular">لوت ${esc(data.lotNumber(lot))}</span>`,
       facts,
-      actions: w.status === 'unpaid' && !w.paying ? `<button type="button" data-pay-open="${w.id}" class="btn-primary px-5 py-2 text-[13px]">ادفع الآن</button>` : '',
-      after: w.status === 'unpaid' && w.paying ? payPanel(w) : '',
+      actions: w.status === 'unpaid' ? `<a href="checkout.html?id=${w.id}" class="btn-primary px-5 py-2 text-[13px]">ادفع الآن</a>` : '',
     });
   }).join('')}</ul>`;
 }
@@ -347,25 +331,11 @@ document.addEventListener('click', (event) => {
     toast('أزلناه من المفضلة');
     return;
   }
-  const open = t.closest('[data-pay-open]');
-  if (open) { state.won.find((w) => w.id === Number(open.dataset.payOpen)).paying = true; render(); $(`[data-pay="${open.dataset.payOpen}"]`)?.focus(); return; }
-  const cancel = t.closest('[data-pay-cancel]');
-  if (cancel) { state.won.find((w) => w.id === Number(cancel.dataset.payCancel)).paying = false; render(); return; }
-  const pay = t.closest('[data-pay]');
-  if (pay) {
-    const w = state.won.find((x) => x.id === Number(pay.dataset.pay));
-    w.status = 'paid';
-    w.paying = false;
-    render();
-    toast(`تم الدفع عبر ${w.method}. سنتواصل معك لموعد التسليم.`);
-    return;
-  }
   if (t.closest('[data-logout]')) { clearUser(); location.href = 'index.html'; }
 });
 
 document.addEventListener('change', (event) => {
   const t = event.target;
-  if (t.dataset.method) { state.won.find((w) => w.id === Number(t.dataset.method)).method = t.value; render(); $(`input[name="${t.name}"]:checked`)?.focus(); }
   if (t.dataset.notify) { state.notify[t.dataset.notify] = t.checked; toast(t.checked ? 'فعّلنا الإشعار' : 'أوقفنا الإشعار'); }
 });
 

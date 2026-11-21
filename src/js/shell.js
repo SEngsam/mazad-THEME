@@ -130,6 +130,12 @@ export function saveListing(listing) {
   writeStore('mz-listings', [listing, ...loadListings()]);
 }
 
+/** Paid orders by lot id: { [id]: { ref, status: 'paid', method, total, delivery, at } }. */
+export const loadOrders = () => readStore('mz-orders', {});
+export function saveOrder(id, order) {
+  writeStore('mz-orders', { ...loadOrders(), [id]: order });
+}
+
 /* ---------- sign-in state ---------- */
 
 const USER_KEY = 'mz-user';
