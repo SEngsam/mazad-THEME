@@ -6,6 +6,15 @@
 const heartIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.1 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.7 3.6 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z"/></svg>';
 const userIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px] sm:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>';
 
+const bellIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 2 6 2 6H4s2-1.5 2-6Z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></svg>';
+
+function bellLink() {
+  const read = loadReadNotifications();
+  const unread = buildNotifications().filter((n) => !read.has(n.id)).length;
+  return `<a href="notifications.html" class="relative flex items-center rounded-full px-2 py-2.5 text-ink hover:text-primary sm:px-2.5" aria-label="الإشعارات، ${unread} غير مقروءة">
+    ${bellIcon}<span data-notif-count ${unread ? '' : 'hidden'} class="absolute -end-0.5 top-0.5 min-w-[18px] rounded-full bg-accent-strong ring-2 ring-white px-1 text-center text-[10px] font-bold leading-[18px] text-white tabular">${unread}</span></a>`;
+}
+
 const topHTML = (user) => `
     <div class="on-dark bg-forest text-[13px] text-white">
       <div class="container-page flex items-center justify-between gap-3 py-[9px]">
@@ -38,6 +47,7 @@ const topHTML = (user) => `
         </form>
 
         <nav aria-label="الحساب" class="ms-auto flex shrink-0 items-center gap-0.5 text-sm sm:gap-1.5">
+          ${user ? bellLink() : ''}
           <a id="watch-link" href="account.html#watch" class="flex items-center gap-1 rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:gap-1.5 sm:px-3.5">
             <span class="sm:hidden">${heartIcon}</span>
             <span class="hidden whitespace-nowrap sm:inline">المفضلة</span>
@@ -98,7 +108,7 @@ const footerHTML = `
       </div>
     </footer>`;
 
-import { initialWatchlist } from './data.js';
+import * as data from './data.js';
 
 /* ---------- browser storage (prototype: everything is kept in this browser only) ---------- */
 
@@ -113,7 +123,7 @@ function writeStore(key, value) {
 }
 
 /** Watched lot ids, shared by every page. */
-export const loadWatch = () => new Set(readStore('mz-watch', initialWatchlist));
+export const loadWatch = () => new Set(readStore('mz-watch', data.initialWatchlist));
 export function saveWatch(set) {
   writeStore('mz-watch', [...set]);
   document.querySelectorAll('[data-watch-count]').forEach((el) => { el.textContent = set.size; });
@@ -141,6 +151,56 @@ export function saveOrder(id, order) {
 export const loadEventRegs = () => readStore('mz-events', {});
 export function saveEventReg(id, reg) {
   writeStore('mz-events', { ...loadEventRegs(), [id]: reg });
+}
+
+/* ---------- notifications (built from the visitor's activity plus prototype examples) ---------- */
+
+const MIN = 60000;
+const HOUR = 60 * MIN;
+const pageLoadedAt = Date.now();
+const priceText = (n) => `${n.toLocaleString('en-US')} ر.س`;
+
+/** All notifications, newest first: { id, kind: 'bids'|'buying'|'selling'|'following', tone: 'warn'|'good'|'info', title, text, href, at }. */
+export function buildNotifications(now = Date.now()) {
+  const lotOf = (id) => data.lots.find((l) => l.id === id);
+  const list = [];
+  const ownBids = loadBids();
+  const bids = [...ownBids, ...[{ id: 8, status: 'outbid', top: 17200, at: now - 2 * HOUR }, { id: 3, status: 'leading', amount: 4250, at: now - 30 * MIN }]
+    .filter((b) => !ownBids.some((o) => o.id === b.id))];
+  bids.forEach((b) => {
+    const lot = lotOf(b.id);
+    if (!lot) return;
+    list.push(b.status === 'outbid'
+      ? { id: `bid-${b.id}-out`, kind: 'bids', tone: 'warn', title: 'تجاوز مزايد آخر مزايدتك', text: `${lot.name} · أعلى مزايدة ${priceText(b.top)}`, href: `lot.html?id=${lot.id}#bid-panel`, at: b.at ?? now - HOUR }
+      : { id: `bid-${b.id}-lead`, kind: 'bids', tone: 'good', title: 'مزايدتك هي الأعلى', text: `${lot.name} · ${priceText(b.amount ?? b.top)}`, href: `lot.html?id=${lot.id}`, at: b.at ?? now - HOUR });
+  });
+  const orders = loadOrders();
+  data.wonLots.forEach((w) => {
+    const lot = lotOf(w.id);
+    if (orders[w.id]) list.push({ id: `paid-${w.id}`, kind: 'buying', tone: 'good', title: 'تم الدفع', text: `${lot.name} · رقم الطلب ${orders[w.id].ref}`, href: 'account.html#won', at: orders[w.id].at });
+    else if (w.dueIn) list.push({ id: `won-${w.id}`, kind: 'buying', tone: 'warn', title: 'فزت بالمزاد، أكمل الدفع', text: `${lot.name} · ${priceText(w.price)}`, href: `checkout.html?id=${w.id}`, at: now - 3 * HOUR });
+    else list.push({ id: `delivered-${w.id}`, kind: 'buying', tone: 'info', title: 'تم تسليم مشترياتك', text: lot.name, href: 'account.html#won', at: now - 26 * HOUR });
+  });
+  loadListings().forEach((l) => list.push({ id: `listing-${l.ref}`, kind: 'selling', tone: 'info', title: 'استلمنا طلب البيع', text: `${l.title} · نراجعه خلال 48 ساعة`, href: 'account.html#selling', at: l.at }));
+  list.push(
+    { id: 'listing-live-7', kind: 'selling', tone: 'good', title: 'نُشر منتجك في المزاد', text: 'رافعة شوكية تويوتا 3 طن', href: 'lot.html?id=7', at: now - 50 * HOUR },
+    { id: 'listing-sold-198230', kind: 'selling', tone: 'good', title: 'بيع منتجك', text: `ساعة سيكو بريساج 2019 · ${priceText(2900)}`, href: 'account.html#selling', at: now - 74 * HOUR },
+  );
+  Object.entries(loadEventRegs()).forEach(([id, reg]) => {
+    const ev = data.events[id];
+    if (ev && reg.remind) list.push({ id: `event-${id}`, kind: 'following', tone: 'info', title: 'تذكير بموعد المزاد', text: ev.title, href: `event.html?e=${id}`, at: reg.at });
+  });
+  const elapsed = Math.floor((now - pageLoadedAt) / 1000);
+  [...loadWatch()].map(lotOf).filter((l) => l && l.endsIn - elapsed > 0 && l.endsIn - elapsed < 3600)
+    .forEach((l) => list.push({ id: `ending-${l.id}`, kind: 'following', tone: 'warn', title: 'مزاد في مفضلتك ينتهي خلال أقل من ساعة', text: l.name, href: `lot.html?id=${l.id}`, at: now - 5 * MIN }));
+  return list.sort((a, b) => b.at - a.at);
+}
+
+export const loadReadNotifications = () => new Set(readStore('mz-notif-read', []));
+export function markNotificationsRead(ids) {
+  writeStore('mz-notif-read', [...new Set([...loadReadNotifications(), ...ids])]);
+  const unread = buildNotifications().filter((n) => !loadReadNotifications().has(n.id)).length;
+  document.querySelectorAll('[data-notif-count]').forEach((el) => { el.textContent = unread; el.hidden = !unread; });
 }
 
 /* ---------- sign-in state ---------- */
