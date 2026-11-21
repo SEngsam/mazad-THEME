@@ -1,5 +1,5 @@
 import * as data from './data.js';
-import { LotCard, Media, esc, formatDays, formatNumber, formatPrice, icons } from './components.js';
+import { LotCard, Media, bidIncrement, esc, formatDays, formatNumber, formatPrice, icons } from './components.js';
 import { catHref, catNavHTML, getUser, loadBids, loadWatch, loginHref, renderShell, saveBid, saveWatch } from './shell.js';
 
 renderShell();
@@ -46,12 +46,7 @@ function detailsFor(l) {
 }
 
 /** Minimum raise for a given current bid. */
-function increment(bid) {
-  if (bid < 10000) return 100;
-  if (bid < 50000) return 250;
-  if (bid < 200000) return 500;
-  return 1000;
-}
+const increment = bidIncrement;
 const minBid = () => state.current + increment(state.current);
 
 function buildHistory(top, count) {

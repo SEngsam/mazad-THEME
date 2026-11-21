@@ -11,6 +11,14 @@ export function formatDays(days) {
   return days <= 10 ? `${days} أيام` : `${days} يوماً`;
 }
 
+/** Minimum raise over a bid, by price band. */
+export function bidIncrement(bid) {
+  if (bid < 10000) return 100;
+  if (bid < 50000) return 250;
+  if (bid < 200000) return 500;
+  return 1000;
+}
+
 export function formatCountdown(seconds) {
   const t = Math.max(0, seconds);
   const days = Math.floor(t / 86400);

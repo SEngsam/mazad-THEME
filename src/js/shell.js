@@ -140,7 +140,7 @@ const topHTML = (user) => `
     <div class="on-dark bg-forest text-[13px] text-white">
       <div class="container-page flex items-center justify-between gap-3 py-[9px]">
         <p class="m-0 min-w-0 truncate">
-          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="event.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات ساحة الشمال الليلة 8:00م · 42 سيارة</a>
+          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="live.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات ساحة الشمال الليلة 8:00م · 42 سيارة</a>
         </p>
         <div class="flex shrink-0 items-center gap-2 whitespace-nowrap">
           <span class="hidden opacity-85 sm:inline">قسّط مع</span>

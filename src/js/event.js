@@ -67,6 +67,7 @@ function registerCard() {
           <div class="flex justify-between gap-3"><dt>تأمين المشاركة (يُسترد)</dt><dd class="m-0 font-semibold text-ink tabular">${formatPrice(ev.deposit)}</dd></div>
         </dl>
         ${action}
+        ${ev.endsInDays ? '' : `<a href="live.html?e=${id}" class="btn-outline w-full py-3 text-sm">${t.live ? 'ادخل غرفة المزاد' : 'غرفة المزاد'}</a>`}
         <a href="help.html#how-to-bid" class="self-center text-sm font-semibold">كيف أزايد؟</a>
       </div>
     </div>`;
