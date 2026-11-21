@@ -212,7 +212,7 @@ function settingsTab() {
         <h2 id="notify-title" class="m-0 pt-4 text-lg font-bold">الإشعارات</h2>
         ${switchRow('outbid', 'عند تجاوز مزايدتي', 'رسالة نصية فور مزايدة أحد بأعلى منك.')}
         ${switchRow('ending', 'قبل انتهاء مزاد في المفضلة', 'تذكير قبل ساعة من انتهاء أي مزاد تتابعه.')}
-        ${switchRow('news', 'عروض وأخبار مزاد', 'مزادات مميزة جديدة، مرة في الأسبوع على الأكثر.')}
+        ${switchRow('news', 'عروض وأخبار مزادي', 'مزادات مميزة جديدة، مرة في الأسبوع على الأكثر.')}
       </section>
       <button type="button" data-logout class="btn-outline self-start px-6 py-3 text-sm">تسجيل الخروج</button>
     </div>`;
@@ -281,7 +281,7 @@ function render() {
         </section>
       </div>
     </div>`;
-  document.title = `${label} · حسابي · مزاد`;
+  document.title = `${label} · حسابي · مزادي`;
   // Keep the selected tab visible in the scrolling row on phones.
   const current = $('[data-tab][aria-current="page"]');
   const rowEl = current?.closest('ul');

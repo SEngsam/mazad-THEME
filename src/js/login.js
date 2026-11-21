@@ -131,7 +131,7 @@ function doneStep() {
   return `
     <div class="flex flex-col items-center gap-4 py-10 text-center">
       <span class="grid h-16 w-16 place-items-center rounded-full bg-primary-soft text-primary">${check.replace('h-4 w-4', 'h-8 w-8')}</span>
-      ${heading('أهلاً بك في مزاد', 'تم تسجيل دخولك. جارٍ إعادتك إلى حيث كنت…')}
+      ${heading('أهلاً بك في مزادي', 'تم تسجيل دخولك. جارٍ إعادتك إلى حيث كنت…')}
       <a href="${esc(next)}" class="btn-primary px-7 py-3 text-sm">متابعة</a>
     </div>`;
 }

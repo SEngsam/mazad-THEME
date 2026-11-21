@@ -166,7 +166,7 @@ export const events = {
     unit: 'قطعة',
     cat: 2,
     endsInDays: 4,
-    place: 'مستودع مزاد، حي الروضة، جدة',
+    place: 'مستودع مزادي، حي الروضة، جدة',
     mapQuery: 'حي الروضة جدة',
     viewing: 'بموعد مسبق من الأحد إلى الأربعاء',
     deposit: 1000,
@@ -175,7 +175,7 @@ export const events = {
   },
   'premium-plates': {
     title: 'مزاد اللوحات المميزة', type: 'إلكتروني', city: 'الرياض', count: 15, unit: 'لوحة', cat: 8,
-    startDay: 1, startHour: 21, place: 'إلكتروني عبر مزاد', mapQuery: 'الرياض', viewing: 'لا تتطلب معاينة',
+    startDay: 1, startHour: 21, place: 'إلكتروني عبر مزادي', mapQuery: 'الرياض', viewing: 'لا تتطلب معاينة',
     deposit: 2000, lots: [6, 14], img: unsplash('1758798219572-512a03a60ce0', 1400),
   },
   'dammam-equipment': {
@@ -185,13 +185,13 @@ export const events = {
   },
   heritage: {
     title: 'مزاد التحف والمقتنيات', type: 'إلكتروني', city: 'جدة', count: 28, unit: 'قطعة', cat: 7,
-    startDay: 3, startHour: 20, place: 'مستودع مزاد، حي الروضة، جدة', mapQuery: 'حي الروضة جدة',
+    startDay: 3, startHour: 20, place: 'مستودع مزادي، حي الروضة، جدة', mapQuery: 'حي الروضة جدة',
     viewing: 'بموعد مسبق', deposit: 500, lots: [11], img: unsplash('1564624171349-46ed471bf4e3', 1400),
   },
   'riyadh-land': {
     title: 'مزاد أراضي شمال الرياض', type: 'حضوري', city: 'الرياض', count: 12, unit: 'أرض', cat: 5,
     startDay: 5, startHour: 19, place: 'قاعة المزادات، طريق أنس بن مالك، الرياض', mapQuery: 'طريق أنس بن مالك الرياض',
-    viewing: 'زيارة المواقع بالتنسيق مع فريق مزاد', deposit: 10000, lots: [9], img: unsplash('1694018359679-49465b4c0d61', 1400),
+    viewing: 'زيارة المواقع بالتنسيق مع فريق مزادي', deposit: 10000, lots: [9], img: unsplash('1694018359679-49465b4c0d61', 1400),
   },
 };
 

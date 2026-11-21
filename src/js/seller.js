@@ -122,7 +122,7 @@ function reviewsPanel() {
 
 function render() {
   const panels = { lots: lotsPanel, sold: soldPanel, reviews: reviewsPanel };
-  document.title = `${seller.name} · مزاد`;
+  document.title = `${seller.name} · مزادي`;
   $('#main').innerHTML = `
     ${header()}
     <section class="flex flex-col gap-4">

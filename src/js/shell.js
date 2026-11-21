@@ -156,8 +156,8 @@ const topHTML = (user) => `
 
     <header class="sticky top-0 z-20 border-b border-line bg-white shadow-header">
       <div class="container-page flex flex-wrap items-center gap-x-2 gap-y-3 sm:gap-x-3 py-3 lg:flex-nowrap lg:gap-6 lg:py-3.5">
-        <a href="index.html" class="shrink-0" aria-label="مزاد — الرئيسية">
-          <img src="public/assets/mazad-logo.png" alt="مزاد" width="900" height="284" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
+        <a href="index.html" class="shrink-0" aria-label="مزادي — الرئيسية">
+          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
         </a>
 
         <form id="search-form" role="search" action="search.html" class="order-last flex w-full items-center rounded-full bg-mist p-1 focus-within:ring-2 focus-within:ring-primary lg:order-none lg:w-auto lg:min-w-[260px] lg:flex-1">
@@ -191,7 +191,7 @@ const footerHTML = `
     <footer class="mt-auto border-t border-line-soft bg-primary-soft">
       <div class="container-page grid grid-cols-2 gap-7 pb-6 pt-10 text-sm sm:grid-cols-3 lg:grid-cols-4">
         <div class="col-span-2 flex flex-col gap-2.5 sm:col-span-3 lg:col-span-1">
-          <img src="public/assets/mazad-logo.png" alt="مزاد" width="900" height="284" class="block h-11 w-auto self-start">
+          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="block h-11 w-auto self-start">
           <p class="m-0 text-[13px] leading-[1.8] text-ink-muted">سجل تجاري 1010XXXXXX<br>موثّق في المركز السعودي للأعمال</p>
           <div class="flex flex-wrap gap-2">
             <a href="#" class="whitespace-nowrap rounded-[10px] bg-ink px-3.5 py-2 text-xs text-white hover:bg-black hover:text-white">App Store</a>
@@ -218,7 +218,7 @@ const footerHTML = `
         </div>
       </div>
       <div class="container-page flex flex-wrap items-center justify-between gap-3 border-t border-[#E5E7EB] pb-7 pt-4 text-xs text-ink-muted">
-        <span>© 2026 مَزاد · جميع الحقوق محفوظة</span>
+        <span>© 2026 مزادي · جميع الحقوق محفوظة</span>
         <ul class="m-0 flex list-none flex-wrap items-center gap-2 p-0" aria-label="وسائل الدفع">
           <li class="pay-badge">مدى<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Mada_Logo.svg" alt="مدى"></li>
           <li class="pay-badge">Apple Pay<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Apple_Pay_logo.svg" alt="Apple Pay"></li>

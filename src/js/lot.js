@@ -40,7 +40,7 @@ function detailsFor(l) {
     gallery: 1,
     specs: [['الفئة', data.categories[l.cat]], ['المدينة', l.city], ['التفاصيل', l.sub]],
     inspection: null,
-    description: `${l.sub}. يُسلَّم المنتج للفائز بعد إتمام الدفع، وتُراجع حالته من فريق مزاد قبل النشر.`,
+    description: `${l.sub}. يُسلَّم المنتج للفائز بعد إتمام الدفع، وتُراجع حالته من فريق مزادي قبل النشر.`,
     viewing: { place: l.city, times: 'بالتنسيق مع البائع بعد الفوز' },
   };
 }
@@ -348,7 +348,7 @@ function mobileBar() {
 /* ---------- render ---------- */
 
 function render() {
-  document.title = `${lot.name} · مزاد`;
+  document.title = `${lot.name} · مزادي`;
   $('#cat-nav').innerHTML = catNavHTML(data.categories, lot.cat);
   $('#lot-root').innerHTML = `
     ${breadcrumb()}

@@ -12,7 +12,7 @@ const SECTIONS = [
   ['how-to-bid', 'كيف أزايد'],
   ['fees', 'الرسوم'],
   ['protection', 'حماية المشتري'],
-  ['selling', 'البيع في مزاد'],
+  ['selling', 'البيع في مزادي'],
   ['faq', 'الأسئلة الشائعة'],
   ['terms', 'الشروط والخصوصية'],
   ['contact', 'تواصل معنا'],
@@ -59,11 +59,11 @@ const FAQ = [
   ['الدفع والاستلام', [
     ['متى يجب أن أدفع بعد الفوز؟', 'خلال 48 ساعة من انتهاء المزاد، من «حسابي» ثم «مشترياتي». يظهر لك الموعد والوقت المتبقي.'],
     ['ما طرق الدفع المتاحة؟', 'مدى، فيزا، ماستركارد، Apple Pay، أو التقسيط مع تابي (4 دفعات) أو تمارا (3 دفعات) بدون فوائد.'],
-    ['كيف أستلم السيارة؟', 'من موقع البائع بموعد نرسله لك، وننقل الملكية عبر أبشر بحضور مندوب مزاد.'],
+    ['كيف أستلم السيارة؟', 'من موقع البائع بموعد نرسله لك، وننقل الملكية عبر أبشر بحضور مندوب مزادي.'],
     ['هل توصلون لكل المدن؟', 'نوصل الساعات والجوالات والمجوهرات والتحف لكل مدن المملكة خلال 2 إلى 4 أيام عمل.'],
   ]],
   ['البيع', [
-    ['كم تكلفة البيع في مزاد؟', 'الإضافة مجانية. نأخذ 5% من سعر البيع فقط إذا بيع المنتج، بحد أدنى 100 ر.س.'],
+    ['كم تكلفة البيع في مزادي؟', 'الإضافة مجانية. نأخذ 5% من سعر البيع فقط إذا بيع المنتج، بحد أدنى 100 ر.س.'],
     ['متى أستلم مبلغي؟', 'خلال 3 أيام عمل بعد أن يستلم المشتري المنتج ويؤكد مطابقته للوصف.'],
     ['ماذا لو لم يصل المزاد للحد الأدنى؟', 'لا يُباع المنتج ولا ندفعك شيئاً. يمكنك إعادة عرضه أو تعديل الحد الأدنى من «منتجاتي».'],
   ]],
@@ -151,7 +151,7 @@ function body() {
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div class="flex flex-col gap-2"><label for="c-topic" class="text-sm font-semibold">الموضوع</label>
           <select id="c-topic" class="select-pill w-full appearance-none rounded-full border-0 bg-mist py-3 pe-5 ps-12 text-[15px] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0">
-            <option>مزايدة أو مزاد</option><option>الدفع والاستلام</option><option>البيع في مزاد</option><option>الإعلان معنا</option><option>غير ذلك</option>
+            <option>مزايدة أو مزاد</option><option>الدفع والاستلام</option><option>البيع في مزادي</option><option>الإعلان معنا</option><option>غير ذلك</option>
           </select></div>
         <div class="flex flex-col gap-2"><label for="c-phone" class="text-sm font-semibold">رقم الجوال للرد</label>
           <input id="c-phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel-national" placeholder="5X XXX XXXX" value="${getUser() ? `0${esc(getUser().phone)}` : ''}"
@@ -186,7 +186,7 @@ function body() {
       <div class="grid grid-cols-1 gap-px overflow-hidden rounded-card border border-line bg-line-soft sm:grid-cols-2">
         ${PROTECTION.map(([t, x]) => `<div class="flex gap-3 bg-white p-5"><span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">${check}</span><span class="flex flex-col gap-1"><b class="text-[15px] font-semibold">${t}</b><span class="text-[13px] leading-[1.7] text-ink-body">${x}</span></span></div>`).join('')}
       </div>`),
-    sectionWrap('selling', 'البيع في مزاد', `${steps(SELL_STEPS)}<a href="sell.html" class="btn-primary self-start px-6 py-2.5 text-sm">ابدأ البيع</a>`, 'اعرض سيارتك أو مقتنياتك لآلاف المزايدين في المملكة.'),
+    sectionWrap('selling', 'البيع في مزادي', `${steps(SELL_STEPS)}<a href="sell.html" class="btn-primary self-start px-6 py-2.5 text-sm">ابدأ البيع</a>`, 'اعرض سيارتك أو مقتنياتك لآلاف المزايدين في المملكة.'),
     sectionWrap('faq', 'الأسئلة الشائعة', `<div class="grid grid-cols-1 gap-5 xl:grid-cols-2">${FAQ.map(([group, items]) => `
       <div class="card flex flex-col px-5 pt-2 sm:px-6"><h3 class="m-0 pb-1 pt-4 text-sm font-bold text-primary">${group}</h3>${items.map((it) => faqItem(it)).join('')}</div>`).join('')}</div>`),
     sectionWrap('terms', 'الشروط والخصوصية', `
@@ -212,7 +212,7 @@ function body() {
         <div class="card flex flex-col gap-4 p-5 sm:p-6">
           <div class="flex flex-col gap-1"><span class="text-[13px] text-ink-muted">الهاتف الموحد</span><a href="tel:920012345" class="text-2xl font-bold text-ink tabular hover:text-primary">920012345</a></div>
           <div class="flex flex-col gap-1 border-t border-line-soft pt-4"><span class="text-[13px] text-ink-muted">ساعات العمل</span><b class="text-sm font-semibold">يومياً من 9 صباحاً إلى 11 مساءً</b></div>
-          <div class="flex flex-col gap-1 border-t border-line-soft pt-4"><span class="text-[13px] text-ink-muted">للإعلان في مزاد</span><span class="text-sm text-ink-body">اختر «الإعلان معنا» في النموذج، ويتواصل معك فريق الإعلانات خلال يوم عمل.</span></div>
+          <div class="flex flex-col gap-1 border-t border-line-soft pt-4"><span class="text-[13px] text-ink-muted">للإعلان في مزادي</span><span class="text-sm text-ink-body">اختر «الإعلان معنا» في النموذج، ويتواصل معك فريق الإعلانات خلال يوم عمل.</span></div>
         </div>
       </div>`, 'نرد على الرسائل خلال ساعات العمل، عادة خلال ساعتين.'),
   ].join('');

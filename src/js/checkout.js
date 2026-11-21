@@ -129,7 +129,7 @@ function deliverySection() {
     optionCard({
       name: 'delivery', value: 'pickup', checked: state.delivery === 'pickup',
       title: lot.cat === 1 ? 'الاستلام ونقل الملكية' : 'الاستلام من البائع',
-      text: lot.cat === 1 ? `من موقع البائع في ${esc(lot.city)}، مع نقل الملكية عبر أبشر بحضور مندوب مزاد.` : `من موقع البائع في ${esc(lot.city)} بموعد نرسله لك بعد الدفع.`,
+      text: lot.cat === 1 ? `من موقع البائع في ${esc(lot.city)}، مع نقل الملكية عبر أبشر بحضور مندوب مزادي.` : `من موقع البائع في ${esc(lot.city)} بموعد نرسله لك بعد الدفع.`,
       aside: 'مجاناً',
     }),
   ].filter(Boolean).join('');
@@ -241,7 +241,7 @@ function successView() {
   const m = METHODS.find((x) => x.id === o.method);
   const steps = o.delivery === 'ship'
     ? [['نستلم المنتج من البائع', 'ونفحص مطابقته للوصف.'], ['نوصله لعنوانك', `في ${o.city} خلال 2 إلى 4 أيام عمل، ونتصل بك قبل الوصول.`], ['نحوّل المبلغ للبائع', 'بعد تأكيد استلامك.']]
-    : [['نرسل لك موعد الاستلام', `من موقع البائع في ${lot.city} خلال 24 ساعة.`], ...(lot.cat === 1 ? [['نقل الملكية عبر أبشر', 'بحضور مندوب مزاد عند الاستلام.']] : []), ['نحوّل المبلغ للبائع', 'بعد تأكيد استلامك.']];
+    : [['نرسل لك موعد الاستلام', `من موقع البائع في ${lot.city} خلال 24 ساعة.`], ...(lot.cat === 1 ? [['نقل الملكية عبر أبشر', 'بحضور مندوب مزادي عند الاستلام.']] : []), ['نحوّل المبلغ للبائع', 'بعد تأكيد استلامك.']];
   return `
     <div class="card mx-auto flex w-full max-w-2xl flex-col items-center gap-6 px-6 py-10 text-center sm:px-10">
       <span class="grid h-16 w-16 place-items-center rounded-full bg-primary-soft text-primary">${check.replace('h-4 w-4', 'h-8 w-8')}</span>
@@ -276,7 +276,7 @@ const messageView = (title, text, href, cta) => `
 function render() {
   const root = $('#checkout');
   if (!user) { root.innerHTML = messageView('سجّل دخولك لإتمام الشراء', 'ادخل بنفس رقم الجوال الذي زايدت به.', loginHref(), 'تسجيل الدخول'); return; }
-  if (state.order) { root.innerHTML = successView(); document.title = 'تم الدفع · مزاد'; return; }
+  if (state.order) { root.innerHTML = successView(); document.title = 'تم الدفع · مزادي'; return; }
   if (!won || !lot || !won.dueIn) { root.innerHTML = messageView('لا يوجد طلب بانتظار الدفع', 'تجد كل المزادات التي فزت بها وحالة دفعها في «مشترياتي».', 'account.html#won', 'إلى مشترياتي'); return; }
   const paid = loadOrders()[lot.id];
   if (paid) { root.innerHTML = messageView('دفعت قيمة هذا المزاد', `رقم الطلب ${esc(paid.ref)}. تابع التسليم من «مشترياتي».`, 'account.html#won', 'إلى مشترياتي'); return; }

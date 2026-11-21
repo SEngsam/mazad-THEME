@@ -54,7 +54,7 @@ function render() {
   }
   const all = report.sections.flatMap((s) => s.items);
   const notes = all.filter((i) => i[1] !== 'ok').length;
-  document.title = `تقرير الفحص · ${lot.name} · مزاد`;
+  document.title = `تقرير الفحص · ${lot.name} · مزادي`;
   $('#main').innerHTML = `
     ${breadcrumb()}
     <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-8">

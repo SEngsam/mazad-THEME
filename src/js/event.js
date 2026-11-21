@@ -76,7 +76,7 @@ function render() {
   const lots = ev.lots.map((lid) => data.lots.find((l) => l.id === lid)).filter(Boolean);
   const elapsed = Math.floor((Date.now() - startedAt) / 1000);
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.mapQuery)}`;
-  document.title = `${ev.title} · مزاد`;
+  document.title = `${ev.title} · مزادي`;
   $('#main').innerHTML = `
     <div class="flex flex-col gap-5">
       <nav aria-label="مسار التصفح" class="text-[13px] text-ink-muted">

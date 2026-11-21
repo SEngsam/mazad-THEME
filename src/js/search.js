@@ -130,7 +130,7 @@ function renderHead() {
       <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[28px]">${esc(title())}</h1>
       <p class="m-0 text-[15px] leading-relaxed text-ink-body">${esc(intro)}</p>
     </header>`;
-  document.title = `${title()} · مزاد`;
+  document.title = `${title()} · مزادي`;
   $('#q').value = state.q;
   $('#cat-nav').innerHTML = catNavHTML(data.categories, state.q ? -1 : state.cat);
 }
