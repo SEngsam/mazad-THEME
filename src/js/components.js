@@ -66,7 +66,7 @@ export function LotCard(lot, { remaining, watched }) {
   return `
     <article class="card flex flex-col gap-3 p-2.5 pb-4">
       <div class="relative">
-        ${Media({ src: lot.img, alt: lot.name, className: 'aspect-[4/3] rounded-[14px]' })}
+        <a href="lot.html?id=${lot.id}" tabindex="-1" aria-hidden="true" class="block">${Media({ src: lot.img, className: 'aspect-[4/3] rounded-[14px]' })}</a>
         <button type="button" data-watch="${lot.id}" aria-pressed="${watched}" aria-label="${watched ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}: ${esc(lot.name)}"
           class="absolute end-2.5 top-2.5 grid h-10 w-10 place-items-center rounded-full bg-white shadow-float transition-transform hover:scale-105 ${watched ? 'text-accent' : 'text-ink'}">
           ${icons.heart(watched)}
@@ -79,7 +79,7 @@ export function LotCard(lot, { remaining, watched }) {
       </div>
       <div class="flex flex-col gap-1 px-1.5">
         <div class="flex flex-wrap items-center gap-2">
-          <a href="#lot-${lot.id}" class="text-base font-semibold leading-normal text-ink hover:text-primary">${esc(lot.name)}</a>
+          <a href="lot.html?id=${lot.id}" class="text-base font-semibold leading-normal text-ink hover:text-primary">${esc(lot.name)}</a>
           ${lot.noReserve ? '<span class="whitespace-nowrap rounded-md bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent-ink">بدون حد أدنى</span>' : ''}
         </div>
         <p class="m-0 text-[13px] leading-relaxed text-ink-body">${esc(lot.sub)}</p>

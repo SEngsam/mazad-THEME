@@ -3,14 +3,20 @@ import {
   AdBanner, CategoryTile, FeaturedCard, LotCard, Media, PickCard, SortTab, SponsoredCard, TrustItem,
   formatCountdown,
 } from './components.js';
+import { catNavHTML, renderShell } from './shell.js';
+
+renderShell();
 
 const PAGE_SIZE = 8;
 const SPONSORED_SLOT = 3;
 
+const params = new URLSearchParams(location.search);
+const initialCat = Number(params.get('cat'));
+
 const state = {
-  cat: 0,
+  cat: Number.isInteger(initialCat) && initialCat > 0 && initialCat < data.categories.length ? initialCat : 0,
   tab: 0,
-  query: '',
+  query: params.get('q')?.trim() ?? '',
   expanded: false,
   showAds: document.documentElement.dataset.ads !== 'off',
   watch: new Set(data.initialWatchlist),
@@ -33,12 +39,7 @@ function visibleLots() {
 }
 
 function renderNav() {
-  $('#cat-nav').innerHTML = data.categories
-    .map((label, i) => {
-      const active = i === state.cat;
-      return `<button type="button" data-cat="${i}" aria-pressed="${active}" class="shrink-0 whitespace-nowrap border-b-[2.5px] px-3.5 pb-3 pt-2.5 text-sm transition-colors ${active ? 'border-primary font-semibold text-ink' : 'border-transparent text-ink-body hover:text-ink'}">${label}</button>`;
-    })
-    .join('');
+  $('#cat-nav').innerHTML = catNavHTML(data.categories, state.cat);
 }
 
 function renderCategories() {
@@ -78,7 +79,7 @@ function renderStatic() {
   $('#featured').innerHTML = data.featured.map(FeaturedCard).join('');
   $('#picks').innerHTML = data.picks.map(PickCard).join('');
   $('#trust').innerHTML = data.trust.map(TrustItem).join('');
-  $('#sell-media').innerHTML = Media({ src: data.ads.sell, label: 'صورة · بيع معنا', className: 'absolute inset-0' });
+  $('#sell-media').innerHTML = Media({ src: data.ads.sell, className: 'absolute inset-0' });
 
   document.querySelectorAll('[data-ad-slot]').forEach((el) => { el.hidden = !state.showAds; });
   if (state.showAds) {
@@ -153,17 +154,12 @@ $('#search-form').addEventListener('input', (event) => {
   }
 });
 
-document.addEventListener('load', (event) => {
-  if (event.target.matches?.('img[data-media]')) event.target.classList.add('is-loaded');
-}, true);
-document.addEventListener('error', (event) => {
-  if (event.target.matches?.('img[data-media], img[data-logo]')) event.target.remove();
-}, true);
-
-document.querySelectorAll('img[data-logo]').forEach((img) => {
-  if (img.complete && img.naturalWidth === 0) img.remove();
-});
-
 renderStatic();
 renderDynamic();
 setInterval(tick, 1000);
+if (state.query) {
+  $('#q').value = state.query;
+  $('#live').scrollIntoView({ block: 'start' });
+} else if (state.cat) {
+  $('#live').scrollIntoView({ block: 'start' });
+}

@@ -2,7 +2,7 @@
 const token = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 
 module.exports = {
-  content: ['./index.html', './src/js/**/*.js'],
+  content: ['./*.html', './src/js/**/*.js'],
   theme: {
     extend: {
       colors: {
