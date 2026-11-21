@@ -6,7 +6,7 @@
 const heartIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.1 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.7 3.6 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z"/></svg>';
 const userIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-[22px] w-[22px] sm:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>';
 
-const topHTML = `
+const topHTML = (user) => `
     <div class="on-dark bg-forest text-[13px] text-white">
       <div class="container-page flex items-center justify-between gap-3 py-[9px]">
         <p class="m-0 min-w-0 truncate">
@@ -43,9 +43,9 @@ const topHTML = `
             <span class="hidden whitespace-nowrap sm:inline">المفضلة</span>
             <span data-watch-count class="tabular rounded-full bg-accent-soft px-[7px] py-0.5 text-[11px] font-semibold text-accent-ink">2</span>
           </a>
-          <a href="#" class="flex items-center rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:px-3.5" aria-label="تسجيل الدخول">
+          <a href="${user ? 'login.html' : loginHref()}" class="flex items-center rounded-full px-2 py-2.5 font-medium text-ink hover:text-primary sm:px-3.5" aria-label="${user ? 'حسابي' : 'تسجيل الدخول'}">
             ${userIcon}
-            <span class="hidden whitespace-nowrap sm:inline">تسجيل الدخول</span>
+            <span class="hidden whitespace-nowrap sm:inline">${user ? 'حسابي' : 'تسجيل الدخول'}</span>
           </a>
           <a href="index.html#sell" class="btn-outline px-3 py-2 text-[13px] sm:px-[18px] sm:py-2.5 sm:text-sm">بِع معنا</a>
         </nav>
@@ -97,6 +97,24 @@ const footerHTML = `
       </div>
     </footer>`;
 
+/* ---------- sign-in state (prototype: kept in this browser only) ---------- */
+
+const USER_KEY = 'mz-user';
+
+export function getUser() {
+  try { return JSON.parse(localStorage.getItem(USER_KEY) ?? 'null'); } catch { return null; }
+}
+export function setUser(user) {
+  try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch { /* storage blocked: stay signed out */ }
+}
+export function clearUser() {
+  try { localStorage.removeItem(USER_KEY); } catch { /* nothing to clear */ }
+}
+/** Login link that brings the visitor back to the current page afterwards. */
+export function loginHref(next = location.pathname.split('/').pop() + location.search) {
+  return next && !next.startsWith('login.html') ? `login.html?next=${encodeURIComponent(next)}` : 'login.html';
+}
+
 /** Category nav buttons. `active` is the selected category index, or -1 for none. */
 export function catNavHTML(categories, active) {
   return categories
@@ -108,20 +126,23 @@ export function catNavHTML(categories, active) {
 }
 
 /** Hide partner/payment logos that fail to load so their text label shows instead. */
+let fallbacksWired = false;
 function wireLogoFallbacks() {
+  document.querySelectorAll('img[data-logo]').forEach((img) => {
+    if (img.complete && img.naturalWidth === 0) img.remove();
+  });
+  if (fallbacksWired) return;
+  fallbacksWired = true;
   document.addEventListener('error', (event) => {
     if (event.target.matches?.('img[data-media], img[data-logo]')) event.target.remove();
   }, true);
   document.addEventListener('load', (event) => {
     if (event.target.matches?.('img[data-media]')) event.target.classList.add('is-loaded');
   }, true);
-  document.querySelectorAll('img[data-logo]').forEach((img) => {
-    if (img.complete && img.naturalWidth === 0) img.remove();
-  });
 }
 
 export function renderShell() {
-  document.getElementById('site-top').innerHTML = topHTML;
+  document.getElementById('site-top').innerHTML = topHTML(getUser());
   document.getElementById('site-footer').innerHTML = footerHTML;
   wireLogoFallbacks();
 }

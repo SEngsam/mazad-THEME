@@ -1,6 +1,6 @@
 import * as data from './data.js';
 import { LotCard, Media, esc, formatNumber, formatPrice, icons } from './components.js';
-import { catNavHTML, renderShell } from './shell.js';
+import { catNavHTML, getUser, loginHref, renderShell } from './shell.js';
 
 renderShell();
 
@@ -420,7 +420,8 @@ function renderBidUI() {
            <button type="button" data-cancel class="btn-outline px-5 py-3 text-sm">تراجع</button>
          </div>
        </div>`
-    : `<button type="submit" class="btn-primary w-full py-3.5 text-[15px] disabled:cursor-not-allowed disabled:opacity-50" ${valid ? '' : 'disabled'}>زايد الآن</button>`;
+    : `<button type="submit" class="btn-primary w-full py-3.5 text-[15px] disabled:cursor-not-allowed disabled:opacity-50" ${valid ? '' : 'disabled'}>زايد الآن</button>
+       ${getUser() ? '' : '<p class="m-0 mt-2 text-center text-xs text-ink-muted">ستسجّل دخولك برقم جوالك أولاً، ثم تعود لهذه الصفحة.</p>'}`;
 }
 
 function renderPrices() {
@@ -561,6 +562,10 @@ document.addEventListener('submit', (event) => {
   if (event.target.id !== 'bid-form') return;
   event.preventDefault();
   if (state.amount < minBid()) return;
+  if (!getUser()) {
+    location.href = loginHref();
+    return;
+  }
   state.confirming = true;
   renderBidUI();
   $('[data-confirm]')?.focus();
