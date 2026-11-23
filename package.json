@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
-    "check": "node --check src/js/data.js && node --check src/js/components.js && node --check src/js/main.js && node scripts/verify.mjs"
+    "check": "node --check src/js/data.js && node --check src/js/components.js && node --check src/js/main.js && node scripts/verify.mjs",
+    "admin:build": "tailwindcss -c admin/tailwind.config.js -i ./admin/src/admin.css -o ./admin/dist/admin.css --minify",
+    "admin:dev": "tailwindcss -c admin/tailwind.config.js -i ./admin/src/admin.css -o ./admin/dist/admin.css --watch"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17"
