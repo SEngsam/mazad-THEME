@@ -152,8 +152,17 @@ const topHTML = (user) => `
     <div class="on-dark bg-forest text-[13px] text-white">
       <div class="container-page flex items-center justify-between gap-3 py-[9px]">
         <p class="m-0 min-w-0 truncate">
-          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="live.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات شركة هدف النسور الليلة 8:00م · 42 سيارة</a>
+          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="live.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات ساحة الشمال الليلة 8:00م · 42 سيارة</a>
         </p>
+        <div class="flex shrink-0 items-center gap-2 whitespace-nowrap">
+          <span class="hidden opacity-85 sm:inline">قسّط مع</span>
+          <span class="brand-pill">
+            <img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=64" alt="" width="16" height="16">تابي
+          </span>
+          <span class="brand-pill">
+            <img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=64" alt="" width="16" height="16">تمارا
+          </span>
+        </div>
       </div>
     </div>
 
@@ -229,6 +238,8 @@ const footerHTML = `
           <li class="pay-badge">مدى<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Mada_Logo.svg" alt="مدى"></li>
           <li class="pay-badge">Apple Pay<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Apple_Pay_logo.svg" alt="Apple Pay"></li>
           <li class="pay-badge">فيزا<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Visa_Inc._logo.svg" alt="فيزا"></li>
+          <li class="pay-badge">تابي<img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=128" alt="تابي"></li>
+          <li class="pay-badge">تمارا<img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=128" alt="تمارا"></li>
         </ul>
       </div>
     </footer>`;
