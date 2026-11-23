@@ -1,3 +1,4 @@
+import { IMAGES } from './mock-images.js';
 /**
  * Sample data for the admin prototype. Field names follow the server models
  * (auctions, accounts, bids, payments, reports, reviews, settings…), so the api layer
@@ -204,7 +205,7 @@ export const notificationLog = Array.from({ length: 45 }, (_, i) => {
 });
 
 export const ads = [
-  { id: 'ad-1', title: 'مزاد ساحة الشمال', placement: 'أعلى الصفحة الرئيسية', linkUrl: '/events/north-yard', enabled: true, sortOrder: 1, startsAt: '2026-11-20', endsAt: '2026-11-30' },
+  { id: 'ad-1', title: 'مزادات شركة هدف النسور', placement: 'أعلى الصفحة الرئيسية', linkUrl: '/events/north-yard', enabled: true, sortOrder: 1, startsAt: '2026-11-20', endsAt: '2026-11-30' },
   { id: 'ad-2', title: 'ساعات فاخرة', placement: 'وسط الصفحة الرئيسية', linkUrl: '/events/luxury-watches', enabled: true, sortOrder: 2, startsAt: '', endsAt: '' },
   { id: 'ad-3', title: 'عرض الجمعة البيضاء', placement: 'صفحة البحث', linkUrl: '/search?sale=1', enabled: false, sortOrder: 1, startsAt: '2026-11-25', endsAt: '2026-11-29' },
 ];
@@ -268,3 +269,5 @@ export const MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', '
 auctions.filter((a) => a.status === 'LIVE').slice(0, 3).forEach((a, i) => {
   a.expiresAt = NOW + [11 * MIN + 2000, 21 * MIN + 14000, 47 * MIN + 30000][i];
 });
+
+auctions.forEach((a) => { a.img = IMAGES[a.title] || null; });

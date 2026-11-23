@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { accName, ago, catPath, chip, emptyBox, esc, fmtDateTime, heroStrip, money, statusChip, toast } from '../ui.js';
+import { accName, ago, catPath, chip, emptyBox, esc, fmtDateTime, heroStrip, money, statusChip, thumb, toast } from '../ui.js';
 
 export const meta = { title: 'المراجعة', sub: 'المزادات المقدَّمة بانتظار قرار المشرف.' };
 
@@ -34,7 +34,7 @@ export default function review(root, { ctx }) {
 
         <section class="ad-card flex min-w-0 flex-[1.8_1_520px] flex-col gap-5" aria-labelledby="d-h">
           <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 id="d-h" class="m-0 text-xl font-bold">${esc(a.title)}</h2><p class="m-0 mt-1 text-[13px] text-ink-muted">${esc(catPath(a))} · ${esc(a.locationPretty)}</p></div>${statusChip(a.status)}</div>
-          <div class="grid grid-cols-4 gap-2.5">${['صورة 1', 'صورة 2', 'صورة 3', '+ 9'].map((t) => `<div class="ad-ph aspect-[4/3]">${t}</div>`).join('')}</div>
+          <div class="grid grid-cols-4 gap-2.5">${[0, 1, 2, 3].map((i) => `<span class="relative block">${thumb(a.img, 'aspect-[4/3] w-full rounded-xl', a.title)}${i === 3 ? '<span class="absolute inset-0 grid place-items-center rounded-xl bg-forest/60 text-sm font-bold text-white">+ 9</span>' : ''}</span>`).join('')}</div>
           <p class="m-0 text-[13px] leading-8 text-ink-body">${esc(a.description)}</p>
           <div class="grid gap-x-7 md:grid-cols-2">
             <div><h3 class="m-0 text-sm font-bold">بيانات المزاد</h3>

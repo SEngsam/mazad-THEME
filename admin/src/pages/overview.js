@@ -1,6 +1,6 @@
 import { api } from '../api.js';
 import { cityShare, endingSoon, pulse, series, statusGroups, topCategories, topSellers } from '../live.js';
-import { ago, chip, countUp, esc, flash, fmt, icon, money, spark } from '../ui.js';
+import { ago, chip, countUp, esc, flash, fmt, icon, money, spark, thumb } from '../ui.js';
 
 export const meta = { title: 'نظرة عامة', sub: 'تتحدّث البيانات مباشرة' };
 
@@ -189,7 +189,7 @@ export default async function overview(root, { ctx }) {
   };
   const drawEnding = () => {
     const list = endingSoon(3);
-    $('#ending').innerHTML = list.length ? list.map((a) => `<li class="flex items-center gap-3 border-b border-line-soft py-3 last:border-0"><span class="h-[38px] w-12 shrink-0 rounded-[10px] bg-primary-soft"></span><span class="min-w-0 flex-1 text-[13px]"><a href="#/auctions/${a.id}" class="font-bold !text-ink">${esc(a.title)}</a><br><span class="tabular font-bold text-primary">${money(a.lastPrice)}</span></span><span data-end="${a.expiresAt}" class="ad-timer"></span></li>`).join('') : '<li class="py-8 text-center text-[13px] text-ink-muted">لا توجد مزادات تنتهي قريباً.</li>';
+    $('#ending').innerHTML = list.length ? list.map((a) => `<li class="flex items-center gap-3 border-b border-line-soft py-3 last:border-0">${thumb(a.img, 'h-[38px] w-12 rounded-[10px]', a.title)}<span class="min-w-0 flex-1 text-[13px]"><a href="#/auctions/${a.id}" class="font-bold !text-ink">${esc(a.title)}</a><br><span class="tabular font-bold text-primary">${money(a.lastPrice)}</span></span><span data-end="${a.expiresAt}" class="ad-timer"></span></li>`).join('') : '<li class="py-8 text-center text-[13px] text-ink-muted">لا توجد مزادات تنتهي قريباً.</li>';
     tickTimers();
   };
   const tickTimers = () => {

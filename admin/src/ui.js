@@ -215,3 +215,7 @@ export const hms = (ms) => {
   const s = Math.max(0, Math.floor(ms / 1000));
   return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map((n) => String(n).padStart(2, '0')).join(':');
 };
+
+/** Photo with a branded placeholder behind it (shown while loading, or when there is no photo / it fails). */
+export const thumb = (src, cls = 'h-[38px] w-12 rounded-[10px]', alt = '') =>
+  `<span class="ad-thumb ${cls}">${src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onload="this.classList.add('is-loaded')" onerror="this.remove()">` : ''}</span>`;

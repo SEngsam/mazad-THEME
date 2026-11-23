@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { accName, ago, askReason, catPath, chip, errorBox, esc, fmt, fmtDateTime, heroStrip, hms, money, runCounts, statusChip, toast } from '../ui.js';
+import { accName, ago, askReason, catPath, chip, errorBox, esc, fmt, fmtDateTime, heroStrip, hms, money, runCounts, statusChip, thumb, toast } from '../ui.js';
 
 export const meta = { title: 'تفاصيل المزاد', sub: '' };
 
@@ -24,7 +24,7 @@ export default async function auctionDetail(root, { params, ctx }) {
           <div class="flex min-w-0 flex-[1.7_1_560px] flex-col gap-5">
             <section class="ad-card flex flex-col gap-4" aria-labelledby="t-h">
               <h2 id="t-h" class="sr-only">${esc(a.title)}</h2>
-              <div class="grid grid-cols-4 gap-2.5">${['صورة 1', 'صورة 2', 'صورة 3', '+ 6'].map((t) => `<div class="ad-ph aspect-[4/3]">${t}</div>`).join('')}</div>
+              <div class="grid grid-cols-4 gap-2.5">${[0, 1, 2, 3].map((i) => `<span class="relative block">${thumb(a.img, 'aspect-[4/3] w-full rounded-xl', a.title)}${i === 3 ? '<span class="absolute inset-0 grid place-items-center rounded-xl bg-forest/60 text-sm font-bold text-white">+ 6</span>' : ''}</span>`).join('')}</div>
               <p class="m-0 text-[13px] leading-8 text-ink-body">${esc(a.description)}</p>
               ${a.statusReason ? `<p class="m-0 rounded-2xl bg-accent-soft px-4 py-3 text-[13px] text-accent-ink"><strong>السبب:</strong> ${esc(a.statusReason)}</p>` : ''}
             </section>

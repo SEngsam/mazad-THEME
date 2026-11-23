@@ -1,5 +1,5 @@
 import { listPage } from '../list.js';
-import { accName, ago, catName, chip, esc, fmt, money, STATUS, statCards, statusChip } from '../ui.js';
+import { accName, ago, catName, chip, esc, fmt, money, STATUS, statCards, statusChip, thumb } from '../ui.js';
 import { api } from '../api.js';
 
 export const meta = { title: 'المزادات', sub: 'جميع المزادات وحالاتها.' };
@@ -35,7 +35,7 @@ export default function auctions(root, { query, ctx }) {
     searchText: (a) => `${a.title} ${a.id}`,
     columns: [
       { h: 'الرقم', cell: (a) => `<span class="tabular text-ink-muted">${esc(a.id)}</span>` },
-      { h: 'العنوان', cell: (a) => `<span class="font-semibold">${esc(a.title)}</span>` },
+      { h: 'العنوان', cell: (a) => `<span class="flex items-center gap-3">${thumb(a.img, 'h-[38px] w-[50px] rounded-lg', a.title)}<span class="font-semibold">${esc(a.title)}</span></span>` },
       { h: 'الحساب', cell: (a) => esc(accName(a.accountId)) },
       { h: 'الفئة', cell: (a) => esc(catName(a.mainCategoryId)) },
       { h: 'الموقع', cell: (a) => esc(a.locationPretty) },
