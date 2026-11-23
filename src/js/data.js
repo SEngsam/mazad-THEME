@@ -13,11 +13,6 @@ export const categoryTiles = [
   { cat: 8, count: 15, img: unsplash('1758798219572-512a03a60ce0', 400) },
 ];
 
-export const featured = [
-  { event: 'north-yard', tag: 'الليلة 8:00م', tone: 'accent', title: 'مزاد سيارات ساحة الشمال · 42 سيارة', meta: 'معاينة من 4 إلى 7 مساءً · الرياض', img: unsplash('1638835373951-3a67da7aaf8d', 1400), large: true },
-  { event: 'luxury-watches', tag: 'ينتهي الخميس', tone: 'primary', title: 'ساعات فاخرة', meta: '53 قطعة موثّقة', img: unsplash('1639006570490-79c0c53f1080', 900), large: false },
-];
-
 /** endsIn: seconds remaining when the page loads. order: listing order for «المضاف حديثاً». */
 export const lots = [
   { id: 0, cat: 1, name: 'تويوتا لاندكروزر GXR 2021', sub: 'V6، كامل المواصفات، صيانة لدى الوكيل، دون حوادث', city: 'الرياض', bid: 92000, endsIn: 4 * 3600 + 272, noReserve: false, img: unsplash('1650530579355-7ad9d4766043') },
@@ -69,6 +64,35 @@ export const sponsoredLot = {
   sub: 'قسّط مشترياتك من المزاد حتى 60 شهر',
   img: unsplash('1603094543704-64cdce2d2532'),
 };
+
+/** Bid count shown on lot cards and the lot page. */
+export const bidCount = (lot) => lotDetails[lot.id]?.bids ?? 5 + lot.id * 3;
+
+/** Details shown on lot cards: status plus two specs per lot (by lot id). */
+export const lotCardFacts = {
+  0: ['مستعمل', 'الممشى', '64,000 كم', 'المحرك', 'V6 · 4.0 لتر'],
+  1: ['مستعمل', 'سنة الصنع', '2022', 'المرفقات', 'كاملة'],
+  2: ['مستعمل', 'الممشى', '41,000 كم', 'اللون', 'أبيض'],
+  3: ['جديد', 'السعة', '1TB', 'الضمان', 'سنة'],
+  4: ['مستعمل', 'الممشى', '18,000 كم', 'سنة الصنع', '2023'],
+  5: ['مستعمل', 'العيار', '21', 'الوزن', '86 غرام'],
+  6: ['مميزة', 'النوع', 'رقم ثلاثي', 'النقل', 'فوري عبر أبشر'],
+  7: ['مستعمل', 'ساعات التشغيل', '4,200', 'سنة الصنع', '2018'],
+  8: ['مستعمل', 'سنة الصنع', '2021', 'المرفقات', 'كاملة'],
+  9: ['سكنية', 'المساحة', '600 م²', 'الصك', 'إلكتروني'],
+  10: ['مستعمل', 'المقاس', 'كبير', 'المرفقات', 'كاملة'],
+  11: ['مستعمل', 'الصناعة', 'يدوية', 'التصنيف', 'تراثي'],
+  12: ['كلاسيكية', 'الممشى', '210,000 كم', 'المحرك', 'أصلي'],
+  13: ['جديد', 'الوزن', '1.2 قيراط', 'الشهادة', 'GIA'],
+  14: ['مميزة', 'النوع', 'رقم أحادي', 'النقل', 'فوري عبر أبشر'],
+};
+
+export const priceBands = [
+  { label: 'أقل من 10,000', min: 0, max: 10000 },
+  { label: '10,000 – 50,000', min: 10000, max: 50000 },
+  { label: '50,000 – 200,000', min: 50000, max: 200000 },
+  { label: 'أكثر من 200,000', min: 200000, max: 0 },
+];
 
 export const sortTabs = ['ينتهي قريباً', 'المضاف حديثاً', 'الأقل سعراً', 'بدون حد أدنى'];
 
@@ -152,7 +176,7 @@ export function orderOf(won, orders = {}) {
 /** Categories that can be shipped; the rest are picked up or transferred (cars, land, equipment, plates). */
 export const shippableCats = [2, 3, 4, 7];
 
-/** Scheduled auction events shown on the home page's featured cards. startsAt: hour of day (live yard auction) or endsInDays (online). */
+/** Scheduled auction events. startsAt: hour of day (live yard auction) or endsInDays (online). */
 export const events = {
   'north-yard': {
     title: 'مزاد سيارات ساحة الشمال',

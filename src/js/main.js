@@ -1,9 +1,10 @@
 import * as data from './data.js';
 import {
-  AdBanner, CategoryTile, FeaturedCard, LotCard, Media, PickCard, SortTab, SponsoredCard, TrustItem,
+  AdBanner, CategoryTile, HeroLot, LotCard, Media, PickCard, SoonRow, SortTab, SponsoredCard, TrustItem,
   formatCountdown,
 } from './components.js';
 import { catHref, catNavHTML, loadWatch, renderShell, saveWatch } from './shell.js';
+import { initHomeFilter } from './homefilter.js';
 
 renderShell();
 
@@ -76,7 +77,14 @@ function renderWatchCount() {
 }
 
 function renderStatic() {
-  $('#featured').innerHTML = data.featured.map(FeaturedCard).join('');
+  const hero = data.lots[0];
+  $('#hero-main').innerHTML = HeroLot(hero, { remaining: remainingFor(hero), watchers: data.lotDetails[hero.id].watchers });
+  $('#hero-soon').innerHTML = data.lots
+    .filter((lot) => lot.id !== hero.id)
+    .sort((a, b) => a.endsIn - b.endsIn)
+    .slice(0, 4)
+    .map((lot) => SoonRow(lot, remainingFor(lot)))
+    .join('');
   $('#picks').innerHTML = data.picks.map(PickCard).join('');
   $('#trust').innerHTML = data.trust.map(TrustItem).join('');
   $('#sell-media').innerHTML = Media({ src: data.ads.sell, className: 'absolute inset-0' });
@@ -138,4 +146,5 @@ $('#show-more').addEventListener('click', () => {
 
 renderStatic();
 renderDynamic();
+initHomeFilter({ data, remainingFor });
 setInterval(tick, 1000);
