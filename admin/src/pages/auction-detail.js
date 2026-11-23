@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { accName, ago, askReason, catPath, chip, errorBox, esc, fmt, fmtDateTime, money, statusChip, toast } from '../ui.js';
+import { accName, ago, askReason, catPath, chip, errorBox, esc, fmt, fmtDateTime, heroStrip, hms, money, runCounts, statusChip, toast } from '../ui.js';
 
 export const meta = { title: 'تفاصيل المزاد', sub: '' };
 
@@ -12,16 +12,18 @@ export default async function auctionDetail(root, { params, ctx }) {
   const row = (k, v) => `<div class="ad-row"><span>${k}</span><span class="font-semibold">${v}</span></div>`;
   const seller = api.rows('accounts').find((x) => x.id === a.accountId);
 
+  let animated = false;
   function draw() {
     const bids = bidsOf();
     const cancellable = ['APPROVED', 'SCHEDULED', 'LIVE'].includes(a.status);
     root.innerHTML = `
       <div class="flex flex-col gap-5">
         <nav aria-label="مسار التصفح" class="text-[13px] text-ink-muted"><a href="#/auctions">المزادات</a> ‹ <span class="text-ink">${esc(a.title)}</span></nav>
+        ${heroStrip(`<div class="flex flex-wrap items-end justify-between gap-5"><div class="min-w-0"><div class="flex items-center gap-2.5">${statusChip(a.status)}<span class="tabular text-xs text-white/60">${esc(a.id)}</span></div><h2 class="m-0 mt-2.5 text-2xl font-bold lg:text-3xl">${esc(a.title)}</h2><p class="m-0 mt-1.5 text-[13px] text-white/70">${esc(catPath(a))} · ${esc(a.locationPretty)}</p></div><div class="flex flex-wrap gap-7"><div><div class="text-xs text-white/60">${a.lastPrice ? 'آخر سعر' : 'سعر البدء'}</div><div data-count data-to="${a.lastPrice || a.startingPrice}" data-suffix=" ر.س" class="tabular text-3xl font-bold text-lime lg:text-4xl">0</div></div>${a.status === 'LIVE' ? `<div><div class="text-xs text-white/60">ينتهي بعد</div><div data-end="${a.expiresAt}" class="ad-timer mt-1.5 inline-block"></div></div>` : ''}<div><div class="text-xs text-white/60">المزايدات</div><div data-count data-to="${bids.length}" class="tabular text-3xl font-bold lg:text-4xl">0</div></div></div></div>`)}
         <div class="flex flex-wrap items-start gap-5">
           <div class="flex min-w-0 flex-[1.7_1_560px] flex-col gap-5">
             <section class="ad-card flex flex-col gap-4" aria-labelledby="t-h">
-              <div class="flex flex-wrap justify-between gap-3"><h2 id="t-h" class="m-0 text-xl font-bold">${esc(a.title)}</h2>${statusChip(a.status)}</div>
+              <h2 id="t-h" class="sr-only">${esc(a.title)}</h2>
               <div class="grid grid-cols-4 gap-2.5">${['صورة 1', 'صورة 2', 'صورة 3', '+ 6'].map((t) => `<div class="ad-ph aspect-[4/3]">${t}</div>`).join('')}</div>
               <p class="m-0 text-[13px] leading-8 text-ink-body">${esc(a.description)}</p>
               ${a.statusReason ? `<p class="m-0 rounded-2xl bg-accent-soft px-4 py-3 text-[13px] text-accent-ink"><strong>السبب:</strong> ${esc(a.statusReason)}</p>` : ''}
@@ -48,7 +50,15 @@ export default async function auctionDetail(root, { params, ctx }) {
         </div>
       </div>`;
     import('../ui.js').then((m) => m.applyRole(root));
+    runCounts(root, !animated);
+    animated = true;
+    tick();
   }
+
+  const tick = () => root.querySelectorAll('[data-end]').forEach((el) => { const left = Number(el.dataset.end) - Date.now(); el.textContent = hms(left); el.classList.toggle('ad-timer-calm', left > 3600000); });
+  const timer = setInterval(tick, 1000);
+  document.addEventListener('ad-route', () => clearInterval(timer), { once: true });
+  ctx.onLive((e) => { if (e.type === 'bid' && e.bid.auctionId === a.id) draw(); });
 
   root.addEventListener('click', async (e) => {
     if (!e.target.closest('[data-cancel]')) return;

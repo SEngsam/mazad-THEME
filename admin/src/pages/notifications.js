@@ -1,3 +1,4 @@
+import { prependStats as _ps, statCards as _sc } from '../ui.js';
 import { api } from '../api.js';
 import { chip, esc, toast } from '../ui.js';
 
@@ -39,6 +40,7 @@ export default async function notifications(root) {
           </form>
         </section>
       </div>`;
+    _ps(root, _sc([{ label: 'أنواع الإشعارات', value: types.length, tone: 'lime', sub: 'بنصوص قابلة للتعديل' }, { label: 'أُرسلت خلال 24 ساعة', value: api.rows('notificationLog').filter((n) => Date.now() - n.createdAt < 86400000).length, tone: 'primary', sub: 'FCM والمتصفح' }, { label: 'غير مقروءة', value: api.rows('notificationLog').filter((n) => !n.read).length, tone: 'outline', sub: 'لم تُفتح' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
   }
 

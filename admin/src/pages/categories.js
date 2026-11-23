@@ -1,3 +1,4 @@
+import { prependStats as _ps, statCards as _sc } from '../ui.js';
 import { api } from '../api.js';
 import { askReason, esc, toast } from '../ui.js';
 
@@ -34,6 +35,7 @@ export default function categories(root) {
             ${cur ? `<div class="rounded-2xl bg-accent-soft p-3.5 text-xs leading-7 text-accent-ink"><strong>تنبيه:</strong> حذف فئة يحذف جميع مزاداتها نهائياً. المقترح: استبدال الحذف بالأرشفة.<br><button type="button" data-del data-write class="ad-btn-danger mt-2">حذف الفئة</button></div>` : ''}` : '<p class="m-0 text-[13px] text-ink-muted">اختر فئة من القائمة لتعديلها.</p>'}
         </section>
       </div>`;
+    _ps(root, _sc([{ label: 'فئات رئيسية', value: mains.length, tone: 'lime', sub: 'في الشجرة' }, { label: 'فئات فرعية', value: all.length - mains.length, tone: 'primary', sub: 'تحت الرئيسية' }, { label: 'مزادات مرتبطة', value: api.rows('auctions').length, tone: 'forest', sub: 'بفئات المنصة' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
   }
 

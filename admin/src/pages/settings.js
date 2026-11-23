@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { esc, toast } from '../ui.js';
+import { esc, icon, toast } from '../ui.js';
 
 export const meta = { title: 'الإعدادات', sub: 'إعدادات المنصة العامة. تُطبَّق على التطبيق والموقع.' };
 
@@ -42,7 +42,7 @@ export default async function settings(root) {
   root.innerHTML = `
     <form id="sf" novalidate class="flex flex-col gap-5">
       <div class="grid items-start gap-5 xl:grid-cols-2">
-        ${SECTIONS.map(([t, fs], i) => `<section class="ad-card" aria-labelledby="s${i}"><h2 id="s${i}" class="ad-h2 mb-1.5">${t}</h2>${fs.map(field).join('')}</section>`).join('')}
+        ${SECTIONS.map(([t, fs], i) => `<section class="ad-card ad-rise" aria-labelledby="s${i}"><h2 id="s${i}" class="ad-h2 mb-1.5 flex items-center gap-3"><span class="grid h-9 w-9 place-items-center rounded-xl ${['bg-primary text-white', 'bg-lime text-forest', 'bg-forest text-lime', 'bg-accent text-white'][i]}">${icon(['gavel', 'coin', 'lock', 'gear'][i], 18)}</span>${t}</h2>${fs.map(field).join('')}</section>`).join('')}
       </div>
       <div class="flex flex-wrap items-center gap-3"><button type="submit" data-write class="ad-btn-primary ad-btn-lg">حفظ الإعدادات</button><span class="ad-muted">دور «للقراءة فقط» يعرض هذه الصفحة دون حفظ.</span></div>
     </form>`;

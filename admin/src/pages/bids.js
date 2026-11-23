@@ -1,10 +1,22 @@
 import { listPage } from '../list.js';
-import { ago, chip, esc, money } from '../ui.js';
+import { api } from '../api.js';
+import { ago, chip, esc, money, statCards } from '../ui.js';
 
 export const meta = { title: 'المزايدات', sub: 'جميع المزايدات المقدّمة على المزادات.' };
 
-export default function bids(root) {
+export default function bids(root, { ctx }) {
+  const top = () => {
+    const r = api.rows('bids');
+    const day = r.filter((b) => Date.now() - b.createdAt < 86400000);
+    return statCards([
+      { label: 'مزايدات آخر 24 ساعة', value: day.length, tone: 'accent', sub: 'تتحدّث مباشرة' },
+      { label: 'أعلى مزايدة اليوم', value: Math.max(0, ...day.map((b) => b.price)), suffix: ' ر.س', tone: 'lime', sub: 'في 24 ساعة' },
+      { label: 'مفتوحة', value: r.filter((b) => b.status === 'open').length, tone: 'primary', sub: 'بانتظار القرار' },
+      { label: 'مرفوضة', value: r.filter((b) => b.status === 'rejected').length, tone: 'outline', sub: 'أُعيدت عملاتها' },
+    ]);
+  };
   listPage(root, {
+    ctx, top, live: (e) => e.type === 'bid',
     table: 'bids', label: 'جدول المزايدات', placeholder: 'بحث بعنوان المزاد', minW: 860,
     pills: [
       { id: 'all', label: 'الكل' },

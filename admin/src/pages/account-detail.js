@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { ago, askReason, chip, esc, fmt, fmtDate, fmtDay, mask, money, money2, statusChip, toast } from '../ui.js';
+import { ago, askReason, chip, esc, fmt, fmtDate, fmtDay, heroStrip, mask, money, money2, runCounts, statCards, statusChip, toast } from '../ui.js';
 import { avatar } from './accounts.js';
 
 export const meta = { title: 'تفاصيل الحساب', sub: '' };
@@ -25,20 +25,16 @@ export default async function accountDetail(root, { params, ctx }) {
   };
   const TABS = [['auctions', 'المزادات'], ['bids', 'المزايدات'], ['payments', 'المدفوعات'], ['reviews', 'التقييمات']];
 
+  let animated = false;
   function draw() {
     root.innerHTML = `
       <div class="flex flex-col gap-5">
         <nav aria-label="مسار التصفح" class="text-[13px] text-ink-muted"><a href="#/accounts">الحسابات</a> ‹ <span class="text-ink">${esc(acc.name)}</span></nav>
-        <section class="ad-card flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-4"><span class="grid h-16 w-16 place-items-center rounded-full bg-primary-soft text-2xl font-bold text-primary">${esc([...acc.name][0])}</span>
-            <div><h2 class="m-0 text-xl font-bold">${esc(acc.name)}</h2><p class="m-0 mt-1 text-[13px] text-ink-muted">${esc(acc.locationPretty)} · مسجّل منذ ${fmtDate(acc.createdAt)}</p></div>
-            ${acc.verified ? chip('موثّق', 'good') : chip('غير موثّق', 'info')}</div>
-          <div class="flex flex-wrap gap-2.5"><button type="button" data-notify data-write class="ad-btn-primary ad-btn-lg">إرسال إشعار</button>
-            <button type="button" data-verify data-write class="ad-btn ad-btn-lg">${acc.verified ? 'إلغاء التوثيق' : 'توثيق الحساب'}</button></div>
-        </section>
-        <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
-          ${[['رصيد العملات', fmt(acc.coins)], ['المزادات', auctions().length], ['المزايدات', bids().length], ['التقييم', acc.rating.toFixed(1)]].map(([k, v]) => `<div class="ad-card"><span class="text-[13px] text-ink-body">${k}</span><div class="tabular mt-1.5 text-[28px] font-bold">${v}</div></div>`).join('')}
-        </div>
+        ${heroStrip(`<div class="flex flex-wrap items-center justify-between gap-4"><div class="flex flex-wrap items-center gap-4"><span class="grid h-16 w-16 place-items-center rounded-full bg-lime text-2xl font-bold text-forest">${esc([...acc.name][0])}</span>
+            <div><h2 class="m-0 text-2xl font-bold">${esc(acc.name)}</h2><p class="m-0 mt-1 text-[13px] text-white/70">${esc(acc.locationPretty)} · مسجّل منذ ${fmtDate(acc.createdAt)}</p></div>${acc.verified ? chip('موثّق', 'good') : chip('غير موثّق', 'info')}</div>
+          <div class="flex flex-wrap gap-2.5"><button type="button" data-notify data-write class="rounded-full bg-lime px-6 py-2.5 text-[13px] font-bold text-forest">إرسال إشعار</button>
+            <button type="button" data-verify data-write class="rounded-full border-[1.5px] border-white/60 px-6 py-2.5 text-[13px] font-semibold text-white">${acc.verified ? 'إلغاء التوثيق' : 'توثيق الحساب'}</button></div></div>`)}
+        ${statCards([{ label: 'رصيد العملات', value: acc.coins, tone: 'lime', sub: 'عملة' }, { label: 'المزادات', value: auctions().length, tone: 'primary', sub: 'أنشأها الحساب' }, { label: 'المزايدات', value: bids().length, tone: 'accent', sub: 'قدّمها الحساب' }, { label: 'التقييم', value: acc.rating, decimals: 1, suffix: ' ★', tone: 'forest', sub: `${revs().length} تقييماً` }])}
         <div class="flex flex-wrap items-start gap-5">
           <section class="ad-card min-w-0 flex-[1.7_1_560px]" aria-label="نشاط الحساب">
             <div role="tablist" aria-label="النشاط" class="mb-2 flex gap-1 overflow-x-auto border-b border-line-soft">${TABS.map(([k, l]) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${k === tab}" class="whitespace-nowrap border-b-2 px-4 py-2.5 text-[13px] font-semibold ${k === tab ? 'border-primary text-primary' : 'border-transparent text-ink-body'}">${l}</button>`).join('')}</div>
@@ -53,6 +49,8 @@ export default async function accountDetail(root, { params, ctx }) {
         </div>
       </div>`;
     import('../ui.js').then((m) => m.applyRole(root));
+    runCounts(root, !animated);
+    animated = true;
   }
 
   root.addEventListener('click', async (e) => {

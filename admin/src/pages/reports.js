@@ -1,3 +1,4 @@
+import { prependStats as _ps, statCards as _sc } from '../ui.js';
 import { api } from '../api.js';
 import { ago, chip, esc, fmtDateTime } from '../ui.js';
 
@@ -25,6 +26,7 @@ export default function reports(root) {
           <p class="ad-muted m-0">البلاغ في النظام الحالي بلا حالة ولا ردّ؛ لذلك لا توجد أزرار إغلاق أو معالجة.</p>
         </section>
       </div>`;
+    _ps(root, _sc([{ label: 'إجمالي البلاغات', value: list.length, tone: 'lime', sub: 'بلا حالة بعد' }, { label: 'على مزادات', value: list.filter((x) => x.entityName === 'auction').length, tone: 'primary', sub: 'محتوى ومنتجات' }, { label: 'على حسابات وتعليقات', value: list.filter((x) => x.entityName !== 'auction').length, tone: 'forest', sub: 'سلوك المستخدمين' }], 'sm:grid-cols-3'));
   }
   root.addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { sel = b.dataset.r; draw(); } });
   draw();

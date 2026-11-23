@@ -1,10 +1,20 @@
 import { listPage } from '../list.js';
-import { ago, chip, esc } from '../ui.js';
+import { api } from '../api.js';
+import { ago, chip, esc, statCards } from '../ui.js';
 
 export const meta = { title: 'سجل الإشعارات', sub: 'الإشعارات المرسلة إلى المستخدمين.' };
 
 export default function notificationsLog(root) {
+  const top = () => {
+    const r = api.rows('notificationLog');
+    return statCards([
+      { label: 'غير مقروءة', value: r.filter((n) => !n.read).length, tone: 'outline', sub: 'لم يفتحها المستخدم' },
+      { label: 'خلال 24 ساعة', value: r.filter((n) => Date.now() - n.createdAt < 86400000).length, tone: 'primary', sub: 'أُرسلت' },
+      { label: 'الإجمالي', value: r.length, tone: 'forest', sub: 'في السجل' },
+    ], 'sm:grid-cols-3');
+  };
   listPage(root, {
+    top,
     table: 'notificationLog', label: 'سجل الإشعارات', minW: 780,
     pills: [
       { id: 'all', label: 'الكل' }, { id: 'unread', label: 'غير مقروءة', test: (n) => !n.read },

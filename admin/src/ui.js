@@ -153,10 +153,10 @@ export const catPath = (a) => [catName(a.mainCategoryId), a.subCategoryId ? catN
 export const REDUCED = !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 /** Count a number up from 0 when it appears. */
-export function countUp(el, to, { prefix = '', suffix = '', ms = 900, decimals = 0 } = {}) {
+export function countUp(el, to, { prefix = '', suffix = '', ms = 900, decimals = 0, instant = false } = {}) {
   if (!el) return;
   const show = (v) => { el.textContent = `${prefix}${decimals ? v.toFixed(decimals) : fmt(Math.round(v))}${suffix}`; };
-  if (REDUCED || !to) { show(to); return; }
+  if (REDUCED || !to || instant) { show(to); return; }
   const t0 = performance.now();
   const frame = (t) => {
     const k = Math.min(1, (t - t0) / ms);
@@ -193,11 +193,25 @@ export function statCards(items, cols = 'grid-cols-2 xl:grid-cols-4') {
   }).join('')}</div>`;
 }
 
-export function runCounts(root) {
-  root.querySelectorAll('[data-count]').forEach((el) => countUp(el, Number(el.dataset.to), { prefix: el.dataset.prefix, suffix: el.dataset.suffix, decimals: Number(el.dataset.dec) }));
+export function runCounts(root, animate = true) {
+  root.querySelectorAll('[data-count]').forEach((el) => countUp(el, Number(el.dataset.to), { prefix: el.dataset.prefix, suffix: el.dataset.suffix, decimals: Number(el.dataset.dec), instant: !animate }));
 }
 
 /** Dark hero strip used at the top of the detail pages. */
 export const heroStrip = (inner) => `<section class="ad-rise relative overflow-hidden rounded-[26px] bg-forest p-6 text-white shadow-[0_18px_40px_-22px_rgba(6,46,34,.7)] lg:p-7">
   <svg aria-hidden="true" viewBox="0 0 200 200" class="pointer-events-none absolute -start-12 -top-16 h-64 w-64 opacity-[.07]" fill="#C6F432"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="60" fill="#062E22"/></svg>
   <div class="relative">${inner}</div></section>`;
+
+/** Put a row of stat cards at the top of a page; counts animate only the first time. */
+export function prependStats(root, html) {
+  const animate = !root.dataset.statsDone;
+  root.dataset.statsDone = '1';
+  root.querySelector('[data-stats]')?.remove();
+  root.insertAdjacentHTML('afterbegin', `<div data-stats class="mb-5">${html}</div>`);
+  runCounts(root.querySelector('[data-stats]'), animate);
+}
+
+export const hms = (ms) => {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map((n) => String(n).padStart(2, '0')).join(':');
+};

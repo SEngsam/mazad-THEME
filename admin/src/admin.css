@@ -199,3 +199,7 @@
 .ad-seg { @apply grid grid-cols-3 gap-1 rounded-2xl bg-mist p-1; }
 .ad-seg button { @apply rounded-xl border-0 bg-transparent py-2 text-[11.5px] font-semibold text-ink-body; }
 .ad-seg button[aria-checked=true] { @apply bg-forest font-bold text-lime; }
+
+@layer base {
+  button:disabled { cursor: not-allowed; opacity: .45; }
+}

@@ -1,3 +1,4 @@
+import { prependStats as _ps, statCards as _sc } from '../ui.js';
 import { api } from '../api.js';
 import { fmt, toast } from '../ui.js';
 
@@ -15,7 +16,7 @@ export default function packages(root) {
         <section class="ad-card min-w-0 flex-[1.6_1_520px]" aria-labelledby="k1">
           <div class="mb-3.5 flex items-center justify-between"><h2 id="k1" class="ad-h2">الباقات</h2><button type="button" data-new data-write class="ad-btn-primary ad-btn-lg">إضافة باقة</button></div>
           <div class="grid gap-3.5 sm:grid-cols-3">${list().map((k, i) => `
-            <div class="flex flex-col gap-1.5 rounded-card border p-5 ${k.id === editing ? 'border-primary bg-primary-soft' : 'border-line bg-white'}"><span class="text-[13px] text-ink-muted">باقة ${i + 1}</span><span class="tabular text-[26px] font-bold">${fmt(k.coinsNo)} عملة</span><span class="tabular font-semibold text-primary">$ ${k.priceInUSD.toFixed(2)}</span><button type="button" data-edit="${k.id}" class="ad-btn mt-2 self-start">تعديل</button></div>`).join('')}</div>
+            <div class="ad-rise flex flex-col gap-1.5 rounded-3xl p-5 ${['bg-forest text-white', 'bg-primary text-white', 'bg-lime text-forest'][i % 3]} ${k.id === editing ? 'ring-2 ring-accent ring-offset-2' : ''}"><span class="text-[13px] opacity-75">باقة ${i + 1}</span><span class="tabular text-[26px] font-bold">${fmt(k.coinsNo)} عملة</span><span class="tabular font-semibold opacity-90">$ ${k.priceInUSD.toFixed(2)}</span><button type="button" data-edit="${k.id}" class="ad-btn mt-2 self-start">تعديل</button></div>`).join('')}</div>
           <p class="ad-muted mb-0 mt-3.5">السعر في النظام بالدولار فقط، ويُحوَّل للريال عند العرض.</p>
         </section>
         <section class="ad-card flex min-w-0 flex-[1_1_320px] flex-col gap-4" aria-labelledby="k2">
@@ -27,6 +28,7 @@ export default function packages(root) {
             <div class="flex flex-wrap gap-2.5"><button type="submit" data-write class="ad-btn-primary ad-btn-lg">حفظ</button><button type="button" data-cancel class="ad-btn ad-btn-lg">إلغاء</button>${cur ? '<button type="button" data-del data-write class="ad-btn-danger ad-btn-lg">حذف</button>' : ''}</div></form>` : '<p class="m-0 text-[13px] text-ink-muted">اختر باقة لتعديلها.</p>'}
         </section>
       </div>`;
+    _ps(root, _sc([{ label: 'الباقات', value: list().length, tone: 'lime', sub: 'معروضة للشراء' }, { label: 'أكبر باقة', value: Math.max(...list().map((k) => k.coinsNo)), suffix: ' عملة', tone: 'primary', sub: 'في المتجر' }, { label: 'أقل سعر للعملة', value: Math.min(...list().map((k) => (k.priceInUSD / k.coinsNo) * 100)), decimals: 2, suffix: ' سنت', tone: 'forest', sub: 'بالدولار' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
   }
 

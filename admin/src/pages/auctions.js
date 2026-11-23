@@ -1,14 +1,25 @@
 import { listPage } from '../list.js';
-import { accName, ago, catName, chip, esc, fmt, money, STATUS, statusChip } from '../ui.js';
+import { accName, ago, catName, chip, esc, fmt, money, STATUS, statCards, statusChip } from '../ui.js';
 import { api } from '../api.js';
 
 export const meta = { title: 'المزادات', sub: 'جميع المزادات وحالاتها.' };
 
 const is = (...s) => (a) => s.includes(a.status);
 
-export default function auctions(root, { query }) {
+export default function auctions(root, { query, ctx }) {
   const mains = api.rows('categories').filter((c) => !c.parentCategoryId);
+  const top = () => {
+    const r = api.rows('auctions');
+    const n = (s) => r.filter((a) => a.status === s).length;
+    return statCards([
+      { label: 'جارية الآن', value: n('LIVE'), tone: 'primary', sub: `${n('SCHEDULED')} مجدولة` },
+      { label: 'بانتظار المراجعة', value: n('PENDING_REVIEW'), tone: 'outline', href: '#/review', sub: 'تحتاج قراراً' },
+      { label: 'تعديلات مطلوبة', value: n('CHANGES_REQUESTED'), tone: 'accent', sub: 'عند البائعين' },
+      { label: 'مغلقة', value: n('CLOSED'), tone: 'forest', sub: 'منتهية' },
+    ]);
+  };
   listPage(root, {
+    ctx, top, live: (e) => e.type === 'submit' || e.type === 'bid',
     table: 'auctions', label: 'جدول المزادات', placeholder: 'بحث بالعنوان أو الرقم', initialQ: query.q || '', minW: 940,
     pills: [
       { id: 'all', label: 'الكل' },

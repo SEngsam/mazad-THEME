@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { accName, ago, catPath, chip, emptyBox, esc, fmtDateTime, money, statusChip, toast } from '../ui.js';
+import { accName, ago, catPath, chip, emptyBox, esc, fmtDateTime, heroStrip, money, statusChip, toast } from '../ui.js';
 
 export const meta = { title: 'المراجعة', sub: 'المزادات المقدَّمة بانتظار قرار المشرف.' };
 
@@ -20,7 +20,10 @@ export default function review(root, { ctx }) {
     const seller = api.rows('accounts').find((x) => x.id === a.accountId);
     const sold = api.rows('auctions').filter((x) => x.accountId === a.accountId && ['LIVE', 'CLOSED'].includes(x.status)).length;
 
+    const oldest = items.reduce((t, x) => Math.min(t, x.submittedAt), Date.now());
     root.innerHTML = `
+      <div class="flex flex-col gap-5">
+      ${heroStrip(`<div class="flex flex-wrap items-center justify-between gap-4"><div><span class="ad-live"><span class="ad-dot"></span>مباشر</span><h2 class="m-0 mt-3 text-2xl font-bold">مزادات بانتظار قرارك</h2><p class="m-0 mt-1.5 text-[13px] text-white/70">أقدمها ${ago(oldest)} · لا يظهر المزاد للعموم قبل اعتماده.</p></div><span class="tabular text-[56px] font-bold leading-none text-lime lg:text-[72px]">${items.length}</span></div>`)}
       <div class="flex flex-wrap items-start gap-5">
         <section class="ad-card flex min-w-0 flex-[1_1_320px] flex-col gap-2.5" aria-labelledby="q-h">
           <div class="mb-1 flex items-center justify-between"><h2 id="q-h" class="ad-h2">بانتظار المراجعة</h2>${chip(String(items.length), 'warn')}</div>
@@ -52,7 +55,7 @@ export default function review(root, { ctx }) {
             <span class="ms-auto text-xs text-ink-muted">إن تغيّر المزاد أثناء المراجعة يُطلب تحديث الصفحة.</span>
           </div>
         </section>
-      </div>`;
+      </div></div>`;
   }
 
   root.addEventListener('click', async (e) => {
@@ -80,5 +83,13 @@ export default function review(root, { ctx }) {
     import('../ui.js').then((m) => m.applyRole(root));
   });
 
+  ctx.onLive((e) => {
+    if (e.type !== 'submit') return;
+    const note = root.querySelector('#note')?.value || '';
+    draw();
+    const n = root.querySelector('#note');
+    if (n) n.value = note;
+    import('../ui.js').then((m) => m.applyRole(root));
+  });
   draw();
 }

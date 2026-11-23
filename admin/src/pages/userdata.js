@@ -1,6 +1,6 @@
 import { api } from '../api.js';
 import { listPage } from '../list.js';
-import { ago, chip, esc, toast } from '../ui.js';
+import { ago, chip, esc, statCards, toast } from '../ui.js';
 
 export const meta = { title: 'بيانات المستخدمين', sub: 'الفلاتر المحفوظة وسجل البحث.' };
 
@@ -22,6 +22,7 @@ export default function userdata(root) {
     root.querySelector('#ud').replaceChildren(host);
     if (tab === 'filters') {
       listPage(host, {
+        top: () => statCards([{ label: 'فلاتر محفوظة', value: api.rows('savedFilters').length, tone: 'lime', sub: 'لدى المستخدمين' }, { label: 'حسابات تحفظ فلاتر', value: new Set(api.rows('savedFilters').map((f) => f.account)).size, tone: 'primary', sub: 'حساباً' }], 'sm:grid-cols-2'),
         table: 'savedFilters', label: 'الفلاتر المحفوظة', placeholder: 'بحث بالاسم', searchText: (f) => `${f.name} ${f.account}`, minW: 720,
         columns: [
           { h: 'الاسم', cell: (f) => `<span class="font-semibold">${esc(f.name)}</span>` }, { h: 'النوع', cell: (f) => chip(f.type) }, { h: 'الحساب', cell: (f) => esc(f.account) },
@@ -33,6 +34,7 @@ export default function userdata(root) {
       });
     } else {
       listPage(host, {
+        top: () => statCards([{ label: 'عمليات بحث', value: api.rows('searchHistory').length, tone: 'forest', sub: 'في السجل' }, { label: 'كلمات مختلفة', value: new Set(api.rows('searchHistory').map((s) => s.searchKey)).size, tone: 'accent', sub: 'كلمة بحث' }], 'sm:grid-cols-2'),
         table: 'searchHistory', label: 'سجل البحث', placeholder: 'بحث بالكلمة', searchText: (s) => `${s.searchKey} ${s.account}`, minW: 640,
         columns: [
           { h: 'كلمة البحث', cell: (s) => `<span class="font-semibold">${esc(s.searchKey)}</span>` }, { h: 'النوع', cell: (s) => chip(s.type) }, { h: 'الحساب', cell: (s) => esc(s.account) },

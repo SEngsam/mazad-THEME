@@ -1,5 +1,5 @@
 import { api } from './api.js';
-import { applyRole, emptyBox, errorBox, esc, pager, skeleton } from './ui.js';
+import { REDUCED, applyRole, emptyBox, errorBox, esc, pager, runCounts, skeleton } from './ui.js';
 
 /**
  * Generic list page: filter pills with counts, search, select filters, table, pager,
@@ -26,12 +26,18 @@ export function listPage(root, cfg) {
           ${cfg.searchText ? `<label><span class="sr-only">بحث</span><input type="search" data-q value="${esc(state.q)}" placeholder="${esc(cfg.placeholder || 'بحث')}" class="ad-input !w-56"></label>` : ''}
         </div>
       </div>
-      ${cfg.top || ''}
+      <div id="l-top"></div>
       <section class="ad-card !py-3" aria-label="${esc(cfg.label)}"><div id="l-body"></div></section>
       ${cfg.note ? `<p class="ad-muted m-0">${cfg.note}</p>` : ''}
     </div>`;
   const body = root.querySelector('#l-body');
   const pillsEl = root.querySelector('#l-pills');
+  const topEl = root.querySelector('#l-top');
+  const drawTop = (animate) => {
+    if (!cfg.top) return;
+    topEl.innerHTML = typeof cfg.top === 'function' ? cfg.top() : cfg.top;
+    runCounts(topEl, animate);
+  };
 
   const drawPills = () => {
     if (!cfg.pills) return;
@@ -40,10 +46,11 @@ export function listPage(root, cfg) {
   };
 
   let seq = 0;
-  async function reload() {
+  async function reload(silent = false) {
     const mine = ++seq;
     drawPills();
-    body.innerHTML = skeleton(6, cfg.columns.length > 4 ? 5 : cfg.columns.length);
+    drawTop(!silent && !topEl.firstChild);
+    if (!silent) body.innerHTML = skeleton(6, cfg.columns.length > 4 ? 5 : cfg.columns.length);
     let result;
     try {
       result = await api.list(cfg.table, { filter, sort: cfg.sort, page: state.page, size: state.size });
@@ -63,6 +70,7 @@ export function listPage(root, cfg) {
       </table></div>
       <div class="mt-1">${pager({ page: state.page, size: state.size, total: result.total })}</div>`;
     applyRole(body);
+    if (silent && !REDUCED) body.querySelector('tbody tr')?.classList.add('ad-flash');
   }
 
   root.addEventListener('click', (e) => {
@@ -88,5 +96,6 @@ export function listPage(root, cfg) {
   });
 
   reload();
+  if (cfg.ctx && cfg.live) cfg.ctx.onLive((e) => { if (cfg.live(e)) reload(true); });
   return { reload, state };
 }

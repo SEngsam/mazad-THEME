@@ -1,14 +1,25 @@
 import { api } from '../api.js';
 import { listPage } from '../list.js';
-import { ago, chip, esc, fmt, fmtDate, mask, toast } from '../ui.js';
+import { ago, chip, esc, fmt, fmtDate, mask, statCards, toast } from '../ui.js';
 
 export const meta = { title: 'الحسابات', sub: 'المستخدمون وطلبات التوثيق ورصيد العملات.' };
 
 export const avatar = (name) => `<span class="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-primary-soft text-[13px] font-bold text-primary">${esc([...name][0])}</span>`;
 export const verifyChip = (a) => (a.verified ? chip('موثّق', 'good') : a.verificationRequestedAt ? chip(`طلب توثيق · ${ago(a.verificationRequestedAt)}`, 'warn') : chip('غير موثّق', 'info'));
 
-export default function accounts(root) {
+export default function accounts(root, { ctx }) {
+  const top = () => {
+    const r = api.rows('accounts');
+    const ver = r.filter((a) => a.verified).length;
+    return statCards([
+      { label: 'إجمالي الحسابات', value: r.length, tone: 'lime', sub: `${r.filter((a) => a.isSeller).length} بائعاً` },
+      { label: 'طلبات توثيق', value: r.filter((a) => a.verificationRequestedAt).length, tone: 'outline', sub: 'بانتظار القرار' },
+      { label: 'نسبة الموثّقين', value: Math.round((ver / r.length) * 100), suffix: '%', tone: 'primary', sub: `${ver} حساباً` },
+      { label: 'رصيد العملات', value: r.reduce((t, a) => t + a.coins, 0), tone: 'forest', sub: 'عملة لدى المستخدمين' },
+    ]);
+  };
   listPage(root, {
+    ctx, top, live: (e) => e.type === 'payment',
     table: 'accounts', label: 'جدول الحسابات', placeholder: 'بحث بالاسم', minW: 880,
     pills: [
       { id: 'all', label: 'الكل' },

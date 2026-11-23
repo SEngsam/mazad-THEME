@@ -1,17 +1,24 @@
 import { api } from '../api.js';
 import { listPage } from '../list.js';
-import { chip, esc, fmt, fmtDateTime, money2 } from '../ui.js';
+import { chip, esc, fmtDateTime, money2, statCards } from '../ui.js';
 
 export const meta = { title: 'المدفوعات', sub: 'عمليات شراء العملات داخل المنصة.' };
 
-export default function payments(root) {
-  const rows = api.rows('payments');
-  const sum = (k) => rows.reduce((t, p) => t + p[k], 0);
-  const kpi = (l, v) => `<div class="ad-card flex flex-col gap-1.5"><span class="text-[13px] text-ink-body">${l}</span><span class="tabular text-[28px] font-bold">${v}</span></div>`;
+export default function payments(root, { ctx }) {
+  const top = () => {
+    const rows = api.rows('payments');
+    const sum = (k) => rows.reduce((t, p) => t + p[k], 0);
+    const day = rows.filter((p) => Date.now() - p.purchasedAt < 86400000);
+    return statCards([
+      { label: 'عمليات الشراء', value: rows.length, tone: 'lime', sub: `${day.length} خلال 24 ساعة` },
+      { label: 'إجمالي المبالغ', value: Math.round(sum('totalAmount')), suffix: ' ر.س', tone: 'primary', sub: 'شاملة الضريبة' },
+      { label: 'الضريبة المحصّلة', value: Math.round(sum('vatAmount')), suffix: ' ر.س', tone: 'forest', sub: '15%' },
+    ], 'sm:grid-cols-3');
+  };
   const store = (...s) => (p) => s.includes(p.store);
   listPage(root, {
+    ctx, top, live: (e) => e.type === 'payment',
     table: 'payments', label: 'جدول المدفوعات', minW: 900, sort: (a, b) => b.purchasedAt - a.purchasedAt,
-    top: `<div class="grid gap-4 sm:grid-cols-3">${kpi('عمليات الشراء', fmt(rows.length))}${kpi('إجمالي المبالغ', money2(sum('totalAmount')))}${kpi('الضريبة المحصّلة', money2(sum('vatAmount')))}</div>`,
     pills: [
       { id: 'all', label: 'الكل' }, { id: 'apple', label: 'App Store / Google Play', test: store('App Store', 'Google Play') },
       { id: 'stripe', label: 'Stripe', test: store('Stripe') }, { id: 'paypal', label: 'PayPal', test: store('PayPal') }, { id: 'razor', label: 'Razorpay', test: store('Razorpay') },

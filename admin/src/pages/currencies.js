@@ -1,3 +1,4 @@
+import { prependStats as _ps, statCards as _sc } from '../ui.js';
 import { api } from '../api.js';
 import { chip, esc, fmtDateTime } from '../ui.js';
 
@@ -16,4 +17,5 @@ export default async function currencies(root) {
           <tbody>${rates.rows.map(([a, b, r]) => `<tr><td class="tabular">${a}</td><td>${b}</td><td class="tabular font-semibold">${r.toFixed(4)}</td></tr>`).join('')}</tbody></table>
         <p class="ad-muted mb-0 mt-3">تُجلب الأسعار تلقائياً بمهمة مجدولة. العرض فقط.</p></section>
     </div>`;
+  _ps(root, _sc([{ label: 'العملات المدعومة', value: list.length, tone: 'lime', sub: 'منها واحدة افتراضية' }, { label: 'أسعار الصرف', value: rates.rows.length, tone: 'primary', sub: 'تُجلب تلقائياً' }, { label: 'عملات إضافية', value: list.length - 1, tone: 'outline', sub: 'تُفعَّل من الإعدادات' }], 'sm:grid-cols-3'));
 }
