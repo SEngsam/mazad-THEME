@@ -1,5 +1,5 @@
 import { prependStats as _ps, statCards as _sc } from '../ui.js';
-import { api } from '../api.js';
+import { api, canWrite } from '../api.js';
 import { askReason, esc, toast } from '../ui.js';
 
 export const meta = { title: 'الفئات', sub: 'الفئات الرئيسية والفرعية.' };
@@ -8,9 +8,13 @@ const GRIP = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"
 
 export default function categories(root, { ctx }) {
   let editing = 'c-cars';
-  let dragMode = false;
+  let dirty = 0;
+  let failed = false;     // the last automatic save failed
+  let lastSaved = null;   // { prev, at } for the undo strip
+  let timer = null;
   let groups = [];        // working copy: [{ id, subs: [id…] }]
   let base = [];          // what is saved
+  const dragOn = () => canWrite();
   let dragged = null;     // { id, kind }
   let target = null;
   let picked = null;      // keyboard pick-up
@@ -84,34 +88,27 @@ export default function categories(root, { ctx }) {
     const c = byId(id);
     const grip = `<button type="button" data-grip="${id}" aria-pressed="${picked === id}" aria-label="اسحب «${esc(c.name.ar)}» لإعادة الترتيب" class="ad-grip">${GRIP}</button>`;
     if (kind === 'main') {
-      return `<div data-row="${id}" data-kind="main" draggable="true" class="ad-row-drag flex items-center gap-3 rounded-2xl border-b border-line-soft px-2 py-3"><${dragMode ? 'span class="contents"' : 'span class="contents"'}>${dragMode ? grip : ''}</span>
+      return `<div data-row="${id}" data-kind="main" draggable="${dragOn()}" class="ad-row-drag flex items-center gap-3 rounded-2xl border-b border-line-soft px-2 py-3"><span class="contents">${dragOn() ? grip : ''}</span>
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-soft font-bold text-primary">${esc([...c.name.ar][0])}</span><strong>${esc(c.name.ar)}</strong>
-        <span class="ms-auto text-xs text-ink-muted tabular">${count(id)} مزاداً</span>${dragMode ? '' : `<button type="button" data-edit="${id}" class="ad-btn">تعديل</button>`}</div>`;
+        <span class="ms-auto text-xs text-ink-muted tabular">${count(id)} مزاداً</span><button type="button" data-edit="${id}" ${dirty ? 'disabled title="احفظ ترتيب الفئات أو تراجع أولاً"' : ''} class="ad-btn">تعديل</button></div>`;
     }
-    return `<div data-row="${id}" data-kind="sub" data-parent="${parent}" draggable="true" class="ad-row-drag ms-11 flex items-center gap-3 rounded-xl border-b border-line-soft px-2 py-2.5 text-[13px]">${dragMode ? grip : ''}<span>${esc(c.name.ar)}</span><span class="ms-auto text-xs text-ink-muted tabular">${count(id)}</span>${dragMode ? '' : `<button type="button" data-edit="${id}" class="ad-btn">تعديل</button>`}</div>`;
+    return `<div data-row="${id}" data-kind="sub" data-parent="${parent}" draggable="${dragOn()}" class="ad-row-drag ms-11 flex items-center gap-3 rounded-xl border-b border-line-soft px-2 py-2.5 text-[13px]">${dragOn() ? grip : ''}<span>${esc(c.name.ar)}</span><span class="ms-auto text-xs text-ink-muted tabular">${count(id)}</span><button type="button" data-edit="${id}" ${dirty ? 'disabled title="احفظ ترتيب الفئات أو تراجع أولاً"' : ''} class="ad-btn">تعديل</button></div>`;
   };
 
   function draw() {
     const all = cats();
     const mains = all.filter((c) => !c.parentCategoryId);
-    const list = dragMode ? groups : readGroups();
+    if (!changes().length) { base = readGroups(); groups = clone(base); }  // pick up edits made elsewhere when nothing is pending
+    const list = groups;
     const cur = all.find((c) => c.id === editing) || null;
     const isNew = editing === 'new';
-    const pend = dragMode ? changes() : [];
+    const pend = changes();
+    dirty = pend.length;
 
-    const side = dragMode ? `
-        <div class="flex min-w-0 flex-[1_1_340px] flex-col gap-5">
-          <section class="ad-card" aria-labelledby="g-h"><h2 id="g-h" class="ad-h2 mb-3.5">دليل الوضع</h2>
-            <div class="flex flex-col gap-3 text-[13px] text-ink-body">
-              <div class="flex items-center gap-2.5"><span class="ad-grip !cursor-default">${GRIP}</span>المقبض: اضغط واسحب</div>
-              <div class="flex items-center gap-2.5"><span class="h-1 w-[34px] shrink-0 rounded bg-lime shadow-[0_0_0_3px_rgba(198,244,50,.35)]"></span>خط ليموني: موضع الإفلات بين عنصرين</div>
-              <div class="flex items-center gap-2.5"><span class="h-[22px] w-[34px] shrink-0 rounded-lg border-2 border-dashed border-primary bg-lime/20"></span>إطار متقطع: نقل الفئة إلى فئة رئيسية أخرى</div>
-              <div class="flex items-center gap-2.5"><span class="h-[22px] w-[34px] shrink-0 rounded-lg border-[1.5px] border-primary shadow-[0_8px_14px_-6px_rgba(6,46,34,.4)]"></span>الصف المرفوع: العنصر قيد السحب</div>
-            </div>
-            <p class="ad-muted mb-0 mt-3.5 leading-7">بالكيبورد: Space لالتقاط الفئة، الأسهم للتحريك (تنتقل الفرعية بين الرئيسية عند الحافة)، Space للإفلات، Esc للتراجع.</p></section>
-          <section class="ad-card" aria-labelledby="p-h"><h2 id="p-h" class="ad-h2 mb-2.5">تغييرات غير محفوظة ${pend.length ? `<span class="ad-chip ad-chip-warn tabular">${pend.length}</span>` : ''}</h2>
-            ${pend.length ? `<ul class="m-0 list-none p-0 text-[13px]">${pend.map((t) => `<li class="border-b border-line-soft py-2.5 last:border-0">${t}</li>`).join('')}</ul>` : '<p class="m-0 text-[13px] text-ink-muted">لا توجد تغييرات بعد.</p>'}</section>
-        </div>` : `
+    const pendingCard = `
+          <section class="ad-card" aria-labelledby="p-h"><h2 id="p-h" class="ad-h2 mb-2.5">قيد الحفظ <span class="ad-chip ad-chip-warn tabular">${pend.length}</span></h2>
+            <ul class="m-0 list-none p-0 text-[13px]">${pend.map((t) => `<li class="border-b border-line-soft py-2.5 last:border-0">${t}</li>`).join('')}</ul></section>`;
+    const side = `<div class="flex min-w-0 flex-[1_1_340px] flex-col gap-5">${pend.length ? pendingCard : ''}
         <section class="ad-card flex min-w-0 flex-[1_1_340px] flex-col gap-4" aria-labelledby="e-h">
           <h2 id="e-h" class="ad-h2">${isNew ? 'فئة جديدة' : cur ? `تعديل فئة · ${esc(cur.name.ar)}` : 'تعديل فئة'}</h2>
           ${cur || isNew ? `
@@ -122,25 +119,24 @@ export default function categories(root, { ctx }) {
               <div class="flex gap-2.5"><button type="submit" data-write class="ad-btn-primary ad-btn-lg">حفظ</button><button type="button" data-cancel class="ad-btn ad-btn-lg">إلغاء</button></div>
             </form>
             ${cur ? `<div class="rounded-2xl bg-accent-soft p-3.5 text-xs leading-7 text-accent-ink"><strong>تنبيه:</strong> حذف فئة يحذف جميع مزاداتها نهائياً. المقترح: استبدال الحذف بالأرشفة.<br><button type="button" data-del data-write class="ad-btn-danger mt-2">حذف الفئة</button></div>` : ''}` : '<p class="m-0 text-[13px] text-ink-muted">اختر فئة من القائمة لتعديلها.</p>'}
-        </section>`;
+        </section></div>`;
 
     root.innerHTML = `
       <div id="dd-live" class="sr-only" aria-live="polite"></div>
       <div class="flex flex-wrap items-start gap-5">
         <section class="ad-card min-w-0 flex-[1.5_1_520px]" aria-labelledby="c-h">
           <div class="mb-2.5 flex flex-wrap items-center justify-between gap-3"><h2 id="c-h" class="ad-h2">شجرة الفئات</h2>
-            <div class="flex items-center gap-2">
-              <button type="button" data-dragmode data-write aria-pressed="${dragMode}" class="${dragMode ? 'inline-flex items-center gap-2 rounded-full bg-forest px-[18px] py-2 text-[13px] font-bold text-lime' : 'ad-btn !px-4 !py-2 !text-[13px]'}">${GRIP.replace('width="18" height="18"', 'width="16" height="16"')}وضع السحب${dragMode ? ' · مفعّل' : ''}</button>
-              <button type="button" data-new data-write ${dragMode ? 'disabled' : ''} class="ad-btn-primary ad-btn-lg">إضافة فئة</button></div></div>
-          ${dragMode ? '<div class="mb-2.5 rounded-2xl bg-primary-soft px-3.5 py-2.5 text-[12.5px] leading-7 text-primary">اسحب المقبض <b>⋮⋮</b> لإعادة الترتيب. اسحب فئة فرعية فوق فئة رئيسية أخرى لنقلها إليها. لا تُحفظ التغييرات حتى تضغط «حفظ الترتيب».</div>' : ''}
+            <button type="button" data-new data-write ${dirty ? 'disabled' : ''} class="ad-btn-primary ad-btn-lg">إضافة فئة</button></div>
+          ${dragOn() ? '<p class="ad-muted mb-2.5 mt-0 leading-7">اسحب المقبض <b>⋮⋮</b> لإعادة الترتيب، أو أفلت فئة فرعية فوق فئة رئيسية لنقلها إليها. تُحفظ التغييرات تلقائياً عند الإفلات.</p>' : ''}
+          ${lastSaved && !pend.length ? '<div class="mb-2.5 flex items-center justify-between gap-3 rounded-2xl bg-primary-soft px-3.5 py-2 text-[12.5px] text-primary"><span>تم حفظ الترتيب.</span><button type="button" data-undo-last data-write class="font-bold underline">تراجع</button></div>' : ''}
           ${list.map((g) => `<div data-group="${g.id}" class="rounded-2xl">${row(g.id, 'main')}${g.subs.map((s) => row(s, 'sub', g.id)).join('')}</div>`).join('')}
         </section>
         ${side}
       </div>
-      ${dragMode && pend.length ? `<div role="region" aria-label="شريط حفظ الترتيب" class="fixed bottom-24 inset-x-3 z-30 flex items-center gap-3.5 rounded-full bg-forest py-3 pe-3.5 ps-[22px] text-white shadow-[0_20px_40px_-16px_rgba(6,46,34,.7)] lg:bottom-6 lg:left-8 lg:right-[288px]">
-        <span class="flex-1 text-[13px]"><b class="tabular text-lime">${pend.length}</b> تغييرات غير محفوظة</span>
+      ${failed && pend.length ? `<div role="region" aria-label="تعذّر حفظ الترتيب" class="fixed bottom-24 inset-x-3 z-30 flex items-center gap-3.5 rounded-full bg-forest py-3 pe-3.5 ps-[22px] text-white shadow-[0_20px_40px_-16px_rgba(6,46,34,.7)] lg:bottom-6 lg:left-8 lg:right-[288px]">
+        <span class="flex-1 text-[13px]">تعذّر حفظ الترتيب</span>
         <button type="button" data-undo class="rounded-full border-[1.5px] border-white/50 bg-transparent px-5 py-2 text-[13px] font-semibold text-white">تراجع</button>
-        <button type="button" data-save data-write class="rounded-full bg-lime px-6 py-2.5 text-[13px] font-bold text-forest">حفظ الترتيب</button></div>` : ''}`;
+        <button type="button" data-save data-write class="rounded-full bg-lime px-6 py-2.5 text-[13px] font-bold text-forest">إعادة المحاولة</button></div>` : ''}`;
 
     _ps(root, _sc([{ label: 'فئات رئيسية', value: mains.length, tone: 'lime', sub: 'في الشجرة' }, { label: 'فئات فرعية', value: all.length - mains.length, tone: 'primary', sub: 'تحت الرئيسية' }, { label: 'مزادات مرتبطة', value: api.rows('auctions').length, tone: 'forest', sub: 'بفئات المنصة' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
@@ -149,38 +145,32 @@ export default function categories(root, { ctx }) {
   const say = (t) => { const l = root.querySelector('#dd-live'); if (l) l.textContent = t; };
   const clearMarks = () => root.querySelectorAll('.ad-drop-before,.ad-drop-after,.ad-drop-into,.ad-dragging').forEach((el) => el.classList.remove('ad-drop-before', 'ad-drop-after', 'ad-drop-into', 'ad-dragging'));
 
-  /* ----- mode switch ----- */
-  async function toggleMode() {
-    if (dragMode) {
-      if (changes().length) {
-        const ok = await askReason({ title: 'تجاهل التغييرات؟', text: 'لم تُحفظ تغييرات الترتيب. سيُلغى كل ما فعلتَه.', confirm: 'تجاهل', danger: true, noField: true });
-        if (ok === null) return;
-      }
-      dragMode = false;
-    } else {
-      base = readGroups();
-      groups = clone(base);
-      dragMode = true;
-      editing = null;
+  /** Save the working order right away (called after every drop). */
+  async function commit(focusId, isUndo = false) {
+    if (!changes().length) return;
+    const prev = clone(base);
+    try {
+      const order = groups.flatMap((g) => [{ id: g.id, parentCategoryId: null }, ...g.subs.map((s) => ({ id: s, parentCategoryId: g.id }))]);
+      await api.saveCategoryOrder(order);
+      base = clone(groups);
+      failed = false;
+      lastSaved = isUndo ? null : { prev, at: Date.now() };
+      toast(isUndo ? 'تم التراجع عن الترتيب.' : 'حُفظ الترتيب تلقائياً.');
+      clearTimeout(timer);
+      if (!isUndo) timer = setTimeout(() => { lastSaved = null; if (!changes().length && !picked) draw(); }, 10000);
+    } catch (err) {
+      failed = true;
+      toast(err.message, 'bad');
     }
-    picked = null;
     draw();
+    if (focusId) root.querySelector(`[data-grip="${focusId}"]`)?.focus();
   }
 
   /* ----- events ----- */
   root.addEventListener('click', async (e) => {
-    if (e.target.closest('[data-dragmode]')) { toggleMode(); return; }
-    if (e.target.closest('[data-undo]')) { groups = clone(base); picked = null; draw(); return; }
-    if (e.target.closest('[data-save]')) {
-      try {
-        const order = groups.flatMap((g) => [{ id: g.id, parentCategoryId: null }, ...g.subs.map((s) => ({ id: s, parentCategoryId: g.id }))]);
-        await api.saveCategoryOrder(order);
-        base = clone(groups);
-        toast('حُفظ الترتيب.');
-      } catch (err) { toast(err.message, 'bad'); }
-      draw();
-      return;
-    }
+    if (e.target.closest('[data-undo]')) { groups = clone(base); picked = null; failed = false; draw(); return; }
+    if (e.target.closest('[data-save]')) { await commit(); return; }
+    if (e.target.closest('[data-undo-last]') && lastSaved) { groups = clone(lastSaved.prev); lastSaved = null; await commit(null, true); return; }
     const ed = e.target.closest('[data-edit]');
     if (ed) { editing = ed.dataset.edit; draw(); return; }
     if (e.target.closest('[data-new]')) { editing = 'new'; draw(); return; }
@@ -211,7 +201,7 @@ export default function categories(root, { ctx }) {
   /* mouse / touch-pad drag and drop */
   root.addEventListener('dragstart', (e) => {
     const r = e.target.closest?.('[data-row]');
-    if (!dragMode || !r) { e.preventDefault(); return; }
+    if (!dragOn() || !r) { e.preventDefault(); return; }
     dragged = { id: r.dataset.row, kind: r.dataset.kind };
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', dragged.id);
@@ -251,6 +241,7 @@ export default function categories(root, { ctx }) {
     dragged = null; target = null;
     draw();
     say(`أُفلتت «${name}».`);
+    commit();
   });
   root.addEventListener('dragend', () => { dragged = null; target = null; clearMarks(); });
 
@@ -262,7 +253,7 @@ export default function categories(root, { ctx }) {
     const focus = () => root.querySelector(`[data-grip="${id}"]`)?.focus();
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      if (picked === id) { picked = null; draw(); focus(); say(`أُفلتت «${nameOf(id)}».`); }
+      if (picked === id) { picked = null; draw(); focus(); say(`أُفلتت «${nameOf(id)}».`); commit(id); }
       else { picked = id; pickSnapshot = clone(groups); draw(); focus(); say(`التقطتَ «${nameOf(id)}». استخدم الأسهم للتحريك، وSpace للإفلات، وEsc للتراجع.`); }
     } else if (e.key === 'Escape' && picked === id) {
       e.preventDefault();
@@ -272,7 +263,7 @@ export default function categories(root, { ctx }) {
       if (step(id, e.key === 'ArrowUp' ? -1 : 1)) { draw(); focus(); say(`«${nameOf(id)}» في موضعها الجديد.`); }
     }
   });
-  document.addEventListener('ad-route', () => { dragged = null; }, { once: true });
+  document.addEventListener('ad-route', () => { dragged = null; clearTimeout(timer); }, { once: true });
 
   draw();
 }
