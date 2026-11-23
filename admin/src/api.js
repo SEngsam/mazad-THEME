@@ -147,6 +147,18 @@ export const api = {
     Object.assign(db.notificationTypes.find((t) => t.type === type), patch);
   },
 
+  /** order: every category once, mains first with their children after, as [{ id, parentCategoryId }]. The server needs a sort column to store this. */
+  async saveCategoryOrder(order) {
+    await guardWrite();
+    const rows = tables.categories;
+    const byId = new Map(rows.map((r) => [r.id, r]));
+    const moved = order.filter((o) => (byId.get(o.id)?.parentCategoryId ?? null) !== o.parentCategoryId).length;
+    const next = order.map((o) => { const r = byId.get(o.id); r.parentCategoryId = o.parentCategoryId; return r; });
+    rows.splice(0, rows.length, ...next);
+    audit('ترتيب الفئات', 'info', 'شجرة الفئات', moved ? `نُقلت ${moved} فئات` : 'إعادة ترتيب');
+    return rows;
+  },
+
   async currencies() { await wait(80); return { currencies: db.currencies, rates: db.exchangeRates }; },
   async notificationTypes() { await wait(80); return db.notificationTypes; },
   async adPlacements() { return db.adPlacements; },
