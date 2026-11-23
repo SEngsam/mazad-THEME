@@ -4,7 +4,7 @@ export default function login(app, { go }) {
   app.innerHTML = `
     <div class="flex min-h-screen flex-col lg:flex-row">
       <div class="flex flex-1 flex-col justify-between gap-8 bg-forest p-8 text-white lg:p-12">
-        <img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="h-11 w-auto self-start rounded-xl bg-white px-3.5 py-2">
+        <img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="h-11 w-auto self-start rounded-xl bg-white px-3.5 py-2">
         <div><h1 class="m-0 mb-3 text-3xl font-bold leading-snug">لوحة إدارة مزادي</h1><p class="m-0 max-w-sm text-[15px] leading-8 text-white/75">مراجعة المزادات، وإدارة الحسابات والمدفوعات والبلاغات.</p></div>
         <span class="text-xs text-white/60">للمشرفين المصرّح لهم فقط.</span>
       </div>

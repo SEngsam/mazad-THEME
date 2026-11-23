@@ -112,7 +112,7 @@ function buildShell() {
   app.innerHTML = `
     <div class="min-h-screen lg:grid lg:grid-cols-[256px_minmax(0,1fr)]">
       <aside class="ad-side hidden px-4 py-6 lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:gap-4 lg:self-start" aria-label="القائمة الجانبية">
-        <div class="flex shrink-0 items-center justify-between px-2"><a href="#/" aria-label="مزادي"><img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="ad-logo"></a><span class="ad-chip ad-tag bg-lime/15 text-lime">الإدارة</span></div>
+        <div class="flex shrink-0 items-center justify-between px-2"><a href="#/" aria-label="مزادي"><img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="ad-logo"></a><span class="ad-chip ad-tag bg-lime/15 text-lime">الإدارة</span></div>
         <nav id="nav" aria-label="أقسام لوحة الإدارة" class="ad-scroll flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto"></nav>
         <div class="ad-sep flex shrink-0 items-center gap-3 border-t border-white/15 px-2 pt-4">
           <span class="ad-avatar grid h-[38px] w-[38px] place-items-center rounded-full bg-lime font-bold text-forest">م</span>

@@ -152,24 +152,15 @@ const topHTML = (user) => `
     <div class="on-dark bg-forest text-[13px] text-white">
       <div class="container-page flex items-center justify-between gap-3 py-[9px]">
         <p class="m-0 min-w-0 truncate">
-          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="live.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات ساحة الشمال الليلة 8:00م · 42 سيارة</a>
+          <b class="me-2 rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b><a href="live.html?e=north-yard" class="text-white underline-offset-4 hover:text-white hover:underline">مزاد سيارات شركة هدف النسور الليلة 8:00م · 42 سيارة</a>
         </p>
-        <div class="flex shrink-0 items-center gap-2 whitespace-nowrap">
-          <span class="hidden opacity-85 sm:inline">قسّط مع</span>
-          <span class="brand-pill">
-            <img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=64" alt="" width="16" height="16">تابي
-          </span>
-          <span class="brand-pill">
-            <img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=64" alt="" width="16" height="16">تمارا
-          </span>
-        </div>
       </div>
     </div>
 
     <header class="sticky top-0 z-20 border-b border-line bg-white shadow-header">
       <div class="container-page flex flex-wrap items-center gap-x-2 gap-y-3 sm:gap-x-3 py-3 lg:flex-nowrap lg:gap-6 lg:py-3.5">
         <a href="index.html" class="shrink-0" aria-label="مزادي — الرئيسية">
-          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
+          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="block h-7 w-auto min-[360px]:h-8 sm:h-10">
         </a>
 
         <form id="search-form" role="search" action="search.html" class="order-last flex w-full items-center rounded-full bg-mist p-1 focus-within:ring-2 focus-within:ring-primary lg:order-none lg:w-auto lg:min-w-[260px] lg:flex-1">
@@ -204,7 +195,7 @@ const footerHTML = `
     <footer class="mt-auto border-t border-line-soft bg-primary-soft">
       <div class="container-page grid grid-cols-2 gap-7 pb-6 pt-10 text-sm sm:grid-cols-3 lg:grid-cols-4">
         <div class="col-span-2 flex flex-col gap-2.5 sm:col-span-3 lg:col-span-1">
-          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="284" class="block h-11 w-auto self-start">
+          <img src="public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="block h-11 w-auto self-start">
           <p class="m-0 text-[13px] leading-[1.8] text-ink-muted">سجل تجاري 1010XXXXXX<br>موثّق في المركز السعودي للأعمال</p>
           <div class="flex flex-wrap gap-2">
             <a href="#" class="whitespace-nowrap rounded-[10px] bg-ink px-3.5 py-2 text-xs text-white hover:bg-black hover:text-white">App Store</a>
@@ -238,8 +229,6 @@ const footerHTML = `
           <li class="pay-badge">مدى<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Mada_Logo.svg" alt="مدى"></li>
           <li class="pay-badge">Apple Pay<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Apple_Pay_logo.svg" alt="Apple Pay"></li>
           <li class="pay-badge">فيزا<img data-logo src="https://commons.wikimedia.org/wiki/Special:FilePath/Visa_Inc._logo.svg" alt="فيزا"></li>
-          <li class="pay-badge">تابي<img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=128" alt="تابي"></li>
-          <li class="pay-badge">تمارا<img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=128" alt="تمارا"></li>
         </ul>
       </div>
     </footer>`;
