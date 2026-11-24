@@ -178,10 +178,10 @@
 .ad-out { color: #FFB8A5; }
 
 /* Dark: darker sidebar with a divider, dark surfaces everywhere. */
-[data-theme=dark] .ad-side { background: #07140F; border-inline-end: 1px solid rgb(var(--line)); }
+[data-theme=dark] .ad-side { background: #0a1220; border-inline-end: 1px solid rgb(var(--line)); }
 [data-theme=dark] [class~="text-primary"], [data-theme=dark] .ad-chip-good, [data-theme=dark] .ad-ph { color: #6CC0EE; }
 [data-theme=dark] [class~="!text-primary"] { color: #6CC0EE !important; }
-[data-theme=dark] .ad-switch { background: #2A403A; }
+[data-theme=dark] .ad-switch { background: #2c3e53; }
 [data-theme=dark] .ad-switch[aria-checked=true] { background: rgb(var(--primary)); }
 [data-theme=dark] .ad-pill[aria-pressed=true], [data-theme=dark] .ad-pill[aria-current=page] { color: #fff; }
 [data-theme=dark] .ad-bn[aria-current=page] { color: rgb(var(--ink)); }
@@ -193,7 +193,7 @@
 [data-theme=dark] svg [stroke="#fff"] { stroke: rgb(var(--surface)); }
 [data-theme=dark] svg [fill="#5A6573"] { fill: rgb(var(--ink-muted)); }
 [data-theme=dark] svg [fill="#121417"] { fill: rgb(var(--ink)); }
-[data-theme=dark] [class~="text-[#C9D3E0]"] { color: #3A524B; }
+[data-theme=dark] [class~="text-[#C9D3E0]"] { color: #3a4f66; }
 .ad-bn[aria-current=page] > span:first-child { color: #0F172A; }
 
 /* Theme switch in the account menu. */
