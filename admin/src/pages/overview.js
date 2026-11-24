@@ -56,19 +56,19 @@ function chart(s, animate) {
   const off = Math.min(W - pw / 2 - 4, Math.max(pw / 2 + 4, pts[peak][0])) - pts[peak][0];
   return `
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="المزايدات: الذروة ${fmt(max)} عند ${labels[peak]}، والآن ${fmt(values[last])}" class="block h-auto w-full">
-      <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#006C35" stop-opacity=".28"/><stop offset="1" stop-color="#006C35" stop-opacity="0"/></linearGradient></defs>
-      ${ticks.map((t) => `<line x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}" stroke="${t ? '#ECEEF1' : '#DDE3E0'}"/><text x="${L - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="#5E6B64">${fmt(Math.round(t))}</text>`).join('')}
+      <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#076091" stop-opacity=".28"/><stop offset="1" stop-color="#076091" stop-opacity="0"/></linearGradient></defs>
+      ${ticks.map((t) => `<line x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}" stroke="${t ? '#ECEEF1' : '#DDE3EA'}"/><text x="${L - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="#5A6573">${fmt(Math.round(t))}</text>`).join('')}
       <path d="${area}" fill="url(#ga)" ${animate ? 'class="ad-fade"' : ''}/>
-      <path d="${line}" pathLength="1" fill="none" stroke="#006C35" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" ${animate ? 'class="ad-draw"' : ''}/>
+      <path d="${line}" pathLength="1" fill="none" stroke="#076091" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" ${animate ? 'class="ad-draw"' : ''}/>
       <g id="cur" data-peak="${peak}" style="transform:translate(${pts[peak][0]}px,0);transition:transform .16s ease-out">
         <line id="cur-l" x1="0" x2="0" y1="${pts[peak][1]}" y2="${H - B}" stroke="#FF5A36" stroke-width="1.5" stroke-dasharray="4 4" style="transition:y1 .16s ease-out"/>
         <circle id="cur-d" cx="0" cy="${pts[peak][1]}" r="6" fill="#FF5A36" stroke="#fff" stroke-width="2.5" style="transition:cy .16s ease-out"/>
-        <g id="cur-p" style="transform:translate(${off}px,0);transition:transform .16s ease-out"><rect x="${-pw / 2}" y="2" width="${pw}" height="22" rx="11" fill="#062E22"/>
-          <text id="cur-t" x="0" y="17" font-size="11.5" font-weight="700" fill="#C6F432" text-anchor="middle">${labels[peak]} · ${fmt(max)}</text></g>
+        <g id="cur-p" style="transform:translate(${off}px,0);transition:transform .16s ease-out"><rect x="${-pw / 2}" y="2" width="${pw}" height="22" rx="11" fill="#0F172A"/>
+          <text id="cur-t" x="0" y="17" font-size="11.5" font-weight="700" fill="#F59E0B" text-anchor="middle">${labels[peak]} · ${fmt(max)}</text></g>
       </g>
-      <circle cx="${pts[last][0]}" cy="${pts[last][1]}" r="5" fill="#006C35" stroke="#fff" stroke-width="2.5"/>
-      <circle cx="${pts[last][0]}" cy="${pts[last][1]}" r="11" fill="none" stroke="#006C35" stroke-opacity=".35"><animate attributeName="r" values="6;16" dur="1.6s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values=".5;0" dur="1.6s" repeatCount="indefinite"/></circle>
-      ${pts.map((p, i) => (i % step === 0 || i === last ? `<text x="${p[0]}" y="${H - 14}" text-anchor="middle" font-size="10.5" fill="#5E6B64">${i === last ? 'الآن' : labels[i]}</text>` : '')).join('')}
+      <circle cx="${pts[last][0]}" cy="${pts[last][1]}" r="5" fill="#076091" stroke="#fff" stroke-width="2.5"/>
+      <circle cx="${pts[last][0]}" cy="${pts[last][1]}" r="11" fill="none" stroke="#076091" stroke-opacity=".35"><animate attributeName="r" values="6;16" dur="1.6s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values=".5;0" dur="1.6s" repeatCount="indefinite"/></circle>
+      ${pts.map((p, i) => (i % step === 0 || i === last ? `<text x="${p[0]}" y="${H - 14}" text-anchor="middle" font-size="10.5" fill="#5A6573">${i === last ? 'الآن' : labels[i]}</text>` : '')).join('')}
     </svg>`;
 }
 
@@ -82,10 +82,10 @@ function donut(groups) {
     off += (n / total) * C;
     return s;
   }).join('');
-  return `<svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="توزيع ${total} مزاداً حسب الحالة" class="shrink-0 -rotate-90"><g fill="none" stroke-width="20"><circle cx="70" cy="70" r="52" stroke="#EFF2F1"/>${segs}</g><g transform="rotate(90 70 70)"><text x="70" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="#121417">${fmt(total)}</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="#5E6B64">مزاد</text></g></svg>`;
+  return `<svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="توزيع ${total} مزاداً حسب الحالة" class="shrink-0 -rotate-90"><g fill="none" stroke-width="20"><circle cx="70" cy="70" r="52" stroke="#F1F4F7"/>${segs}</g><g transform="rotate(90 70 70)"><text x="70" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="#121417">${fmt(total)}</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="#5A6573">مزاد</text></g></svg>`;
 }
 
-const IC = { good: ['bg-lime text-forest', '↑'], warn: ['bg-accent-soft text-accent-ink', '!'], info: ['bg-forest text-lime', '◆'] };
+const IC = { good: ['bg-gold text-navy', '↑'], warn: ['bg-accent-soft text-accent-ink', '!'], info: ['bg-navy text-gold', '◆'] };
 const feedItem = (e, isNew) => {
   const [cls, glyph] = IC[e.tone] || IC.info;
   return `<li class="flex items-start gap-3 border-b border-line-soft py-3 last:border-0 ${isNew ? 'ad-feed-new' : ''}">
@@ -122,18 +122,18 @@ export default async function overview(root, { ctx }) {
       </div>
 
       <div class="grid gap-5 lg:grid-cols-[7fr_5fr]">
-        <section aria-label="المزادات الجارية الآن" class="ad-rise relative flex flex-col gap-5 overflow-hidden rounded-[26px] bg-forest p-6 text-white shadow-[0_18px_40px_-22px_rgba(6,46,34,.7)] lg:p-7">
-          <svg aria-hidden="true" viewBox="0 0 200 200" class="pointer-events-none absolute -start-12 -top-16 h-64 w-64 opacity-[.07]" fill="#C6F432"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="60" fill="#062E22"/></svg>
+        <section aria-label="المزادات الجارية الآن" class="ad-rise relative flex flex-col gap-5 overflow-hidden rounded-[26px] bg-navy p-6 text-white shadow-[0_18px_40px_-22px_rgba(15,23,42,.7)] lg:p-7">
+          <svg aria-hidden="true" viewBox="0 0 200 200" class="pointer-events-none absolute -start-12 -top-16 h-64 w-64 opacity-[.07]" fill="#F59E0B"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="60" fill="#0F172A"/></svg>
           <div class="relative flex items-center justify-between"><span class="ad-live"><span class="ad-dot"></span>مباشر</span><span class="text-xs text-white/65">يتحدّث كل 5 ثوانٍ</span></div>
-          <div class="relative"><div class="flex items-baseline gap-3"><span id="hero-live" class="tabular text-[56px] font-bold leading-none text-lime lg:text-[72px]">0</span><span class="text-lg font-semibold lg:text-xl">مزاداً جارياً الآن</span></div>
+          <div class="relative"><div class="flex items-baseline gap-3"><span id="hero-live" class="tabular text-[56px] font-bold leading-none text-gold lg:text-[72px]">0</span><span class="text-lg font-semibold lg:text-xl">مزاداً جارياً الآن</span></div>
             <p class="m-0 mt-2.5 text-[13px] text-white/70"><b id="hero-b10" class="tabular text-white">${p0.bids10}</b> مزايدة في آخر 10 دقائق · <b id="hero-e1" class="tabular text-white">${p0.ending1h}</b> مزادات تنتهي خلال ساعة</p></div>
           <div class="ad-eq relative" aria-hidden="true">${bars.map((h, i) => `<b style="height:${h}%;animation-delay:${(-((i * 37) % 120) / 100).toFixed(2)}s"></b>`).join('')}</div>
           <div class="relative flex justify-between text-[11px] text-white/55"><span>قبل 24 دقيقة</span><span>الآن</span></div>
         </section>
         <div class="grid grid-cols-2 gap-4 lg:gap-5">
-          ${kpi('#/accounts', 'bg-lime text-forest', 'حسابات جديدة هذا الشهر', 'k-acc', spark(p0.sparkAccounts, '#062E22'), d(p0.accountsDelta, 'bg-forest !text-lime'))}
+          ${kpi('#/accounts', 'bg-gold text-navy', 'حسابات جديدة هذا الشهر', 'k-acc', spark(p0.sparkAccounts, '#0F172A'), d(p0.accountsDelta, 'bg-navy !text-gold'))}
           ${kpi('#/bids', 'bg-accent text-white', 'مزايدات اليوم', 'k-bids', spark(p0.sparkBids, '#fff'), d(p0.bidsDelta, 'bg-white !text-accent-ink'))}
-          ${kpi('#/payments', 'bg-primary text-white', 'مبيعات العملات اليوم', 'k-coins', spark(p0.sparkCoins, '#C6F432'), d(p0.coinsDelta, 'bg-lime !text-forest'))}
+          ${kpi('#/payments', 'bg-primary text-white', 'مبيعات العملات اليوم', 'k-coins', spark(p0.sparkCoins, '#F59E0B'), d(p0.coinsDelta, 'bg-gold !text-navy'))}
           <a href="#/review" class="ad-rise flex min-h-[150px] flex-col justify-between gap-2.5 rounded-3xl border-2 border-accent bg-white p-5 !text-ink"><span class="text-[13px] font-semibold text-accent-ink">بانتظار المراجعة</span><span id="k-pend" class="tabular text-[34px] font-bold leading-none text-accent-strong lg:text-[40px]">0</span><span id="k-pend-sub" class="text-xs text-ink-muted"></span></a>
         </div>
       </div>
@@ -142,7 +142,7 @@ export default async function overview(root, { ctx }) {
         <section class="ad-card ad-rise" aria-labelledby="hr-h">
           <div class="mb-1.5 flex flex-wrap items-center justify-between gap-3">
             <div><h2 id="hr-h" class="ad-h2">المزايدات خلال <span id="rng-label">24 ساعة</span></h2><p id="rng-sub" class="m-0 mt-1 text-xs text-ink-muted"></p></div>
-            <div id="ranges" role="group" aria-label="الفترة" class="flex gap-1 rounded-full bg-mist p-1">${[['24', '24 ساعة'], ['7', '7 أيام'], ['30', '30 يوماً']].map(([k, l]) => `<button type="button" data-r="${k}" class="rounded-full px-3.5 py-1.5 text-xs ${k === range ? 'bg-forest font-bold text-lime' : 'font-semibold text-ink-body'}">${l}</button>`).join('')}</div>
+            <div id="ranges" role="group" aria-label="الفترة" class="flex gap-1 rounded-full bg-mist p-1">${[['24', '24 ساعة'], ['7', '7 أيام'], ['30', '30 يوماً']].map(([k, l]) => `<button type="button" data-r="${k}" class="rounded-full px-3.5 py-1.5 text-xs ${k === range ? 'bg-navy font-bold text-gold' : 'font-semibold text-ink-body'}">${l}</button>`).join('')}</div>
           </div>
           <div id="chart"></div>
         </section>
@@ -179,13 +179,13 @@ export default async function overview(root, { ctx }) {
   const drawDonut = () => {
     const g = statusGroups();
     $('#donut').innerHTML = donut(g);
-    $('#legend').innerHTML = g.map(([l, n, c]) => `<li class="flex items-center gap-2"><i class="h-2.5 w-2.5 rounded-[3px] ${c === '#C6F432' ? 'border border-[#9BC21F]' : ''}" style="background:${c}"></i>${l}<b class="tabular ms-auto">${n}</b></li>`).join('');
+    $('#legend').innerHTML = g.map(([l, n, c]) => `<li class="flex items-center gap-2"><i class="h-2.5 w-2.5 rounded-[3px] ${c === '#F59E0B' ? 'border border-[#C97F06]' : ''}" style="background:${c}"></i>${l}<b class="tabular ms-auto">${n}</b></li>`).join('');
   };
   const drawLists = () => {
-    $('#cities').innerHTML = cityShare().map((c, i, a) => `<div class="grid grid-cols-[72px_1fr_40px] items-center gap-2.5"><span>${esc(c.name)}</span><span class="h-[9px] overflow-hidden rounded-full bg-mist"><span class="block h-full rounded-full ${c.name === 'أخرى' ? 'bg-[#9AA5A0]' : 'bg-primary'}" style="width:${(c.n / a[0].n) * 100}%"></span></span><b class="tabular">${c.pct}%</b></div>`).join('');
-    const tone = ['bg-forest text-lime', 'bg-primary text-white', 'bg-lime text-forest', 'bg-sand text-ink-body', 'bg-sand text-ink-body'];
+    $('#cities').innerHTML = cityShare().map((c, i, a) => `<div class="grid grid-cols-[72px_1fr_40px] items-center gap-2.5"><span>${esc(c.name)}</span><span class="h-[9px] overflow-hidden rounded-full bg-mist"><span class="block h-full rounded-full ${c.name === 'أخرى' ? 'bg-[#9AA6B4]' : 'bg-primary'}" style="width:${(c.n / a[0].n) * 100}%"></span></span><b class="tabular">${c.pct}%</b></div>`).join('');
+    const tone = ['bg-navy text-gold', 'bg-primary text-white', 'bg-gold text-navy', 'bg-sand text-ink-body', 'bg-sand text-ink-body'];
     $('#cats').innerHTML = topCategories().map((c, i) => `<div class="flex items-center gap-3"><span class="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-xl text-[13px] font-bold ${tone[i]}">${i + 1}</span><span class="flex-1 font-semibold">${esc(c.name)}</span><span class="tabular text-xs text-ink-muted">${fmt(c.n)} مزايدة</span></div>`).join('');
-    $('#sellers').innerHTML = topSellers(3).map((s, i) => `<li class="flex items-center gap-3 border-b border-line-soft py-3 last:border-0"><span class="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full text-sm font-bold ${['bg-forest text-lime', 'bg-primary text-white', 'bg-lime text-forest'][i]}">${esc([...s.name][0])}</span><span class="flex-1 text-[13px]"><a href="#/accounts/${s.id}" class="font-bold !text-ink">${esc(s.name)}</a><br><span class="text-ink-muted">${s.deals} مزاداً</span></span>${chip(`★ ${s.rating.toFixed(1)}`, 'good')}</li>`).join('');
+    $('#sellers').innerHTML = topSellers(3).map((s, i) => `<li class="flex items-center gap-3 border-b border-line-soft py-3 last:border-0"><span class="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full text-sm font-bold ${['bg-navy text-gold', 'bg-primary text-white', 'bg-gold text-navy'][i]}">${esc([...s.name][0])}</span><span class="flex-1 text-[13px]"><a href="#/accounts/${s.id}" class="font-bold !text-ink">${esc(s.name)}</a><br><span class="text-ink-muted">${s.deals} مزاداً</span></span>${chip(`★ ${s.rating.toFixed(1)}`, 'good')}</li>`).join('');
   };
   const drawEnding = () => {
     const list = endingSoon(3);
@@ -220,7 +220,7 @@ export default async function overview(root, { ctx }) {
     const b = e.target.closest('[data-r]');
     if (!b) return;
     range = b.dataset.r;
-    $('#ranges').querySelectorAll('[data-r]').forEach((x) => { x.className = `rounded-full px-3.5 py-1.5 text-xs ${x === b ? 'bg-forest font-bold text-lime' : 'font-semibold text-ink-body'}`; });
+    $('#ranges').querySelectorAll('[data-r]').forEach((x) => { x.className = `rounded-full px-3.5 py-1.5 text-xs ${x === b ? 'bg-navy font-bold text-gold' : 'font-semibold text-ink-body'}`; });
     drawChart(true);
   });
 

@@ -4,14 +4,14 @@ import { esc, fmtDay, statCards } from '../ui.js';
 
 export const meta = { title: 'التقييمات', sub: 'تقييمات المستخدمين بعضهم لبعض بعد المزاد.' };
 
-const stars = (n) => `<span class="whitespace-nowrap tracking-widest text-primary" role="img" aria-label="${n} من 5">${'★'.repeat(n)}<span class="text-[#C9D1CD]">${'★'.repeat(5 - n)}</span></span>`;
+const stars = (n) => `<span class="whitespace-nowrap tracking-widest text-primary" role="img" aria-label="${n} من 5">${'★'.repeat(n)}<span class="text-[#C9D3E0]">${'★'.repeat(5 - n)}</span></span>`;
 
 export default function reviews(root) {
   const top = () => {
     const r = api.rows('reviews');
     const avg = r.reduce((t, x) => t + x.stars, 0) / r.length;
     return statCards([
-      { label: 'متوسط التقييم', value: avg, decimals: 1, suffix: ' ★', tone: 'lime', sub: `${r.length} تقييماً` },
+      { label: 'متوسط التقييم', value: avg, decimals: 1, suffix: ' ★', tone: 'gold', sub: `${r.length} تقييماً` },
       { label: 'تقييمات 5 نجوم', value: Math.round((r.filter((x) => x.stars === 5).length / r.length) * 100), suffix: '%', tone: 'primary', sub: 'من الإجمالي' },
       { label: 'تقييمات منخفضة', value: r.filter((x) => x.stars <= 2).length, tone: 'outline', sub: 'نجمتان فأقل' },
     ], 'sm:grid-cols-3');

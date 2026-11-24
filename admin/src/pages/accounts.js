@@ -12,10 +12,10 @@ export default function accounts(root, { ctx }) {
     const r = api.rows('accounts');
     const ver = r.filter((a) => a.verified).length;
     return statCards([
-      { label: 'إجمالي الحسابات', value: r.length, tone: 'lime', sub: `${r.filter((a) => a.isSeller).length} بائعاً` },
+      { label: 'إجمالي الحسابات', value: r.length, tone: 'gold', sub: `${r.filter((a) => a.isSeller).length} بائعاً` },
       { label: 'طلبات توثيق', value: r.filter((a) => a.verificationRequestedAt).length, tone: 'outline', sub: 'بانتظار القرار' },
       { label: 'نسبة الموثّقين', value: Math.round((ver / r.length) * 100), suffix: '%', tone: 'primary', sub: `${ver} حساباً` },
-      { label: 'رصيد العملات', value: r.reduce((t, a) => t + a.coins, 0), tone: 'forest', sub: 'عملة لدى المستخدمين' },
+      { label: 'رصيد العملات', value: r.reduce((t, a) => t + a.coins, 0), tone: 'navy', sub: 'عملة لدى المستخدمين' },
     ]);
   };
   listPage(root, {

@@ -300,7 +300,7 @@ document.addEventListener('keydown', (event) => {
 $('#cat-nav').innerHTML = catNavHTML(data.categories, -1);
 $('#why-list').innerHTML = data.trust.slice(0, 3).map((item) => `
   <li class="flex gap-3">
-    <span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-lime text-forest">${check}</span>
+    <span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gold text-navy">${check}</span>
     <span class="flex flex-col gap-1"><b class="text-[15px] font-semibold">${esc(item.title)}</b><span class="text-[13px] leading-[1.7] text-white/85">${esc(item.text)}</span></span>
   </li>`).join('');
 render(state.step === 'phone' ? '#phone' : null);

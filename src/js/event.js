@@ -53,9 +53,9 @@ function registerCard() {
       : `<button type="button" id="register" class="btn-primary w-full py-3.5 text-[15px]">سجّل للمشاركة</button>`;
   return `
     <div class="card overflow-hidden">
-      <div class="on-dark bg-forest px-5 py-4 text-white">
+      <div class="on-dark bg-navy px-5 py-4 text-white">
         <div class="flex items-center justify-between gap-3 text-[13px]">
-          <span class="${t.live && !ev.endsInDays ? 'rounded-md bg-lime px-2 py-0.5 font-bold text-forest' : 'opacity-85'}">${t.live && !ev.endsInDays ? '● مباشر' : t.label}</span>
+          <span class="${t.live && !ev.endsInDays ? 'rounded-md bg-gold px-2 py-0.5 font-bold text-navy' : 'opacity-85'}">${t.live && !ev.endsInDays ? '● مباشر' : t.label}</span>
           <span class="opacity-75">${esc(whenFmt.format(new Date(t.target)))}</span>
         </div>
         <div id="ev-countdown" class="mt-2.5 grid grid-cols-4 gap-2" role="timer" aria-live="off">${cells(t.target - Date.now())}</div>

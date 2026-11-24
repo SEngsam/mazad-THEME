@@ -41,6 +41,9 @@ export const icons = {
 };
 
 /** Image frame with a branded placeholder that shimmers while loading and stays if the photo can't load. */
+/** Smaller copy of an Unsplash photo for small frames (cards, rows). */
+export const thumb = (src, w) => (src ?? '').replace(/([?&])w=\d+/, `$1w=${w}`);
+
 export function Media({ src, className = '', alt = '', eager = false }) {
   const img = src
     ? `<img src="${esc(src)}" alt="${esc(alt)}" ${eager ? '' : 'loading="lazy"'} decoding="async" data-media>`
@@ -58,17 +61,17 @@ export function HeroLot(lot, { remaining, watchers }) {
   return `
     <a href="lot.html?id=${lot.id}" class="group relative flex min-h-[360px] overflow-hidden rounded-[20px] bg-mist text-white hover:text-white sm:min-h-[520px]">
       ${Media({ src: lot.img, eager: true, className: 'absolute inset-0 transition-transform duration-500 group-hover:scale-[1.02]' })}
-      <span class="relative mt-auto flex w-full flex-col items-start gap-2.5 bg-gradient-to-t from-[rgba(6,20,14,.9)] via-[rgba(6,20,14,.55)] to-transparent p-4 pt-24 sm:gap-3 sm:p-7 sm:pt-32">
-        <span class="rounded-full bg-lime px-3 py-1 text-xs font-bold text-forest">● مباشر الآن</span>
+      <span class="relative mt-auto flex w-full flex-col items-start gap-2.5 bg-gradient-to-t from-[rgba(8,13,26,.9)] via-[rgba(8,13,26,.55)] to-transparent p-4 pt-24 sm:gap-3 sm:p-7 sm:pt-32">
+        <span class="rounded-full bg-gold px-3 py-1 text-xs font-bold text-navy">● مباشر الآن</span>
         <span class="text-xl font-bold leading-[1.3] sm:text-[32px]">${esc(lot.name)}</span>
         <span class="text-[13px] opacity-90 sm:text-sm">${esc(lot.sub)} · ${esc(lot.city)}</span>
         <span class="mt-1 flex flex-wrap gap-2.5">
           ${stat('الوقت المتبقي', `<span data-timer="${lot.id}" class="text-white"><span>${formatCountdown(remaining)}</span></span>`)}
-          ${stat('المزايدة الحالية', formatPrice(lot.bid), 'text-lime')}
+          ${stat('المزايدة الحالية', formatPrice(lot.bid), 'text-gold')}
           ${stat('المزايدات', formatNumber(bidCount(lot)))}
           ${stat('يتابعون', formatNumber(watchers))}
         </span>
-        <span class="btn-lime mt-1.5 px-7 py-3 text-[15px]">ادخل المزاد</span>
+        <span class="btn-gold mt-1.5 px-7 py-3 text-[15px]">ادخل المزاد</span>
       </span>
     </a>`;
 }
@@ -77,7 +80,7 @@ export function HeroLot(lot, { remaining, watchers }) {
 export function SoonRow(lot, remaining) {
   return `
     <a href="lot.html?id=${lot.id}" class="flex items-center gap-3 rounded-2xl bg-white/[.08] p-2.5 text-white hover:bg-white/[.12] hover:text-white">
-      ${Media({ src: lot.img, className: 'h-[72px] w-[72px] shrink-0 rounded-xl' })}
+      ${Media({ src: thumb(lot.img, 240), className: 'h-[72px] w-[72px] shrink-0 rounded-xl' })}
       <span class="flex min-w-0 flex-1 flex-col gap-1">
         <span class="text-sm font-semibold leading-snug">${esc(lot.name)}</span>
         <span class="text-xs opacity-80">${esc(lot.city)} · ${formatNumber(bidCount(lot))} مزايدة</span>
@@ -113,13 +116,13 @@ export function LotCard(lot, { remaining, watched }) {
   return `
     <article class="card flex flex-col gap-3 p-2.5 pb-4">
       <div class="relative">
-        <a href="lot.html?id=${lot.id}" tabindex="-1" aria-hidden="true" class="block">${Media({ src: lot.img, className: 'aspect-[4/3] rounded-[14px]' })}</a>
+        <a href="lot.html?id=${lot.id}" tabindex="-1" aria-hidden="true" class="block">${Media({ src: thumb(lot.img, 640), className: 'aspect-[4/3] rounded-[14px]' })}</a>
         <span class="pointer-events-none absolute start-2.5 top-2.5 flex items-center gap-1 rounded-full bg-white py-1 pe-3 ps-2.5 text-xs font-semibold text-ink shadow-float"><span class="text-primary">${icons.pin}</span>${esc(lot.city)}</span>
         <button type="button" data-watch="${lot.id}" aria-pressed="${watched}" aria-label="${watched ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}: ${esc(lot.name)}"
           class="absolute end-2.5 top-2.5 grid h-10 w-10 place-items-center rounded-full bg-white shadow-float transition-transform hover:scale-105 ${watched ? 'text-accent' : 'text-ink'}">
           ${icons.heart(watched)}
         </button>
-        <div class="pointer-events-none absolute bottom-2.5 start-2.5 flex items-center gap-2.5 whitespace-nowrap rounded-[10px] bg-forest/[.93] px-3 py-[7px] text-[13px] text-white">
+        <div class="pointer-events-none absolute bottom-2.5 start-2.5 flex items-center gap-2.5 whitespace-nowrap rounded-[10px] bg-navy/[.93] px-3 py-[7px] text-[13px] text-white">
           <span class="tabular flex items-center gap-1.5 font-semibold ${timerTone}" data-timer="${lot.id}">${icons.clock}<span>${formatCountdown(remaining)}</span></span>
           <span class="h-3.5 w-px bg-white/25" aria-hidden="true"></span>
           <span class="flex items-baseline gap-1.5"><span class="text-[11px] opacity-75">المزايدة</span><span class="tabular font-semibold">${formatPrice(lot.bid)}</span></span>

@@ -121,8 +121,13 @@ export function initSelects() {
   document.querySelectorAll('select.select-pill').forEach(enhance);
   if (wired) return;
   wired = true;
-  new MutationObserver(() => document.querySelectorAll('select.select-pill:not([data-enhanced])').forEach(enhance))
-    .observe(document.body, { childList: true, subtree: true });
+  // Only re-scan when a select was actually added (the timers rewrite text every second).
+  const addedSelect = (n) => n.nodeType === 1 && (n.matches('select.select-pill') || n.querySelector('select.select-pill'));
+  new MutationObserver((records) => {
+    if (records.some((r) => [...r.addedNodes].some(addedSelect))) {
+      document.querySelectorAll('select.select-pill:not([data-enhanced])').forEach(enhance);
+    }
+  }).observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('click', (event) => {
     const t = event.target;

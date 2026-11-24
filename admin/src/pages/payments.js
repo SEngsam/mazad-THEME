@@ -10,9 +10,9 @@ export default function payments(root, { ctx }) {
     const sum = (k) => rows.reduce((t, p) => t + p[k], 0);
     const day = rows.filter((p) => Date.now() - p.purchasedAt < 86400000);
     return statCards([
-      { label: 'عمليات الشراء', value: rows.length, tone: 'lime', sub: `${day.length} خلال 24 ساعة` },
+      { label: 'عمليات الشراء', value: rows.length, tone: 'gold', sub: `${day.length} خلال 24 ساعة` },
       { label: 'إجمالي المبالغ', value: Math.round(sum('totalAmount')), suffix: ' ر.س', tone: 'primary', sub: 'شاملة الضريبة' },
-      { label: 'الضريبة المحصّلة', value: Math.round(sum('vatAmount')), suffix: ' ر.س', tone: 'forest', sub: '15%' },
+      { label: 'الضريبة المحصّلة', value: Math.round(sum('vatAmount')), suffix: ' ر.س', tone: 'navy', sub: '15%' },
     ], 'sm:grid-cols-3');
   };
   const store = (...s) => (p) => s.includes(p.store);

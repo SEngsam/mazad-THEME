@@ -10,7 +10,7 @@ export default function notificationsLog(root) {
     return statCards([
       { label: 'غير مقروءة', value: r.filter((n) => !n.read).length, tone: 'outline', sub: 'لم يفتحها المستخدم' },
       { label: 'خلال 24 ساعة', value: r.filter((n) => Date.now() - n.createdAt < 86400000).length, tone: 'primary', sub: 'أُرسلت' },
-      { label: 'الإجمالي', value: r.length, tone: 'forest', sub: 'في السجل' },
+      { label: 'الإجمالي', value: r.length, tone: 'navy', sub: 'في السجل' },
     ], 'sm:grid-cols-3');
   };
   listPage(root, {

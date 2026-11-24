@@ -58,7 +58,7 @@ const FAQ = [
   ]],
   ['الدفع والاستلام', [
     ['متى يجب أن أدفع بعد الفوز؟', 'خلال 48 ساعة من انتهاء المزاد، من «حسابي» ثم «مشترياتي». يظهر لك الموعد والوقت المتبقي.'],
-    ['ما طرق الدفع المتاحة؟', 'مدى، فيزا، ماستركارد، Apple Pay، أو التقسيط مع تابي (4 دفعات) أو تمارا (3 دفعات) بدون فوائد.'],
+    ['ما طرق الدفع المتاحة؟', 'مدى، فيزا، ماستركارد، Apple Pay، أو Apple Pay.'],
     ['كيف أستلم السيارة؟', 'من موقع البائع بموعد نرسله لك، وننقل الملكية عبر أبشر بحضور مندوب مزادي.'],
     ['هل توصلون لكل المدن؟', 'نوصل الساعات والجوالات والمجوهرات والتحف لكل مدن المملكة خلال 2 إلى 4 أيام عمل.'],
   ]],
@@ -125,16 +125,16 @@ function head() {
         <li><a href="index.html" class="text-ink-body hover:text-primary">الرئيسية</a></li><li aria-hidden="true">‹</li><li aria-current="page" class="text-ink">مركز المساعدة</li>
       </ol>
     </nav>
-    <div class="on-dark flex flex-col gap-5 rounded-[22px] bg-forest p-6 text-white sm:rounded-hero sm:p-10">
+    <div class="on-dark flex flex-col gap-5 rounded-[22px] bg-navy p-6 text-white sm:rounded-hero sm:p-10">
       <div class="flex flex-col gap-2">
         <h1 class="m-0 text-2xl font-bold leading-[1.35] sm:text-[30px]">كيف يمكننا مساعدتك؟</h1>
         <p class="m-0 text-[15px] leading-[1.8] text-white/85">إجابات عن المزايدة والدفع والبيع، أو تواصل معنا مباشرة.</p>
       </div>
-      <form id="help-search" role="search" class="flex max-w-2xl items-center rounded-full bg-white p-1 focus-within:ring-2 focus-within:ring-lime" onsubmit="return false">
+      <form id="help-search" role="search" class="flex max-w-2xl items-center rounded-full bg-white p-1 focus-within:ring-2 focus-within:ring-gold" onsubmit="return false">
         <label for="hq" class="sr-only">ابحث في الأسئلة الشائعة</label>
         <input id="hq" type="search" autocomplete="off" placeholder="مثل: تأمين المزايدة، التقسيط، نقل الملكية"
           class="min-w-0 flex-1 rounded-full border-0 bg-transparent px-5 py-3 text-[15px] text-ink placeholder:text-ink-muted focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
-        <button type="submit" class="btn-lime px-6 py-3 text-sm">بحث</button>
+        <button type="submit" class="btn-gold px-6 py-3 text-sm">بحث</button>
       </form>
     </div>
     <div id="search-results" aria-live="polite"></div>

@@ -99,7 +99,7 @@ const mark = '<img src="public/assets/mazad-mark.png" alt="" class="h-6 w-6 obje
 
 function avatar(c, size = 'h-11 w-11 text-base') {
   return c.support
-    ? `<span class="grid ${size} shrink-0 place-items-center rounded-full bg-forest">${mark}</span>`
+    ? `<span class="grid ${size} shrink-0 place-items-center rounded-full bg-navy">${mark}</span>`
     : `<span class="grid ${size} shrink-0 place-items-center rounded-full bg-primary-soft font-bold text-primary">${esc(c.name.trim()[0])}</span>`;
 }
 

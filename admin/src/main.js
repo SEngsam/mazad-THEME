@@ -112,17 +112,17 @@ function buildShell() {
   app.innerHTML = `
     <div class="min-h-screen lg:grid lg:grid-cols-[256px_minmax(0,1fr)]">
       <aside class="ad-side hidden px-4 py-6 lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:gap-4 lg:self-start" aria-label="القائمة الجانبية">
-        <div class="flex shrink-0 items-center justify-between px-2"><a href="#/" aria-label="مزادي"><img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="ad-logo"></a><span class="ad-chip ad-tag bg-lime/15 text-lime">الإدارة</span></div>
+        <div class="flex shrink-0 items-center justify-between px-2"><a href="#/" aria-label="مزادي"><img src="../public/assets/mazad-logo.png" alt="مزادي" width="900" height="300" class="ad-logo"></a><span class="ad-chip ad-tag bg-gold/15 text-gold">الإدارة</span></div>
         <nav id="nav" aria-label="أقسام لوحة الإدارة" class="ad-scroll flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto"></nav>
         <div class="ad-sep flex shrink-0 items-center gap-3 border-t border-white/15 px-2 pt-4">
-          <span class="ad-avatar grid h-[38px] w-[38px] place-items-center rounded-full bg-lime font-bold text-forest">م</span>
+          <span class="ad-avatar grid h-[38px] w-[38px] place-items-center rounded-full bg-gold font-bold text-navy">م</span>
           <span class="flex min-w-0 flex-1 flex-col"><span class="font-semibold">مشرف المنصة</span><span class="ad-sub text-xs text-white/60">دور: ${readonly ? 'للقراءة فقط' : 'مدير'}</span></span>
         </div>
       </aside>
 
       <div class="min-w-0">
         <header class="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-line bg-white px-3.5 py-2.5 lg:gap-4 lg:px-8 lg:py-3.5">
-          <button type="button" id="menu" aria-label="القائمة" aria-expanded="false" class="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-forest text-lime lg:hidden">${icon('menu', 22)}</button>
+          <button type="button" id="menu" aria-label="القائمة" aria-expanded="false" class="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-navy text-gold lg:hidden">${icon('menu', 22)}</button>
           <div class="min-w-0 flex-1 basis-40"><h1 id="h-title" class="m-0 truncate text-[17px] font-bold leading-tight lg:text-[22px]"></h1><p id="h-sub" class="m-0 truncate text-[11.5px] text-ink-muted lg:text-[13px]"></p></div>
           <span class="ad-clock hidden xl:inline-flex" title="الاتصال المباشر مع الخادم"><span class="ad-dot"></span><span>مباشر · <span id="clock">--:--</span></span></span>
           <form id="gsearch" role="search" class="hidden h-11 w-[280px] items-center gap-2 rounded-full bg-mist px-4 md:flex"><span class="text-ink-muted">${icon('search', 18)}</span><label class="sr-only" for="gq">بحث</label><input id="gq" type="search" placeholder="ابحث برقم المزاد أو الحساب أو الطلب" class="h-full min-w-0 flex-1 border-0 bg-transparent text-[13px] outline-none"><kbd class="rounded-md bg-white px-1.5 text-[11px] text-ink-muted">/</kbd></form>
@@ -134,11 +134,11 @@ function buildShell() {
           </div>
           <div class="relative">
             <button type="button" id="me" aria-haspopup="menu" aria-expanded="false" class="flex h-11 items-center gap-2.5 rounded-full border border-line bg-white py-0 pe-1.5 ps-3.5 text-ink">
-              <span class="grid h-8 w-8 place-items-center rounded-full bg-forest text-sm font-bold text-lime">م</span>
+              <span class="grid h-8 w-8 place-items-center rounded-full bg-navy text-sm font-bold text-gold">م</span>
               <span class="hidden flex-col items-start leading-tight sm:flex"><span class="text-[13px] font-semibold">مشرف المنصة</span><span class="text-[11px] text-ink-muted">${readonly ? 'للقراءة فقط' : 'مدير'}</span></span>
             </button>
             <div id="me-panel" role="menu" aria-label="الحساب" class="ad-pop hidden w-64 sm:end-0 max-sm:fixed max-sm:inset-x-3 max-sm:top-[66px] max-sm:w-auto">
-              <div class="flex items-center gap-3 border-b border-line-soft p-4"><span class="grid h-10 w-10 place-items-center rounded-full bg-forest font-bold text-lime">م</span><span><strong>مشرف المنصة</strong><br><span class="text-xs text-ink-muted">دور: ${readonly ? 'للقراءة فقط' : 'مدير'}</span></span></div>
+              <div class="flex items-center gap-3 border-b border-line-soft p-4"><span class="grid h-10 w-10 place-items-center rounded-full bg-navy font-bold text-gold">م</span><span><strong>مشرف المنصة</strong><br><span class="text-xs text-ink-muted">دور: ${readonly ? 'للقراءة فقط' : 'مدير'}</span></span></div>
               <div class="border-b border-line-soft px-4 py-3"><div class="mb-2 text-[11px] font-semibold text-ink-muted">المظهر</div>${themeSwitch()}</div>
               <a role="menuitem" href="#/settings" class="flex items-center gap-3 px-4 py-3 text-[13px] !text-ink hover:bg-sand">${icon('gear', 18)}الإعدادات</a>
               <a role="menuitem" href="#/notifications/log" class="flex items-center gap-3 px-4 py-3 text-[13px] !text-ink hover:bg-sand">${icon('bell', 18)}سجل الإشعارات</a>
@@ -152,13 +152,13 @@ function buildShell() {
       </div>
     </div>
 
-    <nav id="bottom" aria-label="التنقل السريع" class="fixed inset-x-0 bottom-0 z-30 flex gap-0.5 border-t border-line bg-white px-2.5 pb-3 pt-2 shadow-[0_-10px_26px_-18px_rgba(6,46,34,.4)] lg:hidden"></nav>
+    <nav id="bottom" aria-label="التنقل السريع" class="fixed inset-x-0 bottom-0 z-30 flex gap-0.5 border-t border-line bg-white px-2.5 pb-3 pt-2 shadow-[0_-10px_26px_-18px_rgba(15,23,42,.4)] lg:hidden"></nav>
 
-    <div id="drawer" class="fixed inset-0 z-40 hidden bg-forest/60 lg:hidden">
+    <div id="drawer" class="fixed inset-0 z-40 hidden bg-navy/60 lg:hidden">
       <aside class="ad-side absolute inset-y-0 start-0 flex w-[310px] max-w-[88vw] flex-col gap-3 p-4 shadow-2xl" aria-label="القائمة">
         <div class="flex shrink-0 items-center justify-between"><img src="../public/assets/mazad-logo.png" alt="مزادي" class="ad-logo !h-[26px]"><button type="button" id="drawer-close" aria-label="إغلاق" class="ad-x grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white">${icon('close')}</button></div>
         <nav id="nav-m" class="ad-scroll flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto"></nav>
-        <div class="ad-sep flex shrink-0 items-center gap-3 border-t border-white/15 px-1.5 pt-3.5"><span class="ad-avatar grid h-[38px] w-[38px] place-items-center rounded-full bg-lime font-bold text-forest">م</span><span class="flex flex-1 flex-col"><strong class="text-[13px]">مشرف المنصة</strong><span class="ad-sub text-[11px] text-white/60">دور: ${readonly ? 'للقراءة فقط' : 'مدير'}</span></span><button type="button" id="logout-m" class="ad-out text-xs font-semibold">خروج</button></div>
+        <div class="ad-sep flex shrink-0 items-center gap-3 border-t border-white/15 px-1.5 pt-3.5"><span class="ad-avatar grid h-[38px] w-[38px] place-items-center rounded-full bg-gold font-bold text-navy">م</span><span class="flex flex-1 flex-col"><strong class="text-[13px]">مشرف المنصة</strong><span class="ad-sub text-[11px] text-white/60">دور: ${readonly ? 'للقراءة فقط' : 'مدير'}</span></span><button type="button" id="logout-m" class="ad-out text-xs font-semibold">خروج</button></div>
       </aside>
     </div>`;
 

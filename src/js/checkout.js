@@ -13,8 +13,6 @@ const CITIES = ['الرياض', 'جدة', 'مكة المكرمة', 'المدين
 const METHODS = [
   { id: 'card', label: 'بطاقة مدى أو ائتمانية', note: 'مدى، فيزا، ماستركارد' },
   { id: 'applepay', label: 'Apple Pay', note: 'ادفع من جوالك أو ساعتك' },
-  { id: 'tabby', label: 'تابي', note: 'قسّطها على 4 دفعات بدون فوائد', parts: 4 },
-  { id: 'tamara', label: 'تمارا', note: 'قسّطها على 3 دفعات بدون فوائد', parts: 3 },
 ];
 
 const params = new URLSearchParams(location.search);

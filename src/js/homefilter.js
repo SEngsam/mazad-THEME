@@ -58,11 +58,11 @@ export function initHomeFilter({ data, remainingFor }) {
     $('#home-filter').innerHTML = `
       <div class="hidden items-center gap-2 rounded-full bg-white/[.08] p-1.5 sm:flex">
         ${['city', 'cat', 'band', 'status'].map((k) => `<div class="min-w-0 flex-1">${selectHTML(k, field, `h-${k}`)}</div>`).join('')}
-        <button type="submit" class="btn-lime shrink-0 px-8 py-2.5 text-sm">بحث</button>
+        <button type="submit" class="btn-gold shrink-0 px-8 py-2.5 text-sm">بحث</button>
       </div>
       <div class="flex items-center gap-2 rounded-full bg-white/[.08] p-1.5 sm:hidden">
         <span class="min-w-0 flex-1 truncate ps-3.5 text-[13px] text-white/85">المدينة · السعر · الحالة</span>
-        <button type="button" data-open-sheet aria-haspopup="dialog" class="btn-lime shrink-0 gap-1.5 px-5 py-2.5 text-sm">
+        <button type="button" data-open-sheet aria-haspopup="dialog" class="btn-gold shrink-0 gap-1.5 px-5 py-2.5 text-sm">
           <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>تصفية
         </button>
       </div>`;

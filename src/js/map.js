@@ -62,10 +62,10 @@ function mapSVG() {
       <polygon points="${border}" fill="url(#map-dots)"/>
       ${PLACES.map(([name, at]) => {
         const [x, y] = project(at);
-        return `<circle cx="${x}" cy="${y}" r="2.5" fill="#5E6B64" opacity=".45"/><text x="${x}" y="${y + 13}" text-anchor="middle" font-size="9" fill="#5E6B64" opacity=".8" font-family="Readex Pro, system-ui">${name}</text>`;
+        return `<circle cx="${x}" cy="${y}" r="2.5" fill="#5A6573" opacity=".45"/><text x="${x}" y="${y + 13}" text-anchor="middle" font-size="9" fill="#5A6573" opacity=".8" font-family="Readex Pro, system-ui">${name}</text>`;
       }).join('')}
-      <text x="${project([36.9, 22.7])[0]}" y="${project([36.9, 22.7])[1]}" text-anchor="middle" font-size="10" fill="#5E6B64" opacity=".6" font-family="Readex Pro, system-ui" transform="rotate(-52 ${project([36.9, 22.7]).join(' ')})">البحر الأحمر</text>
-      <text x="${project([52.6, 25.9])[0]}" y="${project([52.6, 25.9])[1]}" text-anchor="middle" font-size="10" fill="#5E6B64" opacity=".6" font-family="Readex Pro, system-ui">الخليج العربي</text>
+      <text x="${project([36.9, 22.7])[0]}" y="${project([36.9, 22.7])[1]}" text-anchor="middle" font-size="10" fill="#5A6573" opacity=".6" font-family="Readex Pro, system-ui" transform="rotate(-52 ${project([36.9, 22.7]).join(' ')})">البحر الأحمر</text>
+      <text x="${project([52.6, 25.9])[0]}" y="${project([52.6, 25.9])[1]}" text-anchor="middle" font-size="10" fill="#5A6573" opacity=".6" font-family="Readex Pro, system-ui">الخليج العربي</text>
     </svg>`;
 }
 
@@ -77,11 +77,11 @@ function pinsHTML() {
     const on = state.pin === p.id;
     const pos = pct(project(p.at));
     return `
-      <span class="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white ${on ? 'bg-forest' : 'bg-primary'} shadow-float" style="${pos}" aria-hidden="true"></span>
+      <span class="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white ${on ? 'bg-navy' : 'bg-primary'} shadow-float" style="${pos}" aria-hidden="true"></span>
       <button type="button" data-pin="${p.id}" aria-pressed="${on}" aria-label="${esc(p.label)}، ${n} مزاد"
-        class="absolute flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold shadow-card transition-colors ${p.below ? 'translate-y-2.5' : '-translate-y-[calc(100%+10px)]'} ${on ? 'bg-forest text-white' : 'bg-white text-ink hover:bg-primary hover:text-white'}"
+        class="absolute flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold shadow-card transition-colors ${p.below ? 'translate-y-2.5' : '-translate-y-[calc(100%+10px)]'} ${on ? 'bg-navy text-white' : 'bg-white text-ink hover:bg-primary hover:text-white'}"
         style="${pos}">
-        ${esc(p.label)}<span class="rounded-full ${on ? 'bg-lime text-forest' : 'bg-primary-soft text-primary'} px-1.5 text-[11px] font-bold leading-[18px] tabular">${n}</span>
+        ${esc(p.label)}<span class="rounded-full ${on ? 'bg-gold text-navy' : 'bg-primary-soft text-primary'} px-1.5 text-[11px] font-bold leading-[18px] tabular">${n}</span>
       </button>`;
   }).join('');
 }

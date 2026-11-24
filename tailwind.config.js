@@ -6,14 +6,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        forest: token('forest'),
+        navy: token('navy'),
+        deep: token('deep'),
         primary: { DEFAULT: token('primary'), dark: token('primary-dark'), soft: token('primary-soft') },
         accent: { DEFAULT: token('accent'), strong: token('accent-strong'), soft: token('accent-soft'), ink: token('accent-ink') },
-        lime: token('lime'),
+        gold: token('gold'),
         timer: token('timer'),
-        sand: '#EFF2F1',
-        line: { DEFAULT: '#DDE3E0', soft: '#ECEEF1' },
-        ink: { DEFAULT: '#121417', body: '#4B5563', muted: '#5E6B64' },
+        sand: '#F1F4F7',
+        line: { DEFAULT: '#DDE3EA', soft: '#ECEEF1' },
+        ink: { DEFAULT: '#121417', body: '#4B5563', muted: '#5A6573' },
         mist: '#F3F4F6',
       },
       fontFamily: {
@@ -27,8 +28,8 @@ module.exports = {
         hero: '26px',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(6,46,34,.04), 0 8px 24px -12px rgba(6,46,34,.14)',
-        header: '0 6px 20px -14px rgba(6,46,34,.25)',
+        card: '0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.14)',
+        header: '0 6px 20px -14px rgba(15,23,42,.25)',
         float: '0 1px 4px rgba(0,0,0,.12)',
       },
     },

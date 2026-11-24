@@ -101,7 +101,7 @@ function myBids() {
 function myListings() {
   return [...loadListings(), ...DEMO_LISTINGS];
 }
-const PAY_METHODS = { card: 'بطاقة', applepay: 'Apple Pay', tabby: 'تابي', tamara: 'تمارا' };
+const PAY_METHODS = { card: 'بطاقة', applepay: 'Apple Pay' };
 const dueFmt = new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { weekday: 'long', hour: 'numeric', minute: '2-digit' });
 
 /** Won lots with their payment status from orders paid on the checkout page. */
@@ -274,7 +274,7 @@ function walletTab() {
   const heldSum = held.reduce((sum, h) => sum + h.amount, 0);
   const pendingIn = walletTx().filter((t) => t.status === 'pending' && t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
   const tile = (label, value, note, strong = false) => `
-    <div class="flex flex-col gap-1 rounded-card p-4 sm:p-5 ${strong ? 'on-dark bg-forest text-white' : 'border border-line bg-white'}">
+    <div class="flex flex-col gap-1 rounded-card p-4 sm:p-5 ${strong ? 'on-dark bg-navy text-white' : 'border border-line bg-white'}">
       <span class="text-[13px] ${strong ? 'opacity-80' : 'text-ink-muted'}">${label}</span>
       <b class="text-2xl font-bold tabular">${formatNumber(value)} <span class="text-sm font-semibold">ر.س</span></b>
       <span class="text-xs ${strong ? 'opacity-75' : 'text-ink-muted'}">${note}</span>

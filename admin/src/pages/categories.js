@@ -133,12 +133,12 @@ export default function categories(root, { ctx }) {
         </section>
         ${side}
       </div>
-      ${failed && pend.length ? `<div role="region" aria-label="تعذّر حفظ الترتيب" class="fixed bottom-24 inset-x-3 z-30 flex items-center gap-3.5 rounded-full bg-forest py-3 pe-3.5 ps-[22px] text-white shadow-[0_20px_40px_-16px_rgba(6,46,34,.7)] lg:bottom-6 lg:left-8 lg:right-[288px]">
+      ${failed && pend.length ? `<div role="region" aria-label="تعذّر حفظ الترتيب" class="fixed bottom-24 inset-x-3 z-30 flex items-center gap-3.5 rounded-full bg-navy py-3 pe-3.5 ps-[22px] text-white shadow-[0_20px_40px_-16px_rgba(15,23,42,.7)] lg:bottom-6 lg:left-8 lg:right-[288px]">
         <span class="flex-1 text-[13px]">تعذّر حفظ الترتيب</span>
         <button type="button" data-undo class="rounded-full border-[1.5px] border-white/50 bg-transparent px-5 py-2 text-[13px] font-semibold text-white">تراجع</button>
-        <button type="button" data-save data-write class="rounded-full bg-lime px-6 py-2.5 text-[13px] font-bold text-forest">إعادة المحاولة</button></div>` : ''}`;
+        <button type="button" data-save data-write class="rounded-full bg-gold px-6 py-2.5 text-[13px] font-bold text-navy">إعادة المحاولة</button></div>` : ''}`;
 
-    _ps(root, _sc([{ label: 'فئات رئيسية', value: mains.length, tone: 'lime', sub: 'في الشجرة' }, { label: 'فئات فرعية', value: all.length - mains.length, tone: 'primary', sub: 'تحت الرئيسية' }, { label: 'مزادات مرتبطة', value: api.rows('auctions').length, tone: 'forest', sub: 'بفئات المنصة' }], 'sm:grid-cols-3'));
+    _ps(root, _sc([{ label: 'فئات رئيسية', value: mains.length, tone: 'gold', sub: 'في الشجرة' }, { label: 'فئات فرعية', value: all.length - mains.length, tone: 'primary', sub: 'تحت الرئيسية' }, { label: 'مزادات مرتبطة', value: api.rows('auctions').length, tone: 'navy', sub: 'بفئات المنصة' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
   }
 

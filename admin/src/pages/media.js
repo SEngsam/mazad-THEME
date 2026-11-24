@@ -27,7 +27,7 @@ export default function media(root) {
         </section>
         <p class="ad-muted m-0">المسار والحجم والاسم الأصلي للملف. يُرفع الملف من نماذج المزاد واللافتات فقط.</p>
       </div>`;
-    _ps(root, _sc([{ label: 'الملفات', value: rows.length, tone: 'lime', sub: 'صور ومرفقات' }, { label: 'الحجم الكلي', value: Math.round(total / 1048576), suffix: ' MB', tone: 'primary', sub: 'مساحة التخزين' }, { label: 'متوسط الملف', value: Math.round(total / rows.length / 1024), suffix: ' KB', tone: 'forest', sub: 'حجم الصورة' }], 'sm:grid-cols-3'));
+    _ps(root, _sc([{ label: 'الملفات', value: rows.length, tone: 'gold', sub: 'صور ومرفقات' }, { label: 'الحجم الكلي', value: Math.round(total / 1048576), suffix: ' MB', tone: 'primary', sub: 'مساحة التخزين' }, { label: 'متوسط الملف', value: Math.round(total / rows.length / 1024), suffix: ' KB', tone: 'navy', sub: 'حجم الصورة' }], 'sm:grid-cols-3'));
   }
   root.addEventListener('click', (e) => {
     const v = e.target.closest('[data-v]'); if (v) { st.view = v.dataset.v; draw(); }

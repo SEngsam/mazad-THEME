@@ -163,7 +163,7 @@ function gallery() {
     <div class="flex flex-col gap-2.5">
       <div class="relative">
         <div id="main-photo">${Media({ src: state.photo === 0 ? lot.img : '', alt: lot.name, eager: true, className: 'aspect-[4/3] rounded-card' })}</div>
-        <span class="pointer-events-none absolute bottom-3 start-3 rounded-full bg-forest/[.93] px-2.5 py-1 text-xs font-semibold text-white tabular" id="photo-count" dir="ltr">${state.photo + 1} / ${count}</span>
+        <span class="pointer-events-none absolute bottom-3 start-3 rounded-full bg-navy/[.93] px-2.5 py-1 text-xs font-semibold text-white tabular" id="photo-count" dir="ltr">${state.photo + 1} / ${count}</span>
       </div>
       ${thumbs}
     </div>`;
@@ -333,7 +333,7 @@ function bidPanel() {
   const deposit = Math.min(5000, Math.max(500, Math.round((lot.bid * 0.05) / 100) * 100));
   return `
     <div class="card overflow-hidden">
-      <div class="on-dark bg-forest px-5 py-4 text-white">
+      <div class="on-dark bg-navy px-5 py-4 text-white">
         <div class="flex items-center justify-between gap-3 text-[13px]">
           <span class="opacity-85">ينتهي خلال</span>
           <span id="ends-at" class="opacity-75">${endsAtLabel()}</span>
@@ -376,11 +376,6 @@ function bidPanel() {
           <li class="flex justify-between gap-3"><span>عمولة المشتري</span><b class="tabular font-semibold text-ink">2.5%</b></li>
           <li class="flex justify-between gap-3"><span>التمديد التلقائي</span><span class="text-end font-medium text-ink">دقيقتان لأي مزايدة في آخر دقيقتين</span></li>
         </ul>
-        <div class="flex flex-wrap items-center gap-2 rounded-xl bg-primary-soft px-3.5 py-2.5 text-[13px] text-ink-body">
-          <span>قسّط المبلغ مع</span>
-          <span class="brand-pill"><img data-logo src="https://www.google.com/s2/favicons?domain=tabby.ai&amp;sz=64" alt="" width="16" height="16">تابي</span>
-          <span class="brand-pill"><img data-logo src="https://www.google.com/s2/favicons?domain=tamara.co&amp;sz=64" alt="" width="16" height="16">تمارا</span>
-        </div>
       </div>
     </div>`;
 }
@@ -420,7 +415,7 @@ function render() {
       </div>
     </div>
     ${mobileBar()}
-    <dialog id="lot-dialog" aria-labelledby="dialog-title" class="m-auto w-[min(440px,calc(100vw-32px))] rounded-card border border-line bg-white p-0 text-ink shadow-card backdrop:bg-forest/50"></dialog>`;
+    <dialog id="lot-dialog" aria-labelledby="dialog-title" class="m-auto w-[min(440px,calc(100vw-32px))] rounded-card border border-line bg-white p-0 text-ink shadow-card backdrop:bg-navy/50"></dialog>`;
   renderSimilar();
   renderBidUI();
   renderWatch();

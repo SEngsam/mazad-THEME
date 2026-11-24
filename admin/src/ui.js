@@ -51,7 +51,7 @@ export const icon = (name, size = 20) => `<svg aria-hidden="true" viewBox="0 0 2
 export function toast(message, tone = 'good') {
   const host = document.getElementById('toasts');
   const el = document.createElement('div');
-  el.className = `pointer-events-auto rounded-full px-5 py-2.5 text-[13px] font-semibold shadow-card ${tone === 'bad' ? 'bg-accent-strong text-white' : 'bg-forest text-white'}`;
+  el.className = `pointer-events-auto rounded-full px-5 py-2.5 text-[13px] font-semibold shadow-card ${tone === 'bad' ? 'bg-accent-strong text-white' : 'bg-navy text-white'}`;
   el.textContent = message;
   host.append(el);
   setTimeout(() => el.remove(), 3200);
@@ -62,7 +62,7 @@ export function askReason({ title, text = '', label = 'السبب', required = t
   return new Promise((resolve) => {
     const opener = document.activeElement;
     const wrap = document.createElement('div');
-    wrap.className = 'fixed inset-0 z-50 grid place-items-center bg-forest/55 p-4';
+    wrap.className = 'fixed inset-0 z-50 grid place-items-center bg-navy/55 p-4';
     wrap.innerHTML = `
       <div role="dialog" aria-modal="true" aria-labelledby="dlg-t" class="w-full max-w-[400px] rounded-card border border-line bg-white p-5 shadow-card">
         <h2 id="dlg-t" class="ad-h2">${esc(title)}</h2>
@@ -176,8 +176,8 @@ export function spark(values, stroke) {
 }
 
 const STAT_TONE = {
-  lime: ['bg-lime text-forest', '#062E22'], accent: ['bg-accent text-white', '#fff'], primary: ['bg-primary text-white', '#C6F432'],
-  forest: ['bg-forest text-white', '#C6F432'], outline: ['border-2 border-accent bg-white text-ink', '#D93A16'], soft: ['border border-line bg-white text-ink', '#006C35'],
+  gold: ['bg-gold text-navy', '#0F172A'], accent: ['bg-accent text-white', '#fff'], primary: ['bg-primary text-white', '#F59E0B'],
+  navy: ['bg-navy text-white', '#F59E0B'], outline: ['border-2 border-accent bg-white text-ink', '#D93A16'], soft: ['border border-line bg-white text-ink', '#076091'],
 };
 
 /** Colored KPI cards. items: [{id, label, value, tone, prefix, suffix, sub, spark:[…], href}] */
@@ -198,8 +198,8 @@ export function runCounts(root, animate = true) {
 }
 
 /** Dark hero strip used at the top of the detail pages. */
-export const heroStrip = (inner) => `<section class="ad-rise relative overflow-hidden rounded-[26px] bg-forest p-6 text-white shadow-[0_18px_40px_-22px_rgba(6,46,34,.7)] lg:p-7">
-  <svg aria-hidden="true" viewBox="0 0 200 200" class="pointer-events-none absolute -start-12 -top-16 h-64 w-64 opacity-[.07]" fill="#C6F432"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="60" fill="#062E22"/></svg>
+export const heroStrip = (inner) => `<section class="ad-rise relative overflow-hidden rounded-[26px] bg-navy p-6 text-white shadow-[0_18px_40px_-22px_rgba(15,23,42,.7)] lg:p-7">
+  <svg aria-hidden="true" viewBox="0 0 200 200" class="pointer-events-none absolute -start-12 -top-16 h-64 w-64 opacity-[.07]" fill="#F59E0B"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="60" fill="#0F172A"/></svg>
   <div class="relative">${inner}</div></section>`;
 
 /** Put a row of stat cards at the top of a page; counts animate only the first time. */

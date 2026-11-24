@@ -30,7 +30,7 @@ export default function ads(root) {
             <div class="flex gap-2.5"><button type="submit" data-write class="ad-btn-primary ad-btn-lg">حفظ</button><button type="button" data-cancel class="ad-btn ad-btn-lg">إلغاء</button></div></form>` : '<p class="m-0 text-[13px] text-ink-muted">اختر لافتة لتعديلها.</p>'}
         </section>
       </div>`;
-    _ps(root, _sc([{ label: 'إجمالي اللافتات', value: list().length, tone: 'lime', sub: 'في كل المواضع' }, { label: 'مفعّلة', value: list().filter((a) => a.enabled).length, tone: 'primary', sub: 'تظهر الآن' }, { label: 'معطّلة', value: list().filter((a) => !a.enabled).length, tone: 'outline', sub: 'لا تظهر' }], 'sm:grid-cols-3'));
+    _ps(root, _sc([{ label: 'إجمالي اللافتات', value: list().length, tone: 'gold', sub: 'في كل المواضع' }, { label: 'مفعّلة', value: list().filter((a) => a.enabled).length, tone: 'primary', sub: 'تظهر الآن' }, { label: 'معطّلة', value: list().filter((a) => !a.enabled).length, tone: 'outline', sub: 'لا تظهر' }], 'sm:grid-cols-3'));
     import('../ui.js').then((m) => m.applyRole(root));
   }
 

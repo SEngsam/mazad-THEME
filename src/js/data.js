@@ -108,12 +108,12 @@ export const trust = [
   { title: 'هوية موثّقة بنفاذ', text: 'كل مزايد وبائع متحقق منه قبل أول مزايدة.' },
   { title: 'فحص قبل المزاد', text: 'تقرير فحص معتمد لكل سيارة وشهادة أصالة للساعات والمجوهرات.' },
   { title: 'أموالك محمية', text: 'يبقى المبلغ لدينا حتى تستلم المنتج.' },
-  { title: 'ادفع بالطريقة التي تناسبك', text: 'مدى، Apple Pay، أو قسّط مع تابي وتمارا.' },
+  { title: 'ادفع بالطريقة التي تناسبك', text: 'مدى، Apple Pay، أو بطاقة ائتمانية.' },
 ];
 
 export const ads = {
   leaderboard: unsplash('1784637729389-f24e1d2a8b22', 1600),
-  mid: [unsplash('1757774698963-b23f4b273adc', 1600), unsplash('1511707171634-5f897ff02aa9', 1600)],
+  mid: [unsplash('1757774698963-b23f4b273adc', 1000), unsplash('1511707171634-5f897ff02aa9', 1000)],
   sell: unsplash('1554841649-de947c4b954a', 1400),
 };
 
@@ -179,7 +179,7 @@ export const shippableCats = [2, 3, 4, 7];
 /** Scheduled auction events. startsAt: hour of day (live yard auction) or endsInDays (online). */
 export const events = {
   'north-yard': {
-    title: 'مزاد سيارات ساحة الشمال',
+    title: 'مزاد سيارات شركة هدف النسور',
     type: 'حضوري وإلكتروني',
     city: 'الرياض',
     count: 42,

@@ -29,7 +29,7 @@ export default function messages(root, { ctx }) {
           </section>
         </div>
       </div>`;
-    _ps(root, _sc([{ label: 'غير محلولة', value: all.filter((x) => !x.solved).length, tone: 'outline', sub: 'تحتاج رداً' }, { label: 'محلولة', value: all.filter((x) => x.solved).length, tone: 'primary', sub: 'أُغلقت' }, { label: 'إجمالي الرسائل', value: all.length, tone: 'forest', sub: 'من التطبيق والموقع' }], 'sm:grid-cols-3'));
+    _ps(root, _sc([{ label: 'غير محلولة', value: all.filter((x) => !x.solved).length, tone: 'outline', sub: 'تحتاج رداً' }, { label: 'محلولة', value: all.filter((x) => x.solved).length, tone: 'primary', sub: 'أُغلقت' }, { label: 'إجمالي الرسائل', value: all.length, tone: 'navy', sub: 'من التطبيق والموقع' }], 'sm:grid-cols-3'));
     import('../ui.js').then((u) => u.applyRole(root));
   }
 

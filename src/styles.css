@@ -16,15 +16,16 @@
 @layer base {
   /* Brand palette (RGB channels). Swap these to re-theme the page. */
   :root {
-    --forest: 6 46 34;
-    --primary: 0 108 53;
-    --primary-dark: 0 85 42;
-    --primary-soft: 232 243 236;
+    --navy: 15 23 42;
+    --deep: 13 41 71;
+    --primary: 7 96 145;
+    --primary-dark: 8 74 114;
+    --primary-soft: 230 240 247;
     --accent: 255 90 54;
     --accent-strong: 217 58 22;
     --accent-soft: 255 230 223;
     --accent-ink: 194 57 27;
-    --lime: 198 244 50;
+    --gold: 245 158 11;
     --timer: 255 138 101;
   }
 
@@ -34,7 +35,7 @@
   button { @apply cursor-pointer; }
 
   :focus-visible { @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white; }
-  .on-dark :focus-visible { @apply ring-lime ring-offset-forest; }
+  .on-dark :focus-visible { @apply ring-gold ring-offset-navy; }
 
   .tabular { font-variant-numeric: tabular-nums; }
 }
@@ -48,11 +49,13 @@
   .btn { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-colors; }
   .btn-primary { @apply btn bg-primary text-white hover:bg-primary-dark hover:text-white; }
   .btn-outline { @apply btn border-[1.5px] border-ink bg-white text-ink hover:bg-sand hover:text-ink; }
-  .btn-lime { @apply btn bg-lime font-bold text-forest hover:bg-[#D6FA62] hover:text-forest; }
+  .btn-gold { @apply btn bg-gold font-bold text-navy hover:bg-[#FBBF24] hover:text-navy; }
   .btn-ghost-dark { @apply btn border-[1.5px] border-white/60 font-medium text-white hover:bg-white/10 hover:text-white; }
 
   .chip { @apply inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold; }
   .chip-ad { @apply chip pointer-events-none bg-white text-ink-muted; }
+
+  .frame-brand { background-image: linear-gradient(120deg, rgb(var(--primary)) 0%, rgb(var(--deep)) 62%, rgb(var(--navy)) 100%); }
 
   .card { @apply rounded-card border border-line bg-white shadow-card; }
 
@@ -68,7 +71,7 @@
   .media:has(img:not(.is-loaded))::after {
     content: ''; @apply absolute inset-0 -z-10;
     background: linear-gradient(100deg, transparent 25%, rgb(255 255 255 / .6) 50%, transparent 75%);
-    animation: media-shimmer 1.5s ease-in-out infinite;
+    animation: media-shimmer 1.5s ease-in-out 3;
   }
   .media img { @apply absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300; }
   .media img.is-loaded { @apply opacity-100; }
@@ -85,7 +88,7 @@
   /* Native select styled as a pill, chevron on the left (RTL end). */
   .select-pill { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235E6B64' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: left 18px center; background-size: 18px; }
 
-  /* Dropdown fields on a forest band (the hero filter): light chevron and text. */
+  /* Dropdown fields on a navy band (the hero filter): light chevron and text. */
   .on-dark .select-pill { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
   .on-dark [data-select-text].text-ink-muted { color: rgb(255 255 255 / .9); }
 

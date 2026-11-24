@@ -1,7 +1,7 @@
 /** Three looks: light (white sidebar), semi-dark (dark sidebar, default) and dark (everything). Saved on this device. */
 export const THEMES = [['light', 'فاتح'], ['semi', 'شبه داكن'], ['dark', 'داكن']];
 const KEY = 'ad-theme';
-const BAR = { light: '#FFFFFF', semi: '#062E22', dark: '#07140F' };
+const BAR = { light: '#FFFFFF', semi: '#0F172A', dark: '#07140F' };
 
 export const getTheme = () => {
   const t = localStorage.getItem(KEY);

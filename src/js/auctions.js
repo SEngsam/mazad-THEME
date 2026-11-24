@@ -37,7 +37,7 @@ function groupOf({ t }) {
 
 function status({ ev, t }) {
   const left = Math.max(0, Math.floor((t.target - Date.now()) / 1000));
-  if (t.live && !ev.endsInDays) return '<span class="rounded-md bg-forest px-2 py-0.5 text-[11px] font-bold text-lime">● مباشر</span>';
+  if (t.live && !ev.endsInDays) return '<span class="rounded-md bg-navy px-2 py-0.5 text-[11px] font-bold text-gold">● مباشر</span>';
   return `<span class="text-[13px] text-ink-body">${t.label} <b class="font-semibold tabular ${left < 3600 ? 'text-accent-strong' : 'text-ink'}" data-left="${t.target}">${formatCountdown(left)}</b></span>`;
 }
 

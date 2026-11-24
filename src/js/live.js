@@ -150,10 +150,10 @@ function header() {
         <li aria-current="page" class="text-ink">غرفة المزاد</li>
       </ol>
     </nav>
-    <section aria-label="حالة المزاد" class="on-dark flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-card bg-forest px-5 py-4 text-white sm:px-6">
+    <section aria-label="حالة المزاد" class="on-dark flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-card bg-navy px-5 py-4 text-white sm:px-6">
       <div class="flex min-w-0 flex-col gap-1.5">
         <p class="m-0 flex flex-wrap items-center gap-2 text-[13px]">
-          ${room.phase === 'ended' ? '<b class="rounded-md bg-white/15 px-2 py-0.5 font-bold">انتهى</b>' : '<b class="rounded-md bg-lime px-2 py-0.5 font-bold text-forest">● مباشر</b>'}
+          ${room.phase === 'ended' ? '<b class="rounded-md bg-white/15 px-2 py-0.5 font-bold">انتهى</b>' : '<b class="rounded-md bg-gold px-2 py-0.5 font-bold text-navy">● مباشر</b>'}
           <span class="opacity-80">${esc(ev.type)} · ${esc(ev.city)}</span>
         </p>
         <h1 class="m-0 text-xl font-bold leading-snug sm:text-2xl">${esc(ev.title)}</h1>
@@ -170,11 +170,11 @@ function stage() {
   return `
     <div class="relative overflow-hidden rounded-[22px] bg-mist text-white sm:rounded-hero">
       ${Media({ src: l.img, eager: true, alt: l.name, className: 'aspect-[4/3] sm:aspect-[16/10]' })}
-      <span class="absolute start-3 top-3 flex items-center gap-1.5 rounded-full bg-forest/90 px-3 py-1.5 text-xs font-semibold sm:start-4 sm:top-4">
+      <span class="absolute start-3 top-3 flex items-center gap-1.5 rounded-full bg-navy/90 px-3 py-1.5 text-xs font-semibold sm:start-4 sm:top-4">
         <span class="h-2 w-2 rounded-full bg-accent-strong motion-safe:animate-pulse" aria-hidden="true"></span>${inHall ? 'بث مباشر من الساحة' : 'مزاد إلكتروني مباشر'}
       </span>
       <span class="absolute end-3 top-3 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-ink tabular sm:end-4 sm:top-4">لوت ${esc(data.lotNumber(l))}</span>
-      <div id="sold-overlay" class="absolute inset-0 hidden flex-col items-center justify-center gap-1 bg-forest/80 text-center"></div>
+      <div id="sold-overlay" class="absolute inset-0 hidden flex-col items-center justify-center gap-1 bg-navy/80 text-center"></div>
     </div>`;
 }
 
@@ -200,13 +200,13 @@ function lotInfo() {
 function panel() {
   return `
     <div class="card overflow-hidden">
-      <div class="on-dark bg-forest px-5 py-4 text-white">
+      <div class="on-dark bg-navy px-5 py-4 text-white">
         <div class="flex items-center justify-between gap-3 text-[13px]">
           <span id="clock-label" class="opacity-85">يُغلق خلال</span>
           <ol id="phases" class="m-0 flex list-none gap-1 p-0 text-[11px]" aria-label="مراحل البيع"></ol>
         </div>
         <b id="clock" class="mt-1.5 block text-[40px] font-bold leading-none tabular" role="timer" aria-live="off">00:15</b>
-        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/15" aria-hidden="true"><div id="clock-bar" class="h-full rounded-full bg-lime transition-[width] duration-200 ease-linear" style="width: 100%"></div></div>
+        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/15" aria-hidden="true"><div id="clock-bar" class="h-full rounded-full bg-gold transition-[width] duration-200 ease-linear" style="width: 100%"></div></div>
       </div>
       <div class="flex flex-col gap-4 p-5">
         <div>
@@ -234,7 +234,7 @@ function queue() {
       return {
         no: firstNo + i, name: l.name, img: l.img, current,
         note: r ? `بيع بـ ${formatPrice(r.price)}${r.me ? ' · لك' : ''}` : current ? 'يُعرض الآن' : `يبدأ من ${formatPrice(roundTo(l.bid * 0.88, bidIncrement(l.bid)))}`,
-        chip: r ? (r.me ? ['فزت به', 'bg-primary text-white'] : ['مُباع', 'bg-mist text-ink-body']) : current ? ['الآن', 'bg-lime text-forest'] : null,
+        chip: r ? (r.me ? ['فزت به', 'bg-primary text-white'] : ['مُباع', 'bg-mist text-ink-body']) : current ? ['الآن', 'bg-gold text-navy'] : null,
       };
     }),
   ];
@@ -400,13 +400,13 @@ function update() {
   $('#clock-label').textContent = sold ? 'أُغلق البيع' : 'يُغلق خلال';
   const bar = $('#clock-bar');
   bar.style.width = sold ? '0%' : `${(left / (ROUND * 1000)) * 100}%`;
-  bar.classList.toggle('bg-lime', key === 'open');
+  bar.classList.toggle('bg-gold', key === 'open');
   bar.classList.toggle('bg-accent', key === 'once');
   bar.classList.toggle('bg-timer', key === 'twice');
   const at = PHASES.findIndex(([k]) => k === key);
   $('#phases').innerHTML = PHASES.map(([k, label], i) => {
     const on = !sold && k === key;
-    return `<li class="rounded-full px-2 py-0.5 font-semibold ${on ? 'bg-lime text-forest' : !sold && i < at ? 'bg-white/20' : 'bg-white/10 opacity-70'}" ${on ? 'aria-current="step"' : ''}>${label}</li>`;
+    return `<li class="rounded-full px-2 py-0.5 font-semibold ${on ? 'bg-gold text-navy' : !sold && i < at ? 'bg-white/20' : 'bg-white/10 opacity-70'}" ${on ? 'aria-current="step"' : ''}>${label}</li>`;
   }).join('');
 
   $('#price').innerHTML = `${formatNumber(room.price)} <span class="text-base font-semibold">ر.س</span>`;

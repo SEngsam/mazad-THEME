@@ -15,7 +15,7 @@ export default function auctions(root, { query, ctx }) {
       { label: 'جارية الآن', value: n('LIVE'), tone: 'primary', sub: `${n('SCHEDULED')} مجدولة` },
       { label: 'بانتظار المراجعة', value: n('PENDING_REVIEW'), tone: 'outline', href: '#/review', sub: 'تحتاج قراراً' },
       { label: 'تعديلات مطلوبة', value: n('CHANGES_REQUESTED'), tone: 'accent', sub: 'عند البائعين' },
-      { label: 'مغلقة', value: n('CLOSED'), tone: 'forest', sub: 'منتهية' },
+      { label: 'مغلقة', value: n('CLOSED'), tone: 'navy', sub: 'منتهية' },
     ]);
   };
   listPage(root, {

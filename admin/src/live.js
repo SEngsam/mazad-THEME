@@ -109,8 +109,8 @@ export function statusGroups() {
   db.auctions.forEach((a) => { c[a.status] = (c[a.status] || 0) + 1; });
   const g = (...k) => k.reduce((t, s) => t + (c[s] || 0), 0);
   return [
-    ['جارٍ', g('LIVE'), '#006C35'], ['مغلق', g('CLOSED'), '#062E22'], ['معتمد / مجدول', g('APPROVED', 'SCHEDULED'), '#C6F432'],
-    ['بانتظار المراجعة', g('PENDING_REVIEW', 'CHANGES_REQUESTED'), '#FF5A36'], ['أخرى', g('REJECTED', 'CANCELLED', 'DRAFT'), '#C9D1CD'],
+    ['جارٍ', g('LIVE'), '#076091'], ['مغلق', g('CLOSED'), '#0F172A'], ['معتمد / مجدول', g('APPROVED', 'SCHEDULED'), '#F59E0B'],
+    ['بانتظار المراجعة', g('PENDING_REVIEW', 'CHANGES_REQUESTED'), '#FF5A36'], ['أخرى', g('REJECTED', 'CANCELLED', 'DRAFT'), '#C9D3E0'],
   ];
 }
 

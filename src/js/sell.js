@@ -158,7 +158,7 @@ function photosStep() {
   const grid = state.photos.map((p, i) => `
     <li class="relative">
       <div class="media aspect-square rounded-[14px]"><img src="${p.url}" alt="${esc(`صورة ${i + 1}: ${p.name}`)}" class="is-loaded"></div>
-      ${i === state.cover ? '<span class="absolute bottom-2 start-2 rounded-full bg-forest/[.93] px-2.5 py-1 text-[11px] font-semibold text-white">الغلاف</span>'
+      ${i === state.cover ? '<span class="absolute bottom-2 start-2 rounded-full bg-navy/[.93] px-2.5 py-1 text-[11px] font-semibold text-white">الغلاف</span>'
         : `<button type="button" data-cover="${i}" class="absolute bottom-2 start-2 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-ink shadow-float hover:text-primary">اجعلها الغلاف</button>`}
       <button type="button" data-remove-photo="${i}" class="absolute end-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-white text-ink shadow-float hover:text-accent-strong" aria-label="حذف الصورة ${i + 1}">${xIcon}</button>
     </li>`).join('');

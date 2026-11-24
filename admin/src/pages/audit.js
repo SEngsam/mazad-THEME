@@ -12,7 +12,7 @@ export default function audit(root) {
     const r = api.rows('auditLog');
     const c = (re) => r.filter((a) => re.test(a.action)).length;
     return `<div class="flex flex-col gap-4">${BANNER}${statCards([
-      { label: 'إجمالي الأفعال', value: r.length, tone: 'forest', sub: 'في السجل' },
+      { label: 'إجمالي الأفعال', value: r.length, tone: 'navy', sub: 'في السجل' },
       { label: 'اعتماد وتوثيق', value: c(/اعتماد|توثيق/), tone: 'primary', sub: 'قرارات إيجابية' },
       { label: 'رفض وإلغاء وحذف', value: c(/رفض|إلغاء|حذف/), tone: 'outline', sub: 'تحتاج مراجعة' },
     ], 'sm:grid-cols-3')}</div>`;

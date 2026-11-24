@@ -24,7 +24,7 @@ const STEPS = [
   ['2023', 'الانطلاق في الرياض بمزادات السيارات الحضورية.'],
   ['2024', 'إطلاق المزايدة الإلكترونية وإضافة الساعات والمجوهرات.'],
   ['2025', 'التوسع إلى جدة والدمام، وإضافة اللوحات المميزة والعقارات.'],
-  ['2026', 'غرفة المزاد المباشر، والتقسيط مع تابي وتمارا.'],
+  ['2026', 'غرفة المزاد المباشر.'],
 ];
 
 const icons = {
@@ -44,13 +44,13 @@ $('#main').innerHTML = `
         <li aria-current="page" class="text-ink">من نحن</li>
       </ol>
     </nav>
-    <section class="on-dark grid grid-cols-1 overflow-hidden rounded-[22px] bg-forest text-white sm:rounded-hero lg:grid-cols-2">
+    <section class="on-dark grid grid-cols-1 overflow-hidden rounded-[22px] bg-navy text-white sm:rounded-hero lg:grid-cols-2">
       <div class="flex flex-col justify-center gap-4 p-6 sm:p-10">
-        <span class="self-start rounded-md bg-lime px-2 py-0.5 text-xs font-bold text-forest">من نحن</span>
+        <span class="self-start rounded-md bg-gold px-2 py-0.5 text-xs font-bold text-navy">من نحن</span>
         <h1 class="m-0 text-[26px] font-bold leading-[1.35] sm:text-[34px]">سوق مزادات موثوق، من المعاينة حتى التسليم</h1>
         <p class="m-0 max-w-lg text-[15px] leading-[1.9] opacity-90">مزادي منصة سعودية للمزادات الحضورية والإلكترونية: سيارات، وساعات، ومجوهرات، ولوحات مميزة، وعقارات. نجمع المشتري والبائع في مزاد شفاف، ونتولى الفحص والدفع والتسليم.</p>
         <div class="flex flex-wrap gap-2.5 pt-1">
-          <a href="auctions.html" class="btn-lime px-6 py-3 text-sm">المزادات القادمة</a>
+          <a href="auctions.html" class="btn-gold px-6 py-3 text-sm">المزادات القادمة</a>
           <a href="sell.html" class="btn-ghost-dark px-6 py-3 text-sm">بِع معنا</a>
         </div>
       </div>

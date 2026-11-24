@@ -10,7 +10,7 @@ export default function bids(root, { ctx }) {
     const day = r.filter((b) => Date.now() - b.createdAt < 86400000);
     return statCards([
       { label: 'مزايدات آخر 24 ساعة', value: day.length, tone: 'accent', sub: 'تتحدّث مباشرة' },
-      { label: 'أعلى مزايدة اليوم', value: Math.max(0, ...day.map((b) => b.price)), suffix: ' ر.س', tone: 'lime', sub: 'في 24 ساعة' },
+      { label: 'أعلى مزايدة اليوم', value: Math.max(0, ...day.map((b) => b.price)), suffix: ' ر.س', tone: 'gold', sub: 'في 24 ساعة' },
       { label: 'مفتوحة', value: r.filter((b) => b.status === 'open').length, tone: 'primary', sub: 'بانتظار القرار' },
       { label: 'مرفوضة', value: r.filter((b) => b.status === 'rejected').length, tone: 'outline', sub: 'أُعيدت عملاتها' },
     ]);
