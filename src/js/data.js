@@ -57,7 +57,7 @@ export const categoryKeywords = {
 };
 
 /** Lot number shown on the lot page and searchable from the header. */
-export const lotNumber = (lot) => lotDetails[lot.id]?.lotNo ?? `MZ-${10500 + lot.id}`;
+export const lotNumber = (lot) => lotDetails[lot.id]?.lotNo ?? (typeof lot.id === 'number' ? `MZ-${10500 + lot.id}` : 'بعد النشر');
 
 export const sponsoredLot = {
   name: 'تمويل سيارتك من بنك شريك',
@@ -66,7 +66,7 @@ export const sponsoredLot = {
 };
 
 /** Bid count shown on lot cards and the lot page. */
-export const bidCount = (lot) => lotDetails[lot.id]?.bids ?? 5 + lot.id * 3;
+export const bidCount = (lot) => lotDetails[lot.id]?.bids ?? (typeof lot.id === 'number' ? 5 + lot.id * 3 : 0);
 
 /** Details shown on lot cards: status plus two specs per lot (by lot id). */
 export const lotCardFacts = {
